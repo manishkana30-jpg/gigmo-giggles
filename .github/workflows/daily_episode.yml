@@ -38,7 +38,8 @@ jobs:
           unzip -q -o rhubarb-lip-sync-1.13.0-Linux.zip
           
           # 2. Move to the extracted folder and locate the binary (it's inside /bin!)
-          cd rhubarb-lip-sync-1.13.0-Linux
+          EXTRACTED_DIR=$(find . -maxdepth 1 -type d -iname "*rhubarb*" | head -n 1)
+          cd "$EXTRACTED_DIR"
           BIN_PATH=$(find . -type f -executable -name "rhubarb" | head -n 1)
           echo "📍 Found binary at: $BIN_PATH"
           

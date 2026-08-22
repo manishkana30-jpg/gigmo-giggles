@@ -135,33 +135,65 @@ def generate_melodic_chime_wav(
     duration_sec: float = 3.0,
     chord_freqs: Optional[list] = None
 ) -> Path:
-    """Generate a cheerful background chime tone using standard library."""
-    if chord_freqs is None:
-        chord_freqs = [523.25, 659.25, 783.99]  # C Major (C5, E5, G5)
-    
+    """Generate a cheerful kids background music loop with melody, bass, and chimes."""
     output_path.parent.mkdir(parents=True, exist_ok=True)
     sample_rate = 22050
     num_samples = int(duration_sec * sample_rate)
-    
+
+    # Musical notes (Hz) for a cheerful C Major / G Major progression
+    melody_notes = [523.25, 587.33, 659.25, 698.46, 783.99, 659.25, 523.25, 783.99]  # C5 D5 E5 F5 G5 E5 C5 G5
+    bass_notes = [130.81, 164.81, 146.83, 130.81, 196.00, 164.81, 146.83, 130.81]    # C3 E3 D3 C3 G3 E3 D3 C3
+    chime_freqs = [1046.50, 1318.51, 1567.98]  # C6 E6 G6 high sparkle
+
+    note_duration = max(0.4, duration_sec / len(melody_notes))  # Duration per note
+
     with wave.open(str(output_path), "w") as wav_file:
         wav_file.setnchannels(1)
         wav_file.setsampwidth(2)
         wav_file.setframerate(sample_rate)
-        
+
         frames = bytearray()
         for i in range(num_samples):
             t = float(i) / sample_rate
+
+            # Determine current note index (loop through melody)
+            note_idx = int(t / note_duration) % len(melody_notes)
+            note_t = t - (int(t / note_duration) * note_duration)  # Time within current note
+
             val = 0.0
-            for idx, freq in enumerate(chord_freqs):
-                # Arpeggiate slightly
-                note_start = idx * 0.15
-                if t >= note_start:
-                    decay = math.exp(-2.0 * (t - note_start))
-                    val += 0.25 * decay * math.sin(2.0 * math.pi * freq * (t - note_start))
-            
+
+            # Melody: soft sine with envelope
+            melody_freq = melody_notes[note_idx]
+            melody_env = math.exp(-2.5 * note_t) * 0.20  # Pluck-like decay
+            val += melody_env * math.sin(2.0 * math.pi * melody_freq * note_t)
+
+            # Bass: low hum
+            bass_freq = bass_notes[note_idx]
+            bass_env = 0.12 * math.exp(-1.0 * note_t)
+            val += bass_env * math.sin(2.0 * math.pi * bass_freq * note_t)
+
+            # Chime sparkle: very subtle high notes every 2 beats
+            if note_idx % 2 == 0:
+                chime_idx = (note_idx // 2) % len(chime_freqs)
+                chime_env = 0.06 * math.exp(-5.0 * note_t)
+                val += chime_env * math.sin(2.0 * math.pi * chime_freqs[chime_idx] * note_t)
+
+            # Gentle rhythm pulse (soft kick-like thump)
+            kick_period = note_duration
+            kick_t = t % kick_period
+            if kick_t < 0.05:
+                val += 0.08 * math.sin(2.0 * math.pi * 80 * kick_t) * math.exp(-40.0 * kick_t)
+
+            # Master volume fade in/out
+            if t < 1.0:
+                val *= t  # Fade in over 1 second
+            if t > duration_sec - 1.5:
+                val *= max(0, (duration_sec - t) / 1.5)  # Fade out over 1.5 seconds
+
             sample_val = int(val * 32767.0)
             sample_val = max(-32768, min(32767, sample_val))
             frames.extend(struct.pack("<h", sample_val))
-            
+
         wav_file.writeframes(frames)
     return output_path
+

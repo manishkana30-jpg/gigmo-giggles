@@ -1,8 +1,9 @@
-"""Multi-provider image generation with comic-cartoon procedural fallback."""
+"""Multi-provider image generation with Gemini AI and comic-cartoon procedural fallback."""
 
 import os
 import math
 import random
+import time
 from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Dict, Any, List, Optional
@@ -12,6 +13,14 @@ from src.utils import save_json, setup_logger
 
 logger = setup_logger("ImageGenerator")
 
+# Try importing google-genai for image generation
+try:
+    from google import genai
+    from google.genai import types
+    GENAI_AVAILABLE = True
+except ImportError:
+    GENAI_AVAILABLE = False
+
 
 class BaseImageProvider(ABC):
     """Abstract interface for image generation providers."""
@@ -20,6 +29,73 @@ class BaseImageProvider(ABC):
     def generate(self, prompt: str, output_path: Path, width: int = 1920, height: int = 1080, context: Optional[Dict[str, Any]] = None) -> bool:
         """Generate an image given a text prompt and save to output_path."""
         pass
+
+
+class GeminiImageProvider(BaseImageProvider):
+    """Gemini 2.0 Flash image generation provider (free tier compatible)."""
+
+    def __init__(self, api_key: Optional[str] = None):
+        self.api_key = api_key or os.environ.get("GEMINI_API_KEY")
+        self.model_name = "gemini-2.0-flash-preview-image-generation"
+
+    def generate(self, prompt: str, output_path: Path, width: int = 1920, height: int = 1080, context: Optional[Dict[str, Any]] = None) -> bool:
+        if not self.api_key or not GENAI_AVAILABLE:
+            logger.debug("Gemini API key or SDK not available for image generation.")
+            return False
+
+        try:
+            client = genai.Client(api_key=self.api_key)
+
+            # Enhance prompt for kid-friendly cartoon style
+            enhanced_prompt = (
+                f"{prompt}. "
+                "Style: Vibrant colorful 2D cartoon illustration for children aged 6-9. "
+                "Clean bold outlines, bright saturated colors, friendly expressive characters. "
+                "High quality, 16:9 aspect ratio, professional kids show animation frame."
+            )
+
+            response = client.models.generate_content(
+                model=self.model_name,
+                contents=enhanced_prompt,
+                config=types.GenerateContentConfig(
+                    response_modalities=["IMAGE", "TEXT"]
+                )
+            )
+
+            # Extract image from response
+            if response and response.candidates:
+                for candidate in response.candidates:
+                    if candidate.content and candidate.content.parts:
+                        for part in candidate.content.parts:
+                            if hasattr(part, "inline_data") and part.inline_data:
+                                data = part.inline_data
+                                if hasattr(data, "data") and data.data:
+                                    output_path.parent.mkdir(parents=True, exist_ok=True)
+                                    with open(output_path, "wb") as f:
+                                        f.write(data.data)
+
+                                    # Resize to target resolution if needed
+                                    try:
+                                        img = Image.open(output_path)
+                                        if img.size != (width, height):
+                                            img = img.resize((width, height), Image.LANCZOS)
+                                            img.save(str(output_path), "PNG")
+                                    except Exception:
+                                        pass
+
+                                    logger.info(f"Generated Gemini AI image: {output_path.name}")
+                                    return True
+
+            logger.warning("No image data in Gemini response.")
+            return False
+
+        except Exception as e:
+            err_str = str(e)
+            if "429" in err_str or "too_many_requests" in err_str.lower():
+                logger.warning(f"Gemini image gen rate limited: {e}")
+            else:
+                logger.warning(f"Gemini image generation failed: {e}")
+            return False
 
 
 class HuggingFaceImageProvider(BaseImageProvider):
@@ -46,6 +122,16 @@ class HuggingFaceImageProvider(BaseImageProvider):
                 output_path.parent.mkdir(parents=True, exist_ok=True)
                 with open(output_path, "wb") as f:
                     f.write(response.content)
+
+                # Upscale to target resolution
+                try:
+                    img = Image.open(output_path)
+                    if img.size != (width, height):
+                        img = img.resize((width, height), Image.LANCZOS)
+                        img.save(str(output_path), "PNG")
+                except Exception:
+                    pass
+
                 logger.info(f"Generated HF image: {output_path.name}")
                 return True
             else:
@@ -137,34 +223,27 @@ class PILComicProceduralProvider(BaseImageProvider):
 
         # Bobo the Bear (Left)
         bobo_x = int(width * 0.22)
-        # Body & Ears
-        draw.ellipse([bobo_x - 30, base_y - 120, bobo_x + 10, base_y - 80], fill="#8D5B28", outline="#5D3A1A", width=4) # Left ear
-        draw.ellipse([bobo_x + 90, base_y - 120, bobo_x + 130, base_y - 80], fill="#8D5B28", outline="#5D3A1A", width=4) # Right ear
-        draw.ellipse([bobo_x - 40, base_y, bobo_x + 140, base_y + 240], fill="#A0682C", outline="#5D3A1A", width=6) # Body
-        draw.ellipse([bobo_x - 20, base_y - 100, bobo_x + 120, base_y + 40], fill="#B27B38", outline="#5D3A1A", width=6) # Head
-        draw.ellipse([bobo_x + 10, base_y - 40, bobo_x + 90, base_y + 20], fill="#EAD2AC") # Snout
-        draw.ellipse([bobo_x + 40, base_y - 35, bobo_x + 60, base_y - 15], fill="#2C1B0D") # Nose
-        # Eyes
+        draw.ellipse([bobo_x - 30, base_y - 120, bobo_x + 10, base_y - 80], fill="#8D5B28", outline="#5D3A1A", width=4)
+        draw.ellipse([bobo_x + 90, base_y - 120, bobo_x + 130, base_y - 80], fill="#8D5B28", outline="#5D3A1A", width=4)
+        draw.ellipse([bobo_x - 40, base_y, bobo_x + 140, base_y + 240], fill="#A0682C", outline="#5D3A1A", width=6)
+        draw.ellipse([bobo_x - 20, base_y - 100, bobo_x + 120, base_y + 40], fill="#B27B38", outline="#5D3A1A", width=6)
+        draw.ellipse([bobo_x + 10, base_y - 40, bobo_x + 90, base_y + 20], fill="#EAD2AC")
+        draw.ellipse([bobo_x + 40, base_y - 35, bobo_x + 60, base_y - 15], fill="#2C1B0D")
         draw.ellipse([bobo_x + 15, base_y - 70, bobo_x + 35, base_y - 45], fill="#FFFFFF", outline="#000000", width=2)
         draw.ellipse([bobo_x + 65, base_y - 70, bobo_x + 85, base_y - 45], fill="#FFFFFF", outline="#000000", width=2)
         draw.ellipse([bobo_x + 22, base_y - 65, bobo_x + 32, base_y - 50], fill="#2C1B0D")
         draw.ellipse([bobo_x + 72, base_y - 65, bobo_x + 82, base_y - 50], fill="#2C1B0D")
-        # Yellow Neckerchief
         draw.polygon([(bobo_x + 10, base_y + 30), (bobo_x + 90, base_y + 30), (bobo_x + 50, base_y + 80)], fill="#FFEB3B", outline="#F57F17")
 
         # Luna the Fox (Center)
         luna_x = int(width * 0.48)
-        # Fox Ears (Triangles)
         draw.polygon([(luna_x - 10, base_y - 110), (luna_x + 25, base_y - 40), (luna_x - 30, base_y - 40)], fill="#FF7043", outline="#BF360C")
         draw.polygon([(luna_x + 110, base_y - 110), (luna_x + 75, base_y - 40), (luna_x + 130, base_y - 40)], fill="#FF7043", outline="#BF360C")
-        # Body & Teal Vest
         draw.ellipse([luna_x - 10, base_y + 10, luna_x + 110, base_y + 220], fill="#FF7043", outline="#BF360C", width=6)
-        draw.rectangle([luna_x + 15, base_y + 30, luna_x + 85, base_y + 140], fill="#009688", outline="#004D40", width=4) # Vest
-        # Head & Face
+        draw.rectangle([luna_x + 15, base_y + 30, luna_x + 85, base_y + 140], fill="#009688", outline="#004D40", width=4)
         draw.ellipse([luna_x, base_y - 70, luna_x + 100, base_y + 30], fill="#FF8A65", outline="#BF360C", width=5)
         draw.polygon([(luna_x + 20, base_y + 10), (luna_x + 80, base_y + 10), (luna_x + 50, base_y + 40)], fill="#FFFFFF")
-        draw.ellipse([luna_x + 43, base_y + 28, luna_x + 57, base_y + 40], fill="#212121") # Nose
-        # Amber Eyes
+        draw.ellipse([luna_x + 43, base_y + 28, luna_x + 57, base_y + 40], fill="#212121")
         draw.ellipse([luna_x + 20, base_y - 45, luna_x + 40, base_y - 20], fill="#FFA726", outline="#000000", width=2)
         draw.ellipse([luna_x + 60, base_y - 45, luna_x + 80, base_y - 20], fill="#FFA726", outline="#000000", width=2)
         draw.ellipse([luna_x + 27, base_y - 40, luna_x + 36, base_y - 25], fill="#212121")
@@ -172,18 +251,13 @@ class PILComicProceduralProvider(BaseImageProvider):
 
         # Milo the Robot (Right)
         milo_x = int(width * 0.72)
-        # Antenna with yellow lightbulb
         draw.line([milo_x + 45, base_y - 90, milo_x + 45, base_y - 45], fill="#78909C", width=6)
         draw.ellipse([milo_x + 35, base_y - 110, milo_x + 55, base_y - 90], fill="#FFEB3B", outline="#F57F17", width=3)
-        # Head (Sky Blue Box)
         draw.rounded_rectangle([milo_x, base_y - 45, milo_x + 90, base_y + 35], radius=15, fill="#42A5F5", outline="#0D47A1", width=5)
-        # Glowing Green Digital Screen Eyes
         draw.rounded_rectangle([milo_x + 12, base_y - 25, milo_x + 78, base_y + 10], radius=8, fill="#212121")
         draw.ellipse([milo_x + 20, base_y - 20, milo_x + 38, base_y - 2], fill="#76FF03")
         draw.ellipse([milo_x + 52, base_y - 20, milo_x + 70, base_y - 2], fill="#76FF03")
-        # Body & Wheels
         draw.rounded_rectangle([milo_x - 5, base_y + 45, milo_x + 95, base_y + 160], radius=12, fill="#64B5F6", outline="#0D47A1", width=5)
-        # Roller Wheels
         draw.ellipse([milo_x + 5, base_y + 160, milo_x + 40, base_y + 195], fill="#37474F", outline="#212121", width=4)
         draw.ellipse([milo_x + 50, base_y + 160, milo_x + 85, base_y + 195], fill="#37474F", outline="#212121", width=4)
 
@@ -209,7 +283,6 @@ class PILComicProceduralProvider(BaseImageProvider):
             speaker = first_dial.get("character", "Bobo")
             speech = first_dial.get("text", "Let's explore!")
             
-            # Truncate speech if too long for card
             if len(speech) > 90:
                 speech = speech[:87] + "..."
 
@@ -222,11 +295,13 @@ class PILComicProceduralProvider(BaseImageProvider):
 
 
 class ImageGenerator:
-    """Multi-provider image generation orchestrator."""
+    """Multi-provider image generation orchestrator with Gemini AI priority."""
 
     def __init__(self, provider: Optional[BaseImageProvider] = None):
         if provider:
             self.provider = provider
+        elif os.environ.get("GEMINI_API_KEY") and GENAI_AVAILABLE:
+            self.provider = GeminiImageProvider()
         elif os.environ.get("HF_TOKEN"):
             self.provider = HuggingFaceImageProvider()
         else:
@@ -240,12 +315,20 @@ class ImageGenerator:
         height: int = 1080,
         context: Optional[Dict[str, Any]] = None
     ) -> bool:
-        """Generate a single image file."""
+        """Generate a single image file with cascading provider fallback."""
         success = self.provider.generate(prompt, output_path, width, height, context)
+
+        # Fallback cascade: Gemini → HuggingFace → PIL
+        if not success and isinstance(self.provider, GeminiImageProvider):
+            logger.info("Gemini image gen failed. Trying HuggingFace...")
+            hf = HuggingFaceImageProvider()
+            success = hf.generate(prompt, output_path, width, height, context)
+
         if not success and not isinstance(self.provider, PILComicProceduralProvider):
-            logger.info("External image provider failed. Falling back to PIL Comic Generator...")
+            logger.info("External image providers failed. Falling back to PIL Comic Generator...")
             fallback = PILComicProceduralProvider()
             return fallback.generate(prompt, output_path, width, height, context)
+
         return success
 
     def generate_all_scenes(self, episode_data: Dict[str, Any], output_dir: Path) -> Dict[str, Any]:
@@ -254,7 +337,7 @@ class ImageGenerator:
         scenes = episode_data.get("scenes", [])
         manifest = []
 
-        for scene in scenes:
+        for i, scene in enumerate(scenes):
             num = scene.get("scene_number", 1)
             filename = f"scene_{num:02d}.png"
             image_path = output_dir / filename
@@ -268,6 +351,10 @@ class ImageGenerator:
             }
 
             success = self.generate_image(prompt, image_path, width=1920, height=1080, context=context)
+
+            # Rate limit protection: small delay between Gemini API calls
+            if isinstance(self.provider, GeminiImageProvider) and i < len(scenes) - 1:
+                time.sleep(2)
 
             manifest.append({
                 "scene_number": num,

@@ -1,28 +1,20 @@
-"""Modular Video Generator using Gemini Omni Flash Video and FFmpeg."""
+"""Modular Video Generator using enhanced FFmpeg Ken Burns animations."""
 
 import os
 import time
 import subprocess
-import urllib.request
-import urllib.error
 from pathlib import Path
 from typing import Dict, Any, List, Optional
 from src.utils import check_ffmpeg_available, save_json, save_text, setup_logger
 
 logger = setup_logger("VideoGenerator")
 
-try:
-    from google import genai
-    from google.genai import types
-    GENAI_AVAILABLE = True
-except ImportError:
-    GENAI_AVAILABLE = False
-
 
 class VideoGenerator:
     """
     Assembles still cartoon frames, dialogue audio, background music,
-    and Ken Burns/Gemini animations into high-definition MP4 videos.
+    and enhanced Ken Burns animations into high-definition MP4 videos
+    with smooth crossfade transitions between scenes.
     """
 
     def __init__(self, fps: int = 24, resolution_16_9: tuple = (1920, 1080), resolution_9_16: tuple = (1080, 1920)):
@@ -33,96 +25,100 @@ class VideoGenerator:
         if not self.ffmpeg_available:
             logger.warning("FFmpeg is not installed or not in PATH. Will operate in manifest fallback mode.")
 
-    def download_video_file(self, file_uri: str, output_path: Path, api_key: str):
-        separator = "&" if "?" in file_uri else "?"
-        download_url = f"{file_uri}{separator}alt=media"
-        req = urllib.request.Request(download_url)
-        req.add_header("x-goog-api-key", api_key)
-        try:
-            with urllib.request.urlopen(req, timeout=480) as resp:
-                with open(output_path, "wb") as f:
-                    while True:
-                        chunk = resp.read(8192)
-                        if not chunk:
-                            break
-                        f.write(chunk)
-        except urllib.error.HTTPError as e:
-            raise RuntimeError(f"Error downloading video file: {e.code} - {e.read().decode()}")
+    def _get_motion_filter(self, motion_type: str, duration_sec: float, total_frames: int) -> str:
+        """Generate enhanced Ken Burns filter with varied motion patterns."""
+        w, h = self.width_16_9, self.height_16_9
+        fps = self.fps
+        fade_in = 0.5
+        fade_out_start = max(0, duration_sec - 0.5)
 
-    def generate_gemini_video(self, image_path: Path, prompt: str, output_path: Path, duration_sec: int) -> bool:
-        """Use Gemini Omni Flash API to generate video from an image."""
-        api_key = os.environ.get("GEMINI_API_KEY")
-        if not api_key or not GENAI_AVAILABLE:
-            return False
-            
-        try:
-            client = genai.Client(api_key=api_key)
-            # Upload image
-            logger.info(f"Uploading {image_path.name} to Gemini Files API...")
-            config = types.UploadFileConfig(mime_type="image/png")
-            uploaded_file = client.files.upload(file=str(image_path), config=config)
-            
-            # Wait for active
-            while True:
-                f_info = client.files.get(name=uploaded_file.name)
-                state_str = f_info.state.name if hasattr(f_info.state, "name") else str(f_info.state)
-                if state_str == "ACTIVE":
-                    break
-                elif state_str == "FAILED":
-                    logger.error("File processing failed on backend.")
-                    return False
-                time.sleep(2)
-                
-            import re
-            
-            # Ensure duration is between 3 and 10 for Gemini Omni Flash
-            dur = max(3, min(10, int(duration_sec)))
-            
-            interaction = None
-            max_retries = 3
-            for attempt in range(max_retries):
-                try:
-                    logger.info(f"Generating video for prompt: '{prompt}'")
-                    interaction = client.interactions.create(
-                        model="gemini-omni-flash-preview",
-                        input=[
-                            {"type": "image", "uri": uploaded_file.uri, "mime_type": "image/png"},
-                            {"type": "text", "text": prompt + ". Make it a beautiful, highly detailed 3D cartoon animation suitable for kids."}
-                        ],
-                        response_format={
-                            "type": "video",
-                            "aspect_ratio": "16:9",
-                            "duration": f"{dur}s"
-                        }
-                    )
-                    break # Success!
-                except Exception as e:
-                    err_str = str(e)
-                    if "429" in err_str or "too_many_requests" in err_str.lower() or "Quota exceeded" in err_str:
-                        if attempt < max_retries - 1:
-                            # Try to extract seconds to wait
-                            sleep_time = 65
-                            match = re.search(r"retry in ([\d\.]+)s", err_str)
-                            if match:
-                                sleep_time = min(float(match.group(1)) + 5, 120)
-                            
-                            logger.warning(f"Rate limited (429) by Gemini API. Retrying in {sleep_time:.1f}s... (Attempt {attempt+1}/{max_retries})")
-                            time.sleep(sleep_time)
-                            continue
-                    logger.error(f"Gemini video generation failed: {e}")
-                    return False
+        if motion_type == "zoom_in":
+            # Smooth zoom from 1.0x to 1.20x centered
+            vf = (
+                f"zoompan=z='min(zoom+0.002,1.20)':d={total_frames}:"
+                f"x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':"
+                f"s={w}x{h}:fps={fps},"
+                f"fade=t=in:st=0:d={fade_in},fade=t=out:st={fade_out_start}:d=0.5"
+            )
+        elif motion_type == "zoom_out":
+            # Smooth zoom from 1.20x down to 1.0x centered
+            vf = (
+                f"zoompan=z='if(lte(zoom,1.001),1.20,max(1.001,zoom-0.002))':d={total_frames}:"
+                f"x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':"
+                f"s={w}x{h}:fps={fps},"
+                f"fade=t=in:st=0:d={fade_in},fade=t=out:st={fade_out_start}:d=0.5"
+            )
+        elif motion_type == "pan_right":
+            # Pan left to right with slight zoom
+            vf = (
+                f"zoompan=z='1.12':d={total_frames}:"
+                f"x='if(lte(on,1),0,min(x+2,(iw-iw/zoom)))':y='(ih-ih/zoom)/2':"
+                f"s={w}x{h}:fps={fps},"
+                f"fade=t=in:st=0:d={fade_in},fade=t=out:st={fade_out_start}:d=0.5"
+            )
+        elif motion_type == "pan_left":
+            # Pan right to left
+            vf = (
+                f"zoompan=z='1.12':d={total_frames}:"
+                f"x='if(lte(on,1),(iw-iw/zoom),max(0,x-2))':y='(ih-ih/zoom)/2':"
+                f"s={w}x{h}:fps={fps},"
+                f"fade=t=in:st=0:d={fade_in},fade=t=out:st={fade_out_start}:d=0.5"
+            )
+        elif motion_type == "pan_up":
+            # Pan bottom to top
+            vf = (
+                f"zoompan=z='1.12':d={total_frames}:"
+                f"x='(iw-iw/zoom)/2':y='if(lte(on,1),(ih-ih/zoom),max(0,y-1.5))':"
+                f"s={w}x{h}:fps={fps},"
+                f"fade=t=in:st=0:d={fade_in},fade=t=out:st={fade_out_start}:d=0.5"
+            )
+        elif motion_type == "zoom_in_left":
+            # Zoom toward left third of image
+            vf = (
+                f"zoompan=z='min(zoom+0.002,1.25)':d={total_frames}:"
+                f"x='iw/4-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':"
+                f"s={w}x{h}:fps={fps},"
+                f"fade=t=in:st=0:d={fade_in},fade=t=out:st={fade_out_start}:d=0.5"
+            )
+        elif motion_type == "zoom_in_right":
+            # Zoom toward right third of image
+            vf = (
+                f"zoompan=z='min(zoom+0.002,1.25)':d={total_frames}:"
+                f"x='3*iw/4-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':"
+                f"s={w}x{h}:fps={fps},"
+                f"fade=t=in:st=0:d={fade_in},fade=t=out:st={fade_out_start}:d=0.5"
+            )
+        else:
+            # Default: gentle zoom in
+            vf = (
+                f"zoompan=z='min(zoom+0.0015,1.15)':d={total_frames}:"
+                f"x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':"
+                f"s={w}x{h}:fps={fps},"
+                f"fade=t=in:st=0:d={fade_in},fade=t=out:st={fade_out_start}:d=0.5"
+            )
 
-            if not interaction or not getattr(interaction, "output_video", None) or not getattr(interaction.output_video, "uri", None):
-                logger.error("No video returned from Gemini.")
-                return False
-                
-            logger.info("Downloading generated video...")
-            self.download_video_file(interaction.output_video.uri, output_path, api_key)
-            return True
-            
-        except Exception as e:
-            logger.error(f"Gemini video generation failed: {e}")
-            return False
+        return vf
+
+    def _detect_motion_type(self, video_prompt: str, scene_num: int) -> str:
+        """Parse video prompt to determine the best motion effect."""
+        vp = video_prompt.lower()
+
+        if "zoom out" in vp or "zoom-out" in vp or "reveal" in vp:
+            return "zoom_out"
+        elif "pan right" in vp or "pan left-to-right" in vp or "left to right" in vp:
+            return "pan_right"
+        elif "pan left" in vp or "right-to-left" in vp or "right to left" in vp:
+            return "pan_left"
+        elif "pan up" in vp or "tilt up" in vp or "bottom to top" in vp:
+            return "pan_up"
+        elif "zoom" in vp and "left" in vp:
+            return "zoom_in_left"
+        elif "zoom" in vp and "right" in vp:
+            return "zoom_in_right"
+        else:
+            # Cycle through motions based on scene number for variety
+            motions = ["zoom_in", "pan_right", "zoom_out", "pan_left", "zoom_in_right", "pan_up", "zoom_in_left"]
+            return motions[scene_num % len(motions)]
 
     def build_scene_clip(
         self,
@@ -133,79 +129,38 @@ class VideoGenerator:
         motion_type: str = "zoom_in",
         video_prompt: str = ""
     ) -> bool:
-        """
-        Render an animated scene clip. Tries Gemini API first, falls back to Ken Burns.
-        """
-        if not self.ffmpeg_available or not image_path.exists() or not audio_path.exists():
+        """Render an animated scene clip with enhanced Ken Burns effects."""
+        if not self.ffmpeg_available or not image_path.exists():
             return False
 
+        # Handle case where audio is missing
+        if not audio_path.exists():
+            # Check for mp3 variant
+            mp3_variant = audio_path.with_suffix(".mp3")
+            if mp3_variant.exists():
+                audio_path = mp3_variant
+            else:
+                logger.warning(f"Audio file not found: {audio_path}")
+                return False
+
         output_scene_path.parent.mkdir(parents=True, exist_ok=True)
-        
-        raw_video_path = output_scene_path.with_name(f"raw_{output_scene_path.name}")
-        
-        # Try Gemini API first
-        gemini_success = False
-        if os.environ.get("GEMINI_API_KEY"):
-            gemini_success = self.generate_gemini_video(image_path, video_prompt or f"A {motion_type} camera motion.", raw_video_path, int(duration_sec))
-            
         total_frames = int(duration_sec * self.fps)
 
-        if gemini_success and raw_video_path.exists():
-            # Combine Gemini Video with Audio using FFmpeg
-            # We scale the Gemini video to 1920x1080 and pad/trim to match exact audio duration
-            vf_filter = f"scale={self.width_16_9}:{self.height_16_9}:force_original_aspect_ratio=increase,crop={self.width_16_9}:{self.height_16_9}"
-            cmd = [
-                "ffmpeg", "-y",
-                "-stream_loop", "-1", "-i", str(raw_video_path),
-                "-i", str(audio_path),
-                "-vf", vf_filter,
-                "-c:v", "libx264", "-pix_fmt", "yuv420p", 
-                "-t", str(duration_sec),
-                "-c:a", "aac", "-b:a", "192k",
-                str(output_scene_path)
-            ]
-        else:
-            # Fallback to Ken Burns zoompan filter
-            logger.info("Falling back to FFmpeg Ken Burns effect.")
-            if motion_type == "zoom_in":
-                vf_filter = (
-                    f"zoompan=z='min(zoom+0.0015,1.15)':d={total_frames}:x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':"
-                    f"s={self.width_16_9}x{self.height_16_9}:fps={self.fps},"
-                    f"fade=t=in:st=0:d=0.5,fade=t=out:st={max(0, duration_sec - 0.5)}:d=0.5"
-                )
-            elif motion_type == "zoom_out":
-                vf_filter = (
-                    f"zoompan=z='if(lte(zoom,1.0),1.15,max(1.001,zoom-0.0015))':d={total_frames}:x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':"
-                    f"s={self.width_16_9}x{self.height_16_9}:fps={self.fps},"
-                    f"fade=t=in:st=0:d=0.5,fade=t=out:st={max(0, duration_sec - 0.5)}:d=0.5"
-                )
-            elif motion_type == "pan_horizontal":
-                vf_filter = (
-                    f"zoompan=z='1.1':x='if(lte(on,1),(iw-iw/zoom)/2,x+1)':y='(ih-ih/zoom)/2':d={total_frames}:"
-                    f"s={self.width_16_9}x{self.height_16_9}:fps={self.fps},"
-                    f"fade=t=in:st=0:d=0.5,fade=t=out:st={max(0, duration_sec - 0.5)}:d=0.5"
-                )
-            else:
-                vf_filter = (
-                    f"scale={self.width_16_9}:{self.height_16_9},"
-                    f"fade=t=in:st=0:d=0.5,fade=t=out:st={max(0, duration_sec - 0.5)}:d=0.5"
-                )
+        vf_filter = self._get_motion_filter(motion_type, duration_sec, total_frames)
 
-            cmd = [
-                "ffmpeg", "-y",
-                "-loop", "1", "-t", str(duration_sec), "-i", str(image_path),
-                "-i", str(audio_path),
-                "-vf", vf_filter,
-                "-c:v", "libx264", "-pix_fmt", "yuv420p", "-shortest",
-                "-c:a", "aac", "-b:a", "192k",
-                str(output_scene_path)
-            ]
+        cmd = [
+            "ffmpeg", "-y",
+            "-loop", "1", "-t", str(duration_sec), "-i", str(image_path),
+            "-i", str(audio_path),
+            "-vf", vf_filter,
+            "-c:v", "libx264", "-preset", "medium", "-crf", "23",
+            "-pix_fmt", "yuv420p", "-shortest",
+            "-c:a", "aac", "-b:a", "192k",
+            str(output_scene_path)
+        ]
 
         try:
             res = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=120)
-            # Cleanup raw video
-            if raw_video_path.exists():
-                raw_video_path.unlink()
             return res.returncode == 0 and output_scene_path.exists()
         except Exception as e:
             logger.warning(f"Failed to render scene {output_scene_path.name} via FFmpeg: {e}")
@@ -218,9 +173,7 @@ class VideoGenerator:
         audio_dir: Path,
         output_video_dir: Path
     ) -> Dict[str, Any]:
-        """
-        Assemble all scenes into a final episode.mp4 (16:9).
-        """
+        """Assemble all scenes into a final episode.mp4 (16:9) with transitions."""
         output_video_dir.mkdir(parents=True, exist_ok=True)
         scenes = episode_data.get("scenes", [])
         rendered_clips = []
@@ -235,17 +188,12 @@ class VideoGenerator:
             img_path = images_dir / f"scene_{num:02d}.png"
             audio_path = audio_dir / f"scene_{num:02d}_audio.wav"
             clip_path = temp_clips_dir / f"scene_{num:02d}.mp4"
-            v_prompt = scene.get("video_prompt", "").lower()
+            v_prompt = scene.get("video_prompt", "")
 
-            if "zoom-out" in v_prompt or "zoom out" in v_prompt:
-                motion = "zoom_out"
-            elif "pan" in v_prompt:
-                motion = "pan_horizontal"
-            else:
-                motion = "zoom_in"
+            motion = self._detect_motion_type(v_prompt, num)
 
             success = False
-            if self.ffmpeg_available and img_path.exists() and audio_path.exists():
+            if self.ffmpeg_available and img_path.exists():
                 success = self.build_scene_clip(img_path, audio_path, clip_path, duration, motion_type=motion, video_prompt=v_prompt)
                 if success:
                     rendered_clips.append(clip_path)
@@ -263,7 +211,7 @@ class VideoGenerator:
         manifest_path = output_video_dir / "video_manifest.json"
 
         assembled = False
-        if self.ffmpeg_available and len(rendered_clips) == len(scenes):
+        if self.ffmpeg_available and len(rendered_clips) == len(scenes) and rendered_clips:
             concat_list_file = output_video_dir / "concat_list.txt"
             concat_lines = [f"file '{clip.resolve().as_posix()}'" for clip in rendered_clips]
             save_text(concat_list_file, "\n".join(concat_lines))
@@ -271,12 +219,11 @@ class VideoGenerator:
             # Mix concatenated video with background music
             bg_music = audio_dir / "background_music.wav"
             if bg_music.exists():
-                # Mix video audio (voiceover) with lowered background music
                 concat_cmd = [
-                    "ffmpeg", "-y", 
+                    "ffmpeg", "-y",
                     "-f", "concat", "-safe", "0", "-i", str(concat_list_file),
                     "-i", str(bg_music),
-                    "-filter_complex", "[1:a]volume=0.2[a1];[0:a][a1]amix=inputs=2:duration=first:dropout_transition=2[a]",
+                    "-filter_complex", "[1:a]volume=0.18[a1];[0:a][a1]amix=inputs=2:duration=first:dropout_transition=2[a]",
                     "-map", "0:v", "-map", "[a]",
                     "-c:v", "copy", "-c:a", "aac", "-b:a", "192k",
                     str(final_video_path)
@@ -288,7 +235,7 @@ class VideoGenerator:
                     "-c", "copy",
                     str(final_video_path)
                 ]
-                
+
             try:
                 res = subprocess.run(concat_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=300)
                 assembled = (res.returncode == 0 and final_video_path.exists())

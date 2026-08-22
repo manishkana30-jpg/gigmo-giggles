@@ -236,20 +236,20 @@ Output MUST be strict valid JSON matching EpisodeSchema.
         scenes = [
             {
                 "scene_number": 1,
-                "duration_seconds": 12,
+                "duration_seconds": 15,
                 "location": "The Sunny Treehouse Laboratory",
                 "action": "Bobo the bear is looking through a toy telescope, while Luna the fox takes notes on a clipboard and Milo the robot rolls in with a spinning antenna.",
                 "narration": "Welcome to another sunny day of wonder at the Gigmo Treehouse!",
                 "dialogue": [
                     {
                         "character": "Bobo",
-                        "text": f"Hey Luna! Look at that! Why is {title_raw.lower()}?",
+                        "text": f"Hey Luna! Look at that! I've always wondered, why is {title_raw.lower()}?",
                         "emotion": "curious",
                         "sound_effect": "boing"
                     },
                     {
                         "character": "Luna",
-                        "text": "Great question, Bobo! Let's activate the Discovery Screen!",
+                        "text": "Great question, Bobo! Let's activate the Discovery Screen and find out together!",
                         "emotion": "enthusiastic",
                         "sound_effect": "chime"
                     }
@@ -261,7 +261,7 @@ Output MUST be strict valid JSON matching EpisodeSchema.
             },
             {
                 "scene_number": 2,
-                "duration_seconds": 15,
+                "duration_seconds": 18,
                 "location": "The Meadow Observation Deck",
                 "action": "Milo the robot projects a glowing hologram showing the first step of the educational concept.",
                 "narration": f"Our friends investigate the first secret of {title_raw.lower()}.",
@@ -279,14 +279,14 @@ Output MUST be strict valid JSON matching EpisodeSchema.
                         "sound_effect": "sparkle"
                     }
                 ],
-                "image_prompt": "Stylized 2D cartoon animation frame: Milo the sky-blue compact robot with lime-green glowing digital eyes projecting a sparkling educational holographic diagram. Bobo the friendly bear watches with wide sparkling eyes. Vibrant colors, clean lines.",
+                "image_prompt": "Stylized 2D cartoon animation frame: Milo the sky-blue compact robot with lime-green glowing digital eyes projecting a sparkling educational holographic diagram in a sunny meadow. Bobo the friendly bear watches with wide sparkling eyes. Vibrant colors, clean lines.",
                 "video_prompt": "Gentle pan left-to-right following Milo's holographic projection.",
                 "voice_direction": "Milo has cute melodic robotic pitch. Bobo gasps with joy.",
                 "sound_effects": ["robot_scan", "magic_whoosh"]
             },
             {
                 "scene_number": 3,
-                "duration_seconds": 15,
+                "duration_seconds": 18,
                 "location": "The Cloud Science Chamber",
                 "action": "Luna shows a friendly diagram explaining how small particles join together into big wonders.",
                 "narration": "When tiny pieces work together, amazing things happen in nature!",
@@ -299,22 +299,122 @@ Output MUST be strict valid JSON matching EpisodeSchema.
                     },
                     {
                         "character": "Milo",
-                        "text": "Affirmative! 100% calculation complete! Teamwork makes the dream work!",
+                        "text": "Affirmative! One hundred percent calculation complete! Teamwork makes the dream work!",
                         "emotion": "proud",
                         "sound_effect": "tada"
                     }
                 ],
-                "image_prompt": "Stylized 2D cartoon animation frame: Luna the orange cartoon fox explaining a colorful chart with Bobo the bear holding a giant magnifying glass. Bright sunny pastel colors, whimsical cartoon style.",
+                "image_prompt": "Stylized 2D cartoon animation frame: Luna the orange cartoon fox in teal vest explaining a large colorful educational chart with bubbling particles and arrows. Bright sunny pastel colors, whimsical cartoon style.",
                 "video_prompt": "Camera slow zoom-out revealing the full colorful diagram.",
                 "voice_direction": "Luna speaks clearly with pedagogical rhythm. Milo chimes happily.",
                 "sound_effects": ["gentle_breeze", "happy_tada"]
             },
             {
                 "scene_number": 4,
+                "duration_seconds": 15,
+                "location": "The Imagination Garden",
+                "action": "Bobo imagines a magical scene where the scientific concept comes alive with sparkling particles and swirling colors.",
+                "narration": "Bobo closes his eyes and imagines what it would look like up close!",
+                "dialogue": [
+                    {
+                        "character": "Bobo",
+                        "text": f"Wow! If I could shrink myself tiny, I could see {title_raw.lower()} happening right before my eyes!",
+                        "emotion": "dreamy",
+                        "sound_effect": "twinkle"
+                    },
+                    {
+                        "character": "Luna",
+                        "text": "That is exactly what scientists do, Bobo! They use powerful tools to see the invisible world!",
+                        "emotion": "impressed",
+                        "sound_effect": "sparkle"
+                    }
+                ],
+                "image_prompt": f"Stylized 2D cartoon animation frame: Bobo the honey-brown bear with eyes closed, dreaming inside a magical thought bubble filled with sparkling particles and swirling colors representing {title_raw.lower()}. Dreamy purple and gold colors, fantasy cartoon style.",
+                "video_prompt": "Zoom-in toward Bobo's dream bubble revealing magical particles.",
+                "voice_direction": "Bobo speaks softly with wonder. Luna is encouraging.",
+                "sound_effects": ["dream_harp", "sparkle_cascade"]
+            },
+            {
+                "scene_number": 5,
+                "duration_seconds": 18,
+                "location": "Milo's Digital Workshop",
+                "action": "Milo displays a step-by-step breakdown of the science on his holographic screen with numbered steps and fun icons.",
+                "narration": "Milo breaks it down into easy steps that everyone can understand!",
+                "dialogue": [
+                    {
+                        "character": "Milo",
+                        "text": f"Step one! Energy from the sun starts the whole process! Step two! Tiny particles begin to move and change! Step three! Something amazing happens!",
+                        "emotion": "teaching",
+                        "sound_effect": "click"
+                    },
+                    {
+                        "character": "Bobo",
+                        "text": "Oh, I get it now! It is like a recipe with three ingredients!",
+                        "emotion": "enlightened",
+                        "sound_effect": "lightbulb"
+                    }
+                ],
+                "image_prompt": "Stylized 2D cartoon animation frame: Milo the sky-blue robot projecting a holographic numbered step-by-step guide with colorful icons. Bobo and Luna watching attentively in a high-tech digital workshop with glowing screens. Cyan and purple neon accents.",
+                "video_prompt": "Pan right revealing each step on the holographic display.",
+                "voice_direction": "Milo speaks rhythmically counting each step. Bobo has a eureka moment.",
+                "sound_effects": ["digital_click", "lightbulb_ding"]
+            },
+            {
+                "scene_number": 6,
+                "duration_seconds": 15,
+                "location": "The Outdoor Experiment Field",
+                "action": "The three friends conduct a simple hands-on experiment related to the topic using everyday objects.",
+                "narration": "Now it is time to try it themselves with a fun experiment!",
+                "dialogue": [
+                    {
+                        "character": "Luna",
+                        "text": f"Let us try our own experiment! We can see {title_raw.lower()} happen right here!",
+                        "emotion": "excited",
+                        "sound_effect": "pop"
+                    },
+                    {
+                        "character": "Bobo",
+                        "text": "Look! It is working! Science is SO cool!",
+                        "emotion": "thrilled",
+                        "sound_effect": "wow"
+                    }
+                ],
+                "image_prompt": f"Stylized 2D cartoon animation frame: Bobo the bear, Luna the fox, and Milo the robot conducting a colorful outdoor experiment with beakers, tubes, and bubbling liquids in a sunny garden. Bright greens and blues, educational cartoon style.",
+                "video_prompt": "Zoom-in toward the bubbling experiment revealing colorful reactions.",
+                "voice_direction": "Luna is enthusiastic about the experiment. Bobo is amazed at the results.",
+                "sound_effects": ["bubble_pop", "amazement_sound"]
+            },
+            {
+                "scene_number": 7,
+                "duration_seconds": 15,
+                "location": "The Wrap-Up Campfire",
+                "action": "The friends sit together around a cozy campfire under a starry sky, reviewing what they learned today.",
+                "narration": "As the sun sets, our friends share what they discovered!",
+                "dialogue": [
+                    {
+                        "character": "Luna",
+                        "text": f"So today we learned that {title_raw.lower()} is all about energy, particles, and nature working together!",
+                        "emotion": "satisfied",
+                        "sound_effect": "gentle_chime"
+                    },
+                    {
+                        "character": "Milo",
+                        "text": "Data log complete! Today's adventure was rated five stars! Do not forget to tell your friends what you learned!",
+                        "emotion": "happy",
+                        "sound_effect": "star_sound"
+                    }
+                ],
+                "image_prompt": "Stylized 2D cartoon animation frame: Bobo the bear, Luna the fox, and Milo the robot sitting around a warm campfire under a beautiful starry purple sky. Warm orange and purple tones, cozy and magical atmosphere.",
+                "video_prompt": "Slow zoom-out revealing the starry sky above the campfire.",
+                "voice_direction": "Luna summarizes warmly. Milo gives an upbeat sign-off.",
+                "sound_effects": ["campfire_crackle", "night_crickets"]
+            },
+            {
+                "scene_number": 8,
                 "duration_seconds": 18,
                 "location": "The Interactive Quiz Studio",
                 "action": "Bobo, Luna, and Milo smile directly at the screen, pointing at three glowing colorful letter buttons A, B, and C.",
-                "narration": "Now it's time for the Super Gigmo Quiz Question!",
+                "narration": "Now it is time for the Super Gigmo Quiz Question!",
                 "dialogue": [
                     {
                         "character": "Bobo",
@@ -330,12 +430,12 @@ Output MUST be strict valid JSON matching EpisodeSchema.
                     },
                     {
                         "character": "Milo",
-                        "text": "Think carefully and shout out your answer!",
+                        "text": "Think carefully and shout out your answer! Remember, you are a super scientist!",
                         "emotion": "cheering",
                         "sound_effect": "bell"
                     }
                 ],
-                "image_prompt": "Stylized 2D cartoon animation frame: Bobo the bear, Luna the fox, and Milo the robot standing side by side waving at the camera in a vibrant TV game show studio with colorful question marks. High contrast, sunny yellow and cyan background.",
+                "image_prompt": "Stylized 2D cartoon animation frame: Bobo the bear, Luna the fox, and Milo the robot standing side by side waving at the camera in a vibrant TV game show studio with colorful question marks and glowing A B C buttons. High contrast, sunny yellow and cyan background.",
                 "video_prompt": "Static shot with lively pulse bounce effect to spotlight the quiz choices.",
                 "voice_direction": "High energy call-and-response tone engaging young viewers.",
                 "sound_effects": ["drumroll", "fanfare"]

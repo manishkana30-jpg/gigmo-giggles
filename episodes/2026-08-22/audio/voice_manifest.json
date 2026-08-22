@@ -1,5 +1,5 @@
 {
-  "episode_id": "2026-08-22-why-do-we-need-trees",
+  "episode_id": "2026-08-22-journey-through-the-solar-system",
   "total_scenes": 4,
   "scenes": [
     {
@@ -11,7 +11,7 @@
         {
           "line_id": "scene_01_line_01",
           "character": "Bobo",
-          "text": "Hey Luna! Look at that! Why is why do we need trees??",
+          "text": "Hey Luna! Look at that! Why is journey through the solar system?",
           "emotion": "curious",
           "sound_effect": "boing"
         },

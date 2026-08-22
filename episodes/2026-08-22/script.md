@@ -1,8 +1,8 @@
-# 🎬 Gigmo Giggles Screenplay: Why Do We Need Trees? - Gigmo Giggles Episode
-**Episode ID:** `2026-08-22-why-do-we-need-trees`  
-**Topic:** Why Do We Need Trees?  
+# 🎬 Gigmo Giggles Screenplay: Journey Through the Solar System - Gigmo Giggles Episode
+**Episode ID:** `2026-08-22-journey-through-the-solar-system`  
+**Topic:** Journey Through the Solar System  
 **Target Age:** 6-9  
-**Learning Objective:** Learn how trees give us clean oxygen, shade, and animal homes.
+**Learning Objective:** Meet the planets orbiting our bright warm Sun in order.
 
 ## 👥 Characters
 - **Bobo**: Curious Explorer Bear
@@ -18,7 +18,7 @@
 
 > **NARRATOR:** Welcome to another sunny day of wonder at the Gigmo Treehouse!
 
-**BOBO** *(curious)* `[SFX: boing]`: "Hey Luna! Look at that! Why is why do we need trees??"
+**BOBO** *(curious)* `[SFX: boing]`: "Hey Luna! Look at that! Why is journey through the solar system?"
 
 **LUNA** *(enthusiastic)* `[SFX: chime]`: "Great question, Bobo! Let's activate the Discovery Screen!"
 
@@ -30,7 +30,7 @@
 ### Scene 2 — The Meadow Observation Deck (15s)
 *Action/Staging:* Milo the robot projects a glowing hologram showing the first step of the educational concept.
 
-> **NARRATOR:** Our friends investigate the first secret of why do we need trees?.
+> **NARRATOR:** Our friends investigate the first secret of journey through the solar system.
 
 **MILO** *(energetic)* `[SFX: robot_beep]`: "Beep-boop! Scanning parameters! The secret begins with sunlight and energy!"
 
@@ -73,18 +73,18 @@
 
 ## 🧠 Interactive Kid Quiz
 
-**Question 1:** What did Bobo and Luna learn about why do we need trees??
+**Question 1:** What did Bobo and Luna learn about journey through the solar system?
 - A) Nature's energy and science make it happen!
 - B) Sleeping bears cause it to happen
 - C) It is made of strawberry jam
 
 **Correct Answer:** `A) Nature's energy and science make it happen!`
-**Explanation:** Sunlight, air, and teamwork in nature work together to create why do we need trees?!
+**Explanation:** Sunlight, air, and teamwork in nature work together to create journey through the solar system!
 
 ## 📱 YouTube Shorts Concepts
 
-- **The Secret of Why Do We Need Trees?! 🌟 #Shorts** (25s)
-  *Hook:* "Did you know how why do we need trees? works? Let's check with Milo!" *(Based on Scene 2)*
+- **The Secret of Journey Through the Solar System! 🌟 #Shorts** (25s)
+  *Hook:* "Did you know how journey through the solar system works? Let's check with Milo!" *(Based on Scene 2)*
 
 - **Bobo's Fun Science Quiz! 🧠 #Shorts** (20s)
   *Hook:* "Can you solve today's Gigmo brain teaser in 10 seconds?" *(Based on Scene 4)*

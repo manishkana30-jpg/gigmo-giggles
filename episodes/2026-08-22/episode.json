@@ -1,9 +1,9 @@
 {
-  "episode_id": "2026-08-22-why-do-we-need-trees",
-  "topic": "Why Do We Need Trees?",
-  "learning_objective": "Learn how trees give us clean oxygen, shade, and animal homes.",
+  "episode_id": "2026-08-22-journey-through-the-solar-system",
+  "topic": "Journey Through the Solar System",
+  "learning_objective": "Meet the planets orbiting our bright warm Sun in order.",
   "target_age": "6-9",
-  "title": "Why Do We Need Trees? - Gigmo Giggles Episode",
+  "title": "Journey Through the Solar System - Gigmo Giggles Episode",
   "characters": [
     {
       "name": "Bobo",
@@ -28,7 +28,7 @@
       "dialogue": [
         {
           "character": "Bobo",
-          "text": "Hey Luna! Look at that! Why is why do we need trees??",
+          "text": "Hey Luna! Look at that! Why is journey through the solar system?",
           "emotion": "curious",
           "sound_effect": "boing"
         },
@@ -52,7 +52,7 @@
       "duration_seconds": 15,
       "location": "The Meadow Observation Deck",
       "action": "Milo the robot projects a glowing hologram showing the first step of the educational concept.",
-      "narration": "Our friends investigate the first secret of why do we need trees?.",
+      "narration": "Our friends investigate the first secret of journey through the solar system.",
       "dialogue": [
         {
           "character": "Milo",
@@ -140,22 +140,22 @@
   ],
   "quiz": [
     {
-      "question": "What did Bobo and Luna learn about why do we need trees??",
+      "question": "What did Bobo and Luna learn about journey through the solar system?",
       "options": [
         "A) Nature's energy and science make it happen!",
         "B) Sleeping bears cause it to happen",
         "C) It is made of strawberry jam"
       ],
       "correct_answer": "A) Nature's energy and science make it happen!",
-      "explanation": "Sunlight, air, and teamwork in nature work together to create why do we need trees?!"
+      "explanation": "Sunlight, air, and teamwork in nature work together to create journey through the solar system!"
     }
   ],
   "youtube": {
-    "title": "Why Do We Need Trees? 🌟 | Fun Science for Kids | Gigmo Giggles",
-    "description": "Join Bobo the Bear, Luna the Fox, and Milo the Robot on an exciting educational adventure!\n\nIn this episode, we explore: Learn how trees give us clean oxygen, shade, and animal homes.\n\n🔔 Subscribe to Gigmo Giggles for daily colorful learning cartoon episodes!\n\n#GigmoGiggles #KidsLearning #ScienceForKids #EducationalCartoon",
+    "title": "Journey Through the Solar System 🌟 | Fun Science for Kids | Gigmo Giggles",
+    "description": "Join Bobo the Bear, Luna the Fox, and Milo the Robot on an exciting educational adventure!\n\nIn this episode, we explore: Meet the planets orbiting our bright warm Sun in order.\n\n🔔 Subscribe to Gigmo Giggles for daily colorful learning cartoon episodes!\n\n#GigmoGiggles #KidsLearning #ScienceForKids #EducationalCartoon",
     "tags": [
       "kids educational cartoon",
-      "why do we need trees?",
+      "journey through the solar system",
       "science for kids",
       "learning videos for children",
       "gigmo giggles",
@@ -173,13 +173,13 @@
     "target_audience": "Children (Made for Kids)"
   },
   "thumbnail": {
-    "prompt": "Vibrant 2D cartoon YouTube thumbnail: Bobo the friendly brown bear with sunny yellow scarf pointing up at why do we need trees? with Milo the cute blue robot smiling. Bold bright yellow background, high contrast, clean vector style.",
-    "overlay_text": "WHY DO WE NEED TREES?"
+    "prompt": "Vibrant 2D cartoon YouTube thumbnail: Bobo the friendly brown bear with sunny yellow scarf pointing up at journey through the solar system with Milo the cute blue robot smiling. Bold bright yellow background, high contrast, clean vector style.",
+    "overlay_text": "JOURNEY THROUGH THE SOLAR SYSTEM"
   },
   "shorts": [
     {
-      "title": "The Secret of Why Do We Need Trees?! 🌟 #Shorts",
-      "hook": "Did you know how why do we need trees? works? Let's check with Milo!",
+      "title": "The Secret of Journey Through the Solar System! 🌟 #Shorts",
+      "hook": "Did you know how journey through the solar system works? Let's check with Milo!",
       "scene_reference": 2,
       "duration_seconds": 25
     },

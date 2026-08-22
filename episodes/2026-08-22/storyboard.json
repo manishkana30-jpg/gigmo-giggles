@@ -1,7 +1,7 @@
 {
-  "episode_id": "2026-08-22-why-do-we-need-trees",
-  "topic": "Why Do We Need Trees?",
-  "title": "Why Do We Need Trees? - Gigmo Giggles Episode",
+  "episode_id": "2026-08-22-journey-through-the-solar-system",
+  "topic": "Journey Through the Solar System",
+  "title": "Journey Through the Solar System - Gigmo Giggles Episode",
   "total_duration_seconds": 60,
   "scenes_count": 4,
   "scenes": [
@@ -28,7 +28,7 @@
         "dialogue_lines": [
           {
             "character": "Bobo",
-            "text": "Hey Luna! Look at that! Why is why do we need trees??",
+            "text": "Hey Luna! Look at that! Why is journey through the solar system?",
             "emotion": "curious",
             "sound_effect": "boing"
           },

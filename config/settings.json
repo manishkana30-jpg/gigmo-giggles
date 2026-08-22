@@ -14,7 +14,8 @@
     "height": 1920
   },
   "frame_rate": 24,
-  "auto_upload_youtube": false,
+  "auto_upload_youtube": true,
+  "youtube_privacy_status": "private",
   "image_generation_enabled": true,
   "voice_generation_enabled": true,
   "video_generation_enabled": true,

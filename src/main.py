@@ -140,9 +140,24 @@ def run_pipeline(
         YouTubeMetadataGenerator.save_metadata(episode_data, base_episodes_dir / "youtube_metadata.json")
         mark_step_completed("metadata")
 
-        # Step 11: Future YouTube Publisher check (v1 disabled)
-        publisher = YouTubePublisher(enabled=False)
-        publisher.publish(base_episodes_dir / "video" / "episode.mp4", episode_data.get("youtube", {}))
+        # Step 11: YouTube Publisher check
+        import json
+        settings_path = root / "config" / "settings.json"
+        with open(settings_path, 'r', encoding='utf-8') as f:
+            settings = json.load(f)
+        
+        publisher = YouTubePublisher(
+            enabled=settings.get("auto_upload_youtube", False),
+            privacy_status=settings.get("youtube_privacy_status", "private")
+        )
+        
+        # Prepare metadata for YouTube
+        youtube_metadata = episode_data.get("youtube", {})
+        if not youtube_metadata and (base_episodes_dir / "youtube_metadata.json").exists():
+            with open(base_episodes_dir / "youtube_metadata.json", 'r', encoding='utf-8') as f:
+                youtube_metadata = json.load(f)
+                
+        publisher.publish(base_episodes_dir / "video" / "episode.mp4", youtube_metadata)
 
         # Step 12: Quality Gate Verification
         logger.info("--- 11. Quality Gate Verification ---")

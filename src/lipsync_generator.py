@@ -1,19 +1,43 @@
-"""Audio-reactive 2.5D animation generator for simulating lip-sync and character movement."""
+"""Hardened Audio-reactive 3D and 2.5D animation generator for simulating lip-sync and character movement."""
 
+import os
+import sys
+import time
 import math
 import wave
 import struct
+import shutil
 import subprocess
+import tempfile
 from pathlib import Path
-from PIL import Image
-
+from typing import Dict, Any, List, Optional
 from src.utils import check_ffmpeg_available, setup_logger
 
 logger = setup_logger("LipsyncGenerator")
 
 
+def retry(attempts=3, delay=1, backoff=2):
+    """Custom retry decorator for handling transient subprocess spikes without external dependencies."""
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            curr_delay = delay
+            for attempt in range(1, attempts + 1):
+                try:
+                    return func(*args, **kwargs)
+                except (subprocess.SubprocessError, subprocess.TimeoutExpired) as e:
+                    if attempt == attempts:
+                        logger.error(f"Function {func.__name__} failed after {attempts} attempts: {e}")
+                        raise
+                    logger.warning(f"Attempt {attempt} failed for {func.__name__}: {e}. Retrying in {curr_delay}s...")
+                    time.sleep(curr_delay)
+                    curr_delay *= backoff
+            return None
+        return wrapper
+    return decorator
+
+
 class LipsyncGenerator:
-    """Generates 2.5D audio-reactive animation to simulate talking."""
+    """Generates 3D and 2.5D audio-reactive animation to simulate talking."""
 
     def __init__(self, fps: int = 24, width: int = 1920, height: int = 1080):
         self.fps = fps
@@ -21,151 +45,163 @@ class LipsyncGenerator:
         self.height = height
         self.ffmpeg_available = check_ffmpeg_available()
 
-    def _compute_audio_rms(self, audio_path: Path, fps: int) -> list[float]:
-        """Read WAV file and compute RMS volume for each frame."""
+    def resolve_rhubarb_binary(self) -> str:
+        """Dynamically resolve the rhubarb binary, searching paths and directories if not on system PATH."""
+        # 1. Check system PATH
+        system_path = shutil.which("rhubarb")
+        if system_path:
+            return system_path
+
+        # 2. Search root directory for compiled/extracted folder
+        root_dir = Path(__file__).resolve().parent.parent
+        logger.info(f"Rhubarb not found on PATH. Scanning root: {root_dir}")
+        
+        # Search recursively
+        for p in root_dir.rglob("rhubarb"):
+            if p.is_file() and os.access(p, os.X_OK):
+                logger.info(f"Found executable Rhubarb at: {p}")
+                return str(p)
+            elif p.is_file() and (p.name == "rhubarb" or p.name == "rhubarb.exe"):
+                # Try to make executable
+                try:
+                    p.chmod(0o755)
+                    logger.info(f"Found and marked executable Rhubarb at: {p}")
+                    return str(p)
+                except Exception as e:
+                    logger.warning(f"Failed to chmod executable: {e}")
+
+        # 3. Last resort fallback
+        return "rhubarb"
+
+    def resample_audio_ffmpeg(self, input_path: Path, output_path: Path) -> bool:
+        """Force resample input audio to exactly 44100 Hz WAV using FFmpeg."""
+        if not self.ffmpeg_available:
+            logger.error("FFmpeg not available; cannot resample audio.")
+            return False
+
+        cmd = [
+            "ffmpeg", "-y",
+            "-i", str(input_path),
+            "-ar", "44100",
+            "-ac", "1",  # Mono is preferred for Rhubarb processing
+            str(output_path)
+        ]
+        
         try:
-            with wave.open(str(audio_path), "rb") as wf:
-                sample_rate = wf.getframerate()
-                num_frames = wf.getnframes()
-                samples_per_video_frame = int(sample_rate / fps)
-                
-                # We assume 16-bit PCM mono or stereo.
-                channels = wf.getnchannels()
-                sampwidth = wf.getsampwidth()
-                
-                if sampwidth != 2:
-                    logger.warning(f"Unsupported sample width {sampwidth} in {audio_path}. Expected 2 (16-bit).")
-                    return []
-
-                raw_data = wf.readframes(num_frames)
-                
-            # Unpack 16-bit integers
-            num_samples = len(raw_data) // 2
-            samples = struct.unpack(f"<{num_samples}h", raw_data)
-            
-            # If stereo, take every 2nd sample to get left channel
-            if channels == 2:
-                samples = samples[0::2]
-                
-            rms_list = []
-            for i in range(0, len(samples), samples_per_video_frame):
-                chunk = samples[i:i + samples_per_video_frame]
-                if not chunk:
-                    break
-                
-                # Compute RMS (Root Mean Square)
-                sum_sq = sum(float(s) * float(s) for s in chunk)
-                rms = math.sqrt(sum_sq / len(chunk))
-                
-                # Normalize (max value for 16-bit signed is 32768)
-                normalized = min(1.0, rms / 8000.0) 
-                rms_list.append(normalized)
-                
-            return rms_list
-            
+            logger.info(f"Resampling audio {input_path.name} to 44100 Hz...")
+            res = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=30)
+            return res.returncode == 0 and output_path.exists()
         except Exception as e:
-            logger.warning(f"Failed to compute audio RMS for {audio_path}: {e}")
-            return []
+            logger.error(f"FFmpeg audio resampling failed: {e}")
+            return False
 
-    def generate_audioreactive_clip(
+    @retry(attempts=3, delay=2, backoff=2)
+    def _run_rhubarb(self, rhubarb_path: str, audio_path: Path, json_path: Path) -> bool:
+        """Execute Rhubarb with custom retry wrapper."""
+        cmd = [
+            rhubarb_path,
+            "-f", "json",
+            "-o", str(json_path),
+            str(audio_path)
+        ]
+        logger.info(f"Running Rhubarb: {' '.join(cmd)}")
+        res = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=120)
+        if res.returncode != 0:
+            err_msg = res.stderr.decode("utf-8", errors="ignore")
+            raise subprocess.SubprocessError(f"Rhubarb exited with code {res.returncode}. Error: {err_msg}")
+        return True
+
+    @retry(attempts=3, delay=5, backoff=2)
+    def _run_blender_render(self, audio_path: Path, json_path: Path, temp_video_path: Path) -> bool:
+        """Execute Headless Blender render with custom retry wrapper."""
+        animator_script = Path(__file__).resolve().parent / "blender_animator.py"
+        if not animator_script.exists():
+            raise FileNotFoundError(f"Blender animator script not found at {animator_script}")
+
+        cmd = [
+            "blender", "-b", "-P", str(animator_script),
+            "--",
+            "--audio", str(audio_path),
+            "--visemes", str(json_path),
+            "--output", str(temp_video_path),
+            "--fps", str(self.fps)
+        ]
+        logger.info(f"Running Headless Blender Render: {' '.join(cmd)}")
+        res = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=600)
+        if res.returncode != 0:
+            err_msg = res.stderr.decode("utf-8", errors="ignore")
+            raise subprocess.SubprocessError(f"Blender exited with code {res.returncode}. Error: {err_msg}")
+        return True
+
+    def generate_3d_lipsync_clip(
         self,
-        image_path: Path,
         audio_path: Path,
         output_path: Path,
         duration_sec: float
     ) -> bool:
         """
-        Create a video where the image 'bounces' or stretches based on audio volume.
-        Pipes raw generated RGB frames directly to FFmpeg.
+        Generates a 3D animated lip-sync video clip using Blender and Rhubarb.
+        Ensures atomicity with .lock files and intermediate temp file paths.
         """
-        if not self.ffmpeg_available:
-            return False
-            
-        if not image_path.exists():
-            return False
-            
-        # Ensure we're reading a .wav file for volume analysis
-        wav_path = audio_path
-        if audio_path.suffix.lower() == ".mp3":
-            wav_path = audio_path.with_suffix(".wav")
-            if not wav_path.exists():
-                return False
-
         output_path.parent.mkdir(parents=True, exist_ok=True)
         
-        # 1. Compute volume per frame
-        volumes = self._compute_audio_rms(wav_path, self.fps)
-        total_frames = int(duration_sec * self.fps)
-        
-        # Pad or truncate volumes to match duration
-        if len(volumes) < total_frames:
-            volumes.extend([0.0] * (total_frames - len(volumes)))
-        else:
-            volumes = volumes[:total_frames]
+        # Define temporary/atomic paths
+        lock_file = output_path.with_suffix(".lock")
+        temp_video = output_path.with_suffix(".tmp.mp4")
+        temp_audio = output_path.parent / f"{output_path.stem}_resampled.wav"
+        temp_json = output_path.parent / f"{output_path.stem}_visemes.json"
 
+        # If locked, wait or cleanup (idempotency safety check)
+        if lock_file.exists():
+            logger.warning(f"Lock file exists for {output_path.name}. Cleaning up stale lock.")
+            try:
+                lock_file.unlink(missing_ok=True)
+            except Exception as e:
+                logger.error(f"Could not remove lock file: {e}")
+
+        # Mark rendering in progress
+        lock_file.touch()
+
+        success = False
         try:
-            # 2. Open base image
-            base_img = Image.open(image_path).convert("RGB")
-            if base_img.size != (self.width, self.height):
-                base_img = base_img.resize((self.width, self.height), Image.LANCZOS)
-                
-            # 3. Setup FFmpeg subprocess to receive raw frames via stdin
-            cmd = [
-                "ffmpeg", "-y",
-                "-f", "rawvideo",
-                "-vcodec", "rawvideo",
-                "-s", f"{self.width}x{self.height}",
-                "-pix_fmt", "rgb24",
-                "-r", str(self.fps),
-                "-i", "-",          # Input from stdin
-                "-i", str(audio_path), # Audio input
-                "-c:v", "libx264",
-                "-preset", "fast",
-                "-crf", "23",
-                "-pix_fmt", "yuv420p",
-                "-c:a", "aac",
-                "-b:a", "192k",
-                "-shortest",
-                str(output_path)
-            ]
-            
-            process = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-            
-            # 4. Generate and pipe frames
-            for frame_idx, vol in enumerate(volumes):
-                # Smooth the volume slightly (moving average with previous frame)
-                if frame_idx > 0:
-                    vol = (vol + volumes[frame_idx - 1]) / 2.0
-                    
-                # Create bouncing / squashing effect based on volume
-                # If volume is high, the character stretches vertically slightly (simulating talking/energy)
-                # Max stretch is 5% vertically
-                stretch_factor = 1.0 + (vol * 0.05)
-                
-                # Calculate new dimensions
-                new_h = int(self.height * stretch_factor)
-                
-                # Resize image
-                frame_img = base_img.resize((self.width, new_h), Image.BILINEAR)
-                
-                # Crop back to original size (anchor bottom, so the top "bounces" up)
-                crop_y = new_h - self.height
-                frame_img = frame_img.crop((0, crop_y, self.width, new_h))
-                
-                # Write raw RGB bytes to ffmpeg
-                process.stdin.write(frame_img.tobytes())
-                
-            process.stdin.close()
-            process.wait(timeout=120)
-            
-            success = process.returncode == 0 and output_path.exists()
-            if success:
-                logger.info(f"Generated 2.5D audio-reactive clip: {output_path.name}")
-            else:
-                logger.warning(f"Failed to generate audio-reactive clip: FFmpeg exit code {process.returncode}")
-                
-            return success
-            
+            # 1. Resolve Rhubarb Binary
+            rhubarb_bin = self.resolve_rhubarb_binary()
+
+            # 2. Resample Audio to 44100 Hz
+            if not self.resample_audio_ffmpeg(audio_path, temp_audio):
+                logger.error("Failed to resample audio. Using original audio file as fallback.")
+                temp_audio = audio_path
+
+            # 3. Generate Visemes JSON via Rhubarb
+            logger.info("Generating visemes JSON using Rhubarb...")
+            self._run_rhubarb(rhubarb_bin, temp_audio, temp_json)
+
+            # 4. Render 3D Animation via Headless Blender
+            logger.info("Rendering 3D scene in Blender...")
+            self._run_blender_render(temp_audio, temp_json, temp_video)
+
+            # 5. Atomic Rename (Finalize File Write)
+            if temp_video.exists():
+                if output_path.exists():
+                    output_path.unlink()
+                shutil.move(str(temp_video), str(output_path))
+                success = True
+                logger.info(f"Atomic Render Success: {output_path}")
+
         except Exception as e:
-            logger.warning(f"Error during audio-reactive generation: {e}")
-            return False
+            logger.error(f"Failed to generate 3D lipsync clip for {output_path.name}: {e}")
+            if temp_video.exists():
+                try:
+                    temp_video.unlink()
+                except Exception:
+                    pass
+        finally:
+            # Cleanup temporary intermediates
+            for path in [temp_audio, temp_json, lock_file]:
+                if path.exists():
+                    try:
+                        path.unlink()
+                    except Exception as e:
+                        logger.warning(f"Failed to clean up temporary file {path}: {e}")
+
+        return success

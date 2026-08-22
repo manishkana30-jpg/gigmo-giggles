@@ -1,24 +1,24 @@
-name: Daily Kids YouTube Episode Creator
+name: Build, Harden and Validate Pipeline
 
 on:
-  schedule:
-    # Runs daily at 06:00 UTC (11:30 AM IST / 01:00 AM EST)
-    - cron: "0 6 * * *"
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
   workflow_dispatch:
     inputs:
       topic:
-        description: "Optional forced topic (leave blank to auto-select from catalog)"
+        description: "Forced topic title"
         required: false
         default: ""
       mock:
-        description: "Run in offline mock mode (zero API usage for testing)"
+        description: "Run in mock mode"
         required: false
-        default: false
-        type: boolean
+        default: "false"
 
 jobs:
-  build-and-generate:
-    name: Generate Daily Episode
+  validate-and-render:
+    name: SRE Pipeline Run
     runs-on: ubuntu-latest
 
     steps:
@@ -59,6 +59,7 @@ jobs:
       - name: Install Python Dependencies
         run: |
           python -m pip install --upgrade pip
+          # Ensure critical packages exist in environment
           pip install Pillow>=10.0.0 moviepy>=1.0.3
           if [ -f requirements.txt ]; then
             pip install -r requirements.txt
@@ -68,11 +69,10 @@ jobs:
         run: |
           pytest -v
 
-      - name: Run Episode Generator
+      - name: Run Hardened Generator Pipeline
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GEMINI_MODEL: ${{ secrets.GEMINI_MODEL || 'gemini-2.5-flash' }}
-          HF_TOKEN: ${{ secrets.HF_TOKEN }}
           YOUTUBE_CLIENT_ID: ${{ secrets.YOUTUBE_CLIENT_ID }}
           YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
           YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
@@ -84,7 +84,7 @@ jobs:
           
           MOCK_FLAG=""
           if [ "${{ inputs.mock }}" = "true" ] || [ -z "$GEMINI_API_KEY" ]; then
-            echo "Running with mock/fallback mode (no live Gemini key provided or mock flag enabled)"
+            echo "Running in Offline Mock Mode"
             MOCK_FLAG="--mock"
           fi
           

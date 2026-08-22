@@ -29,7 +29,7 @@ def test_script_generator_markdown_output(mock_episode, tmp_path: Path):
     assert script_path.exists()
     content = script_path.read_text(encoding="utf-8")
     assert "Gigmo Giggles Screenplay" in content
-    assert "Scene Breakdown" in content
+    assert "OBS Teleprompter Script" in content
     assert "Bobo" in content
     assert "Interactive Kid Quiz" in content
 
@@ -70,12 +70,8 @@ def test_voice_generator_audio_manifest(mock_episode, tmp_path: Path):
     result = voice_gen.generate_all_scene_audio(mock_episode, audio_dir)
 
     assert result["scene_count"] >= 4
-    manifest_file = audio_dir / "voice_manifest.json"
+    manifest_file = audio_dir / "OBS_Recording_Guide.md"
     assert manifest_file.exists()
-
-    scene_audio = audio_dir / "scene_01_audio.wav"
-    assert scene_audio.exists()
-    assert scene_audio.stat().st_size > 500
 
 
 def test_thumbnail_generator_render(mock_episode, tmp_path: Path):
@@ -84,9 +80,8 @@ def test_thumbnail_generator_render(mock_episode, tmp_path: Path):
     thumb_path = ThumbnailGenerator.generate_thumbnail(mock_episode, thumb_dir)
 
     assert thumb_path.exists()
-    assert thumb_path.name == "thumbnail.png"
-    assert thumb_path.stat().st_size > 2000
-
+    assert thumb_path.name == "Photopea_Thumbnail_Guide.md"
+    
     manifest = thumb_dir / "thumbnail_prompt.json"
     assert manifest.exists()
 

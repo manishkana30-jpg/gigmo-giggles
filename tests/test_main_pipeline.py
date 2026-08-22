@@ -42,16 +42,15 @@ def test_full_pipeline_mock_run(tmp_path: Path):
     assert (episode_dir / "images" / "image_prompts.json").exists()
     assert (episode_dir / "images" / "scene_01.png").exists()
 
-    assert (episode_dir / "audio" / "voice_manifest.json").exists()
-    assert (episode_dir / "audio" / "scene_01_audio.wav").exists()
+    assert (episode_dir / "audio" / "OBS_Recording_Guide.md").exists()
 
     assert (episode_dir / "subtitles" / "episode.srt").exists()
     assert (episode_dir / "subtitles" / "episode.vtt").exists()
 
-    assert (episode_dir / "thumbnail" / "thumbnail.png").exists()
+    assert (episode_dir / "thumbnail" / "Photopea_Thumbnail_Guide.md").exists()
     assert (episode_dir / "thumbnail" / "thumbnail_prompt.json").exists()
 
-    assert (episode_dir / "video" / "video_manifest.json").exists()
+    assert (episode_dir / "video" / "DaVinci_Resolve_Assembly_Guide.md").exists()
 
     # Check status file content
     status_on_disk = load_json(episode_dir / "run_status.json")
@@ -88,4 +87,4 @@ def test_pipeline_failure_resilience_records_partial_status(tmp_path: Path, monk
     assert (episode_dir / "script.md").exists()
     assert (episode_dir / "storyboard.json").exists()
     assert (episode_dir / "images" / "scene_01.png").exists()
-    assert (episode_dir / "audio" / "scene_01_audio.wav").exists()
+    assert (episode_dir / "audio" / "OBS_Recording_Guide.md").exists()

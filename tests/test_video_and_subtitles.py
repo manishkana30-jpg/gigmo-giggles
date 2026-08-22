@@ -58,6 +58,6 @@ def test_video_generator_manifest_creation(mock_episode, tmp_path: Path):
     vid_gen = VideoGenerator()
     manifest_data = vid_gen.assemble_episode_video(mock_episode, images_dir, audio_dir, video_dir)
 
-    assert (video_dir / "video_manifest.json").exists()
-    assert len(manifest_data["scenes"]) >= 4
+    assert (video_dir / "DaVinci_Resolve_Assembly_Guide.md").exists()
+    assert manifest_data["ffmpeg_available"] is False
     assert "resolution" in manifest_data

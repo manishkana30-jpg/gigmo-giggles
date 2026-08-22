@@ -31,30 +31,35 @@ jobs:
           python-version: "3.11"
           cache: "pip"
 
-      - name: Install System FFmpeg, Blender, and Rhubarb
+      - name: Install Rhubarb (Zero-Fail Method)
         run: |
-          sudo apt-get update -y
-          sudo apt-get install -y ffmpeg blender unzip
+          # 1. Download and extract
+          wget -q https://github.com/DanielSWolf/rhubarb-lip-sync/releases/download/v1.13.0/rhubarb-lip-sync-1.13.0-Linux.zip
+          unzip -q -o rhubarb-lip-sync-1.13.0-Linux.zip
           
-          # Download and install Rhubarb with robust folder-independent resolution
-          wget -q -O rhubarb.zip https://github.com/DanielSWolf/rhubarb-lip-sync/releases/download/v1.13.0/rhubarb-lip-sync-1.13.0-Linux.zip
-          unzip -q -o rhubarb.zip
+          # 2. Move to the extracted folder and locate the binary (it's inside /bin!)
+          cd rhubarb-lip-sync-1.13.0-Linux
+          BIN_PATH=$(find . -type f -executable -name "rhubarb" | head -n 1)
+          echo "📍 Found binary at: $BIN_PATH"
           
-          BIN=$(find . -type f -executable -name "rhubarb" | head -n 1)
-          if [ -z "$BIN" ]; then
-            echo "Rhubarb Lip Sync binary not found after extraction"
-            exit 1
-          fi
+          # 3. Move it to system path
+          sudo mv "$BIN_PATH" /usr/local/bin/rhubarb
+          sudo chmod +x /usr/local/bin/rhubarb
+          # Copy resource folder next to the executable to prevent pocket sphinx crash
+          sudo cp -r res /usr/local/bin/
           
-          chmod +x "$BIN"
-          BIN_DIR=$(dirname "$BIN")
-          sudo mv "$BIN_DIR" /opt/rhubarb
-          sudo ln -s /opt/rhubarb/rhubarb /usr/local/bin/rhubarb
-          
-          # Verify installations
-          ffmpeg -version
-          blender --version
+          # 4. Verify
           rhubarb --version
+          echo "✅ Rhubarb installed successfully!"
+
+      - name: Install FFmpeg, Blender & Clean Old Ghosts
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg blender
+          # Kill zombie temp files left by previous failed runs
+          rm -rf /tmp/*_pipeline_*.mp3 /tmp/*_pipeline_*.wav || true
+          rm -rf ./output/cache/* || true
+          echo "🗑️ Zombie cache cleared."
 
       - name: Install Python Dependencies
         run: |

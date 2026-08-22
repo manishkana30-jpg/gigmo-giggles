@@ -6,11 +6,19 @@ from src.main import run_pipeline
 from src.utils import load_json
 
 
-def test_full_pipeline_mock_run(tmp_path: Path):
+def test_full_pipeline_mock_run(tmp_path: Path, monkeypatch):
     """
     Execute the entire automated pipeline end-to-end in offline mock mode.
     Validates that every single artifact is created and run_status.json reports success.
     """
+    # Mock LipsyncGenerator to prevent running Blender in tests (saves runner time)
+    from src.lipsync_generator import LipsyncGenerator
+    def mock_render(audio_path, output_path, duration_sec):
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        output_path.touch()
+        return True
+    monkeypatch.setattr(LipsyncGenerator, "generate_3d_lipsync_clip", mock_render)
+
     episode_dir = tmp_path / "episodes" / "2026-08-22"
 
     result = run_pipeline(

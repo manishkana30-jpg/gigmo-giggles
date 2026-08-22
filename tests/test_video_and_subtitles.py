@@ -45,7 +45,7 @@ def test_subtitle_generator_files(mock_episode, tmp_path: Path):
     assert vtt_text.startswith("WEBVTT")
 
 
-def test_video_generator_manifest_creation(mock_episode, tmp_path: Path):
+def test_video_generator_manifest_creation(mock_episode, tmp_path: Path, monkeypatch):
     """Test VideoGenerator creates video_manifest.json with all scenes and camera cues."""
     images_dir = tmp_path / "images"
     audio_dir = tmp_path / "audio"
@@ -54,6 +54,14 @@ def test_video_generator_manifest_creation(mock_episode, tmp_path: Path):
     # Generate prerequisite assets
     ImageGenerator().generate_all_scenes(mock_episode, images_dir)
     VoiceGenerator().generate_all_scene_audio(mock_episode, audio_dir)
+
+    # Mock LipsyncGenerator 3D Blender rendering to save runner execution time
+    from src.lipsync_generator import LipsyncGenerator
+    def mock_render(audio_path, output_path, duration_sec):
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        output_path.touch()
+        return True
+    monkeypatch.setattr(LipsyncGenerator, 'generate_3d_lipsync_clip', mock_render)
 
     vid_gen = VideoGenerator()
     manifest_data = vid_gen.assemble_episode_video(mock_episode, images_dir, audio_dir, video_dir)

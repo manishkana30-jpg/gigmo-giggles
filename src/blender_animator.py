@@ -4,6 +4,7 @@ import json
 import argparse
 import bpy
 import bmesh
+import math
 
 # Extract arguments passed after "--"
 argv = sys.argv
@@ -131,7 +132,6 @@ head.animation_data.action = bpy.data.actions.new(name="Idle")
 fc_z = head.animation_data.action.fcurves.new(data_path="location", index=2)
 fc_rot = head.animation_data.action.fcurves.new(data_path="rotation_euler", index=2)
 
-import math
 for f in range(0, scene.frame_end + 1, int(args.fps / 2)): # Every half second
     t = f / args.fps
     head.location.z = 1.0 + (math.sin(t * 3.0) * 0.1)

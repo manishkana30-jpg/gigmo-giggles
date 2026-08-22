@@ -35,35 +35,32 @@ class ScriptGenerator:
         lines.append("\n---\n")
 
         # Scene-by-scene script
-        lines.append("## 📜 Scene Breakdown\n")
+        # OBS Teleprompter Script
+        lines.append("## 🎙️ OBS Teleprompter Script (Read this while recording!)\n")
+        lines.append("> *TIP: Copy this section into your OBS Teleprompter or Notepad and read it aloud.*")
+        lines.append("> *Leave pauses where it says [PAUSE]*\n")
+
         for scene in episode_data.get("scenes", []):
             num = scene.get("scene_number", 1)
             duration = scene.get("duration_seconds", 15)
-            location = scene.get("location", "Scene Location")
-            action = scene.get("action", "")
+            
+            lines.append(f"### --- SCENE {num} ({duration} seconds) ---")
+            
             narration = scene.get("narration", "")
-            voice_dir = scene.get("voice_direction", "")
-            sfx = scene.get("sound_effects", [])
-
-            lines.append(f"### Scene {num} — {location} ({duration}s)")
-            lines.append(f"*Action/Staging:* {action}\n")
-
             if narration:
-                lines.append(f"> **NARRATOR:** {narration}\n")
+                lines.append(f"**NARRATOR:**")
+                lines.append(f"{narration}\n")
 
             for dial in scene.get("dialogue", []):
                 char = dial.get("character", "Speaker")
                 text = dial.get("text", "")
                 emotion = dial.get("emotion", "neutral")
-                sfx_tag = f" `[SFX: {dial['sound_effect']}]`" if dial.get("sound_effect") else ""
-                lines.append(f"**{char.upper()}** *({emotion})*{sfx_tag}: \"{text}\"\n")
-
-            if voice_dir:
-                lines.append(f"*Voice Direction:* {voice_dir}")
-            if sfx:
-                lines.append(f"*Sound Effects:* {', '.join(sfx)}")
-
-            lines.append("\n---\n")
+                
+                lines.append(f"**{char.upper()} ({emotion}):**")
+                lines.append(f"{text}\n")
+            
+            lines.append("*[PAUSE FOR NEXT SCENE]*\n")
+            lines.append("---\n")
 
         # Interactive Quiz
         quiz_items = episode_data.get("quiz", [])

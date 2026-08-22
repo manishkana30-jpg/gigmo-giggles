@@ -118,6 +118,9 @@ class LipsyncGenerator:
         if not animator_script.exists():
             raise FileNotFoundError(f"Blender animator script not found at {animator_script}")
 
+        # Check if running on Linux and xvfb-run is available
+        xvfb_bin = shutil.which("xvfb-run")
+        
         cmd = [
             "blender", "-b", "-P", str(animator_script),
             "--",
@@ -126,6 +129,11 @@ class LipsyncGenerator:
             "--output", str(temp_video_path),
             "--fps", str(self.fps)
         ]
+        
+        if xvfb_bin:
+            logger.info("xvfb-run detected. Running Blender inside virtual display...")
+            cmd = [xvfb_bin, "--auto-servernum"] + cmd
+
         logger.info(f"Running Headless Blender Render: {' '.join(cmd)}")
         res = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=600)
         if res.returncode != 0:

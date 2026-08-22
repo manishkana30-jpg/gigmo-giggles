@@ -56,7 +56,7 @@ jobs:
       - name: Install FFmpeg, Blender & Clean Old Ghosts
         run: |
           sudo apt-get update
-          sudo apt-get install -y ffmpeg blender libegl1 libgl1 libxxf86vm1 libxfixes3 libxi6 libxrender1
+          sudo apt-get install -y ffmpeg blender xvfb libegl1 libgl1 libxxf86vm1 libxfixes3 libxi6 libxrender1
           # Kill zombie temp files left by previous failed runs
           rm -rf /tmp/*_pipeline_*.mp3 /tmp/*_pipeline_*.wav || true
           rm -rf ./output/cache/* || true

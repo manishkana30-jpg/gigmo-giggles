@@ -119,6 +119,10 @@ class VideoGenerator:
             logger.info("Downloading generated video...")
             self.download_video_file(interaction.output_video.uri, output_path, api_key)
             return True
+            
+        except Exception as e:
+            logger.error(f"Gemini video generation failed: {e}")
+            return False
 
     def build_scene_clip(
         self,

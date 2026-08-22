@@ -182,36 +182,51 @@ class VideoGenerator:
         temp_clips_dir = output_video_dir / "temp_scenes"
         temp_clips_dir.mkdir(parents=True, exist_ok=True)
 
-        from src.lipsync_generator import LipsyncGenerator
-        lipsync_gen = LipsyncGenerator(fps=self.fps, width=self.width_16_9, height=self.height_16_9)
+        from src.rhubarb_generator import RhubarbGenerator
+        rhubarb_gen = RhubarbGenerator()
 
         for scene in scenes:
             num = scene.get("scene_number", 1)
             duration = float(scene.get("duration_seconds", 15))
-            img_path = images_dir / f"scene_{num:02d}.png"
+            img_path = images_dir / f"scene_{num:02d}.png" # Not used in 3D but kept for manifest compatibility
             audio_path = audio_dir / f"scene_{num:02d}_audio.wav"
             clip_path = temp_clips_dir / f"scene_{num:02d}.mp4"
+            visemes_path = temp_clips_dir / f"scene_{num:02d}_visemes.json"
             v_prompt = scene.get("video_prompt", "")
 
-            motion = "audio_reactive_bounce"
+            motion = "3d_blender_lipsync"
 
             success = False
-            if self.ffmpeg_available and img_path.exists():
-                # Use the new 2.5D Lipsync generator
-                success = lipsync_gen.generate_audioreactive_clip(
-                    image_path=img_path,
-                    audio_path=audio_path,
-                    output_path=clip_path,
-                    duration_sec=duration
-                )
-                if success:
-                    rendered_clips.append(clip_path)
+            if self.ffmpeg_available and audio_path.exists():
+                # 1. Generate Visemes
+                viseme_success = rhubarb_gen.generate_visemes(audio_path, visemes_path)
+                
+                # 2. Render 3D Animation with Blender
+                if viseme_success:
+                    cmd = [
+                        "blender", "-b", "-P", "src/blender_animator.py",
+                        "--",
+                        "--audio", str(audio_path),
+                        "--visemes", str(visemes_path),
+                        "--output", str(clip_path),
+                        "--fps", str(self.fps)
+                    ]
+                    try:
+                        logger.info(f"Rendering 3D scene {num} in Blender...")
+                        res = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=600)
+                        if res.returncode == 0 and clip_path.exists():
+                            success = True
+                            rendered_clips.append(clip_path)
+                        else:
+                            logger.error(f"Blender render failed for scene {num}:\n{res.stderr.decode('utf-8', errors='ignore')}")
+                    except Exception as e:
+                        logger.error(f"Failed to execute Blender for scene {num}: {e}")
 
             scene_manifests.append({
                 "scene_number": num,
                 "duration_seconds": duration,
-                "image_file": str(img_path),
                 "audio_file": str(audio_path),
+                "visemes_file": str(visemes_path) if success else None,
                 "motion": motion,
                 "rendered": success
             })

@@ -32,10 +32,14 @@ jobs:
           python-version: "3.11"
           cache: "pip"
 
-      - name: Install System FFmpeg
+      - name: Install System FFmpeg, Blender, and Rhubarb
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y ffmpeg
+          sudo apt-get install -y ffmpeg blender unzip
+          wget https://github.com/DanielSWolf/rhubarb-lip-sync/releases/download/v1.13.0/rhubarb-lip-sync-1.13.0-Linux.zip
+          unzip rhubarb-lip-sync-1.13.0-Linux.zip
+          sudo mv rhubarb-lip-sync-1.13.0-Linux/rhubarb /usr/local/bin/
+          rm -rf rhubarb-lip-sync-1.13.0-Linux*
 
       - name: Install Python Dependencies
         run: |

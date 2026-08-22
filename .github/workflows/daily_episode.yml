@@ -36,10 +36,10 @@ jobs:
         run: |
           sudo apt-get update -y
           sudo apt-get install -y ffmpeg blender unzip
-          wget https://github.com/DanielSWolf/rhubarb-lip-sync/releases/download/v1.13.0/rhubarb-lip-sync-1.13.0-Linux.zip
-          unzip rhubarb-lip-sync-1.13.0-Linux.zip
-          sudo mv rhubarb-lip-sync-1.13.0-Linux/rhubarb /usr/local/bin/
-          rm -rf rhubarb-lip-sync-1.13.0-Linux*
+          wget -q https://github.com/DanielSWolf/rhubarb-lip-sync/releases/download/v1.13.0/rhubarb-lip-sync-1.13.0-Linux.zip
+          unzip -q rhubarb-lip-sync-1.13.0-Linux.zip
+          sudo find . -name "rhubarb" -type f -executable -exec mv {} /usr/local/bin/ \;
+          rm -f rhubarb-lip-sync-1.13.0-Linux.zip
 
       - name: Install Python Dependencies
         run: |

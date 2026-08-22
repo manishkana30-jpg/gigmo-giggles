@@ -73,34 +73,52 @@ class VideoGenerator:
                     return False
                 time.sleep(2)
                 
-            logger.info(f"Generating video for prompt: '{prompt}'")
+            import re
+            
             # Ensure duration is between 3 and 10 for Gemini Omni Flash
             dur = max(3, min(10, int(duration_sec)))
             
-            interaction = client.interactions.create(
-                model="gemini-omni-flash-preview",
-                input=[
-                    {"type": "image", "uri": uploaded_file.uri, "mime_type": "image/png"},
-                    {"type": "text", "text": prompt + ". Make it a beautiful, highly detailed 3D cartoon animation suitable for kids."}
-                ],
-                response_format={
-                    "type": "video",
-                    "aspect_ratio": "16:9",
-                    "duration": f"{dur}s"
-                }
-            )
-            
-            if not interaction.output_video or not interaction.output_video.uri:
+            interaction = None
+            max_retries = 3
+            for attempt in range(max_retries):
+                try:
+                    logger.info(f"Generating video for prompt: '{prompt}'")
+                    interaction = client.interactions.create(
+                        model="gemini-omni-flash-preview",
+                        input=[
+                            {"type": "image", "uri": uploaded_file.uri, "mime_type": "image/png"},
+                            {"type": "text", "text": prompt + ". Make it a beautiful, highly detailed 3D cartoon animation suitable for kids."}
+                        ],
+                        response_format={
+                            "type": "video",
+                            "aspect_ratio": "16:9",
+                            "duration": f"{dur}s"
+                        }
+                    )
+                    break # Success!
+                except Exception as e:
+                    err_str = str(e)
+                    if "429" in err_str or "too_many_requests" in err_str.lower() or "Quota exceeded" in err_str:
+                        if attempt < max_retries - 1:
+                            # Try to extract seconds to wait
+                            sleep_time = 65
+                            match = re.search(r"retry in ([\d\.]+)s", err_str)
+                            if match:
+                                sleep_time = min(float(match.group(1)) + 5, 120)
+                            
+                            logger.warning(f"Rate limited (429) by Gemini API. Retrying in {sleep_time:.1f}s... (Attempt {attempt+1}/{max_retries})")
+                            time.sleep(sleep_time)
+                            continue
+                    logger.error(f"Gemini video generation failed: {e}")
+                    return False
+
+            if not interaction or not getattr(interaction, "output_video", None) or not getattr(interaction.output_video, "uri", None):
                 logger.error("No video returned from Gemini.")
                 return False
                 
             logger.info("Downloading generated video...")
             self.download_video_file(interaction.output_video.uri, output_path, api_key)
             return True
-            
-        except Exception as e:
-            logger.error(f"Gemini video generation failed: {e}")
-            return False
 
     def build_scene_clip(
         self,

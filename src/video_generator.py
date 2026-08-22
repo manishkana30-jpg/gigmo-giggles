@@ -182,6 +182,9 @@ class VideoGenerator:
         temp_clips_dir = output_video_dir / "temp_scenes"
         temp_clips_dir.mkdir(parents=True, exist_ok=True)
 
+        from src.lipsync_generator import LipsyncGenerator
+        lipsync_gen = LipsyncGenerator(fps=self.fps, width=self.width_16_9, height=self.height_16_9)
+
         for scene in scenes:
             num = scene.get("scene_number", 1)
             duration = float(scene.get("duration_seconds", 15))
@@ -190,11 +193,17 @@ class VideoGenerator:
             clip_path = temp_clips_dir / f"scene_{num:02d}.mp4"
             v_prompt = scene.get("video_prompt", "")
 
-            motion = self._detect_motion_type(v_prompt, num)
+            motion = "audio_reactive_bounce"
 
             success = False
             if self.ffmpeg_available and img_path.exists():
-                success = self.build_scene_clip(img_path, audio_path, clip_path, duration, motion_type=motion, video_prompt=v_prompt)
+                # Use the new 2.5D Lipsync generator
+                success = lipsync_gen.generate_audioreactive_clip(
+                    image_path=img_path,
+                    audio_path=audio_path,
+                    output_path=clip_path,
+                    duration_sec=duration
+                )
                 if success:
                     rendered_clips.append(clip_path)
 

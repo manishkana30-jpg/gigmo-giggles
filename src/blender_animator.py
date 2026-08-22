@@ -25,7 +25,7 @@ bpy.ops.object.delete()
 
 # Set up render settings
 scene = bpy.context.scene
-scene.render.engine = 'BLENDER_EEVEE_NEXT' if hasattr(bpy.types, 'RenderEngine') else 'BLENDER_EEVEE'
+scene.render.engine = 'BLENDER_EEVEE'
 scene.render.fps = args.fps
 scene.render.resolution_x = 1920
 scene.render.resolution_y = 1080

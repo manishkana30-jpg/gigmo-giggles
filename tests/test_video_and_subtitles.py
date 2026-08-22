@@ -57,7 +57,7 @@ def test_video_generator_manifest_creation(mock_episode, tmp_path: Path, monkeyp
 
     # Mock LipsyncGenerator 3D Blender rendering to save runner execution time
     from src.lipsync_generator import LipsyncGenerator
-    def mock_render(audio_path, output_path, duration_sec):
+    def mock_render(self, audio_path, output_path, duration_sec):
         output_path.parent.mkdir(parents=True, exist_ok=True)
         output_path.touch()
         return True

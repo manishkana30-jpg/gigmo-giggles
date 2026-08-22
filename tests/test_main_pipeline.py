@@ -13,7 +13,7 @@ def test_full_pipeline_mock_run(tmp_path: Path, monkeypatch):
     """
     # Mock LipsyncGenerator to prevent running Blender in tests (saves runner time)
     from src.lipsync_generator import LipsyncGenerator
-    def mock_render(audio_path, output_path, duration_sec):
+    def mock_render(self, audio_path, output_path, duration_sec):
         output_path.parent.mkdir(parents=True, exist_ok=True)
         output_path.touch()
         return True

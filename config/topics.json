@@ -1,0 +1,122 @@
+[
+  {
+    "id": "topic_001",
+    "title": "Why Does Rain Happen?",
+    "category": "Earth Science",
+    "learning_objective": "Understand the simple water cycle: evaporation, clouds, and raindrops.",
+    "target_age": "6-9",
+    "keywords": ["water cycle", "clouds", "rain", "sun", "puddles"]
+  },
+  {
+    "id": "topic_002",
+    "title": "Why Do We Need Trees?",
+    "category": "Nature & Ecology",
+    "learning_objective": "Learn how trees give us clean oxygen, shade, and animal homes.",
+    "target_age": "6-9",
+    "keywords": ["trees", "oxygen", "nature", "forest", "leaves"]
+  },
+  {
+    "id": "topic_003",
+    "title": "Journey Through the Solar System",
+    "category": "Space Science",
+    "learning_objective": "Meet the planets orbiting our bright warm Sun in order.",
+    "target_age": "6-9",
+    "keywords": ["planets", "solar system", "sun", "earth", "space"]
+  },
+  {
+    "id": "topic_004",
+    "title": "Amazing Animal Habitats",
+    "category": "Biology",
+    "learning_objective": "Discover why polar bears love ice and monkeys love rainforests.",
+    "target_age": "6-9",
+    "keywords": ["habitats", "ocean", "jungle", "arctic", "desert"]
+  },
+  {
+    "id": "topic_005",
+    "title": "The Magic Power of Good Manners",
+    "category": "Social & Emotional",
+    "learning_objective": "Understand how saying 'Please' and 'Thank You' makes everyone happy.",
+    "target_age": "6-9",
+    "keywords": ["manners", "kindness", "please", "thank you", "sharing"]
+  },
+  {
+    "id": "topic_006",
+    "title": "Fun with Colors and Mixing",
+    "category": "Art & Early Learning",
+    "learning_objective": "Discover how mixing primary colors creates secondary colors like green and purple.",
+    "target_age": "6-9",
+    "keywords": ["colors", "red", "blue", "yellow", "rainbow", "mixing"]
+  },
+  {
+    "id": "topic_007",
+    "title": "Shapes in Our World",
+    "category": "Mathematics",
+    "learning_objective": "Identify circles, triangles, squares, and rectangles in everyday objects.",
+    "target_age": "6-9",
+    "keywords": ["shapes", "circle", "square", "triangle", "geometry"]
+  },
+  {
+    "id": "topic_008",
+    "title": "Why Do We Brush Our Teeth?",
+    "category": "Healthy Habits",
+    "learning_objective": "Learn how brushing removes sugar bugs and keeps smiles shining bright.",
+    "target_age": "6-9",
+    "keywords": ["teeth", "brushing", "hygiene", "dentist", "healthy"]
+  },
+  {
+    "id": "topic_009",
+    "title": "How Do Birds Fly?",
+    "category": "Physics for Kids",
+    "learning_objective": "Explore how feathers, light bones, and flapping wings push air to fly.",
+    "target_age": "6-9",
+    "keywords": ["birds", "wings", "flying", "feathers", "air"]
+  },
+  {
+    "id": "topic_010",
+    "title": "The Seven Continents Adventure",
+    "category": "Geography",
+    "learning_objective": "Explore the seven giant landmasses that make up our planet Earth.",
+    "target_age": "6-9",
+    "keywords": ["continents", "world map", "earth", "oceans", "globe"]
+  },
+  {
+    "id": "topic_011",
+    "title": "Why Does the Moon Change Shape?",
+    "category": "Space Science",
+    "learning_objective": "Learn about lunar phases and sunlight reflecting off the Moon.",
+    "target_age": "6-9",
+    "keywords": ["moon", "lunar phases", "crescent", "full moon", "night sky"]
+  },
+  {
+    "id": "topic_012",
+    "title": "How Seeds Grow into Flowers",
+    "category": "Botany",
+    "learning_objective": "Discover what seeds need: soil, water, sunshine, and love to bloom.",
+    "target_age": "6-9",
+    "keywords": ["plants", "seeds", "sunlight", "gardening", "flowers"]
+  },
+  {
+    "id": "topic_013",
+    "title": "Healthy Foods That Give Us Superpower Energy",
+    "category": "Health & Nutrition",
+    "learning_objective": "Identify fruits, vegetables, and water as brain and muscle fuel.",
+    "target_age": "6-9",
+    "keywords": ["nutrition", "fruits", "vegetables", "energy", "vitamins"]
+  },
+  {
+    "id": "topic_014",
+    "title": "Why Do Things Fall Down? Meet Gravity!",
+    "category": "Physics for Kids",
+    "learning_objective": "Understand Earth's invisible pulling force that keeps us on the ground.",
+    "target_age": "6-9",
+    "keywords": ["gravity", "falling", "earth", "physics", "force"]
+  },
+  {
+    "id": "topic_015",
+    "title": "How Musical Instruments Make Sound",
+    "category": "Music & Acoustics",
+    "learning_objective": "Discover how vibrations create high, low, loud, and soft sounds.",
+    "target_age": "6-9",
+    "keywords": ["music", "sound", "vibrations", "drums", "guitar"]
+  }
+]

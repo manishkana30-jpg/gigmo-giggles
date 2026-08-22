@@ -1,0 +1,20 @@
+{
+  "status": "success",
+  "date": "2026-08-22",
+  "completed": [
+    "topic",
+    "creative_direction",
+    "script",
+    "storyboard",
+    "images",
+    "audio",
+    "subtitles",
+    "video",
+    "thumbnail",
+    "metadata"
+  ],
+  "failed": null,
+  "error": null,
+  "started_at": "2026-08-22T05:44:52.772666+00:00",
+  "finished_at": "2026-08-22T05:45:04.708454+00:00"
+}

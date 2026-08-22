@@ -1,0 +1,42 @@
+{
+  "episode_id": "2026-08-22-why-do-we-need-trees",
+  "ffmpeg_available": false,
+  "video_file": null,
+  "resolution": "1920x1080",
+  "fps": 24,
+  "assembled": false,
+  "scenes": [
+    {
+      "scene_number": 1,
+      "duration_seconds": 12.0,
+      "image_file": "C:\\Users\\manis\\Gigmo Giggles\\episodes\\2026-08-22\\images\\scene_01.png",
+      "audio_file": "C:\\Users\\manis\\Gigmo Giggles\\episodes\\2026-08-22\\audio\\scene_01_audio.wav",
+      "motion": "zoom_in",
+      "rendered": false
+    },
+    {
+      "scene_number": 2,
+      "duration_seconds": 15.0,
+      "image_file": "C:\\Users\\manis\\Gigmo Giggles\\episodes\\2026-08-22\\images\\scene_02.png",
+      "audio_file": "C:\\Users\\manis\\Gigmo Giggles\\episodes\\2026-08-22\\audio\\scene_02_audio.wav",
+      "motion": "pan_horizontal",
+      "rendered": false
+    },
+    {
+      "scene_number": 3,
+      "duration_seconds": 15.0,
+      "image_file": "C:\\Users\\manis\\Gigmo Giggles\\episodes\\2026-08-22\\images\\scene_03.png",
+      "audio_file": "C:\\Users\\manis\\Gigmo Giggles\\episodes\\2026-08-22\\audio\\scene_03_audio.wav",
+      "motion": "zoom_out",
+      "rendered": false
+    },
+    {
+      "scene_number": 4,
+      "duration_seconds": 18.0,
+      "image_file": "C:\\Users\\manis\\Gigmo Giggles\\episodes\\2026-08-22\\images\\scene_04.png",
+      "audio_file": "C:\\Users\\manis\\Gigmo Giggles\\episodes\\2026-08-22\\audio\\scene_04_audio.wav",
+      "motion": "zoom_in",
+      "rendered": false
+    }
+  ]
+}

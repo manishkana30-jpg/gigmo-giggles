@@ -1,0 +1,26 @@
+[
+  {
+    "scene_number": 1,
+    "filename": "scene_01.png",
+    "prompt": "Stylized 2D cartoon animation frame: Bobo the honey-brown cartoon bear with sunny yellow neckerchief pointing excitedly at a glowing screen with Luna the orange fox in teal vest and Milo the sky-blue robot in a cozy sunlit treehouse. Bright vivid colors, clean outlines, storybook illustration.",
+    "generated": true
+  },
+  {
+    "scene_number": 2,
+    "filename": "scene_02.png",
+    "prompt": "Stylized 2D cartoon animation frame: Milo the sky-blue compact robot with lime-green glowing digital eyes projecting a sparkling educational holographic diagram. Bobo the friendly bear watches with wide sparkling eyes. Vibrant colors, clean lines.",
+    "generated": true
+  },
+  {
+    "scene_number": 3,
+    "filename": "scene_03.png",
+    "prompt": "Stylized 2D cartoon animation frame: Luna the orange cartoon fox explaining a colorful chart with Bobo the bear holding a giant magnifying glass. Bright sunny pastel colors, whimsical cartoon style.",
+    "generated": true
+  },
+  {
+    "scene_number": 4,
+    "filename": "scene_04.png",
+    "prompt": "Stylized 2D cartoon animation frame: Bobo the bear, Luna the fox, and Milo the robot standing side by side waving at the camera in a vibrant TV game show studio with colorful question marks. High contrast, sunny yellow and cyan background.",
+    "generated": true
+  }
+]

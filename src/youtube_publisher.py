@@ -22,14 +22,89 @@ class YouTubePublisher:
 
     def publish(self, video_path: Path, metadata: Dict[str, Any]) -> Dict[str, Any]:
         """
-        In Manual Creator Mode, we do not upload to YouTube automatically because
-        the pipeline only generates raw assets for DaVinci Resolve, not a final .mp4.
+        Publish video to YouTube.
         """
-        logger.info("Pipeline is in Manual Creator Mode. Skipping auto-publishing.")
-        logger.info("You must render the video in DaVinci Resolve and upload it manually to YouTube.")
+        if not self.enabled:
+            logger.info("YouTube auto-publishing is currently disabled. Video generated locally for manual review.")
+            return {
+                "status": "skipped",
+                "reason": "auto_upload_youtube is set to false in settings.json",
+                "video_file": str(video_path)
+            }
 
-        return {
-            "status": "skipped",
-            "reason": "Manual Creator Mode active. Final MP4 must be rendered in DaVinci Resolve.",
-            "video_file": None
-        }
+        client_id = os.getenv("YOUTUBE_CLIENT_ID")
+        client_secret = os.getenv("YOUTUBE_CLIENT_SECRET")
+        refresh_token = os.getenv("YOUTUBE_REFRESH_TOKEN")
+
+        if not all([client_id, client_secret, refresh_token]):
+            logger.error("YouTube API credentials missing. Check YOUTUBE_CLIENT_ID, YOUTUBE_CLIENT_SECRET, YOUTUBE_REFRESH_TOKEN.")
+            return {
+                "status": "failed",
+                "reason": "missing credentials"
+            }
+
+        try:
+            creds = Credentials(
+                None,
+                refresh_token=refresh_token,
+                token_uri="https://oauth2.googleapis.com/token",
+                client_id=client_id,
+                client_secret=client_secret
+            )
+
+            youtube = build("youtube", "v3", credentials=creds)
+
+            # Metadata parsing
+            title = metadata.get("title", "Kids Educational Video")
+            description = metadata.get("description", "A fun and educational video for kids!")
+            tags = metadata.get("tags", ["kids", "educational", "learning"])
+            
+            logger.info(f"Uploading to YouTube: {title}")
+
+            body = {
+                "snippet": {
+                    "title": title[:100],  # Title max length is 100
+                    "description": description,
+                    "tags": tags,
+                    "categoryId": "27"  # Education
+                },
+                "status": {
+                    "privacyStatus": self.privacy_status,
+                    "selfDeclaredMadeForKids": True
+                }
+            }
+
+            media = MediaFileUpload(str(video_path), chunksize=-1, resumable=True, mimetype="video/mp4")
+
+            request = youtube.videos().insert(
+                part="snippet,status",
+                body=body,
+                media_body=media
+            )
+            
+            response = request.execute()
+            video_id = response.get("id")
+            logger.info(f"Video uploaded successfully! Video ID: {video_id}")
+
+            # Upload thumbnail if provided
+            thumbnail_path = video_path.parent / "thumbnail.jpg"
+            if thumbnail_path.exists():
+                logger.info("Uploading custom thumbnail...")
+                youtube.thumbnails().set(
+                    videoId=video_id,
+                    media_body=MediaFileUpload(str(thumbnail_path), mimetype="image/jpeg")
+                ).execute()
+                logger.info("Thumbnail uploaded successfully.")
+
+            return {
+                "status": "success",
+                "video_id": video_id,
+                "url": f"https://youtu.be/{video_id}"
+            }
+
+        except Exception as e:
+            logger.error(f"Error publishing to YouTube: {e}")
+            return {
+                "status": "failed",
+                "error": str(e)
+            }

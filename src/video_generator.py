@@ -284,7 +284,7 @@ class VideoGenerator:
                         f"subtitles='{escaped_srt}'"
                         f":force_style='Alignment=2,FontName=Arial,FontSize=24,Bold=1,"
                         f"PrimaryColour=&H00FFFFFF,OutlineColour=&H00000000,"
-                        f"BackColour=&H80000000,Outline=3,Shadow=2,MarginV=60'"
+                        f"BackColour=&H80000000,Outline=3,Shadow=2,MarginV=15'"
                     )
 
                 # Direct FFmpeg complex filter command to burn subtitles and mix audio

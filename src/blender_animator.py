@@ -26,7 +26,18 @@ bpy.ops.object.delete()
 
 # Set up render settings
 scene = bpy.context.scene
-scene.render.engine = 'BLENDER_EEVEE'
+scene.render.engine = 'BLENDER_WORKBENCH'
+
+# Configure Workbench shading for premium cartoon style
+shading = scene.display.shading
+shading.light = 'STUDIO'
+shading.color_type = 'MATERIAL'
+shading.show_shadows = True
+shading.show_cavity = True
+shading.cavity_type = 'BOTH'
+shading.show_object_outline = True
+shading.object_outline_color = (0, 0, 0)
+
 scene.render.fps = args.fps
 scene.render.resolution_x = 1920
 scene.render.resolution_y = 1080
@@ -61,6 +72,7 @@ mat = bpy.data.materials.new(name="CharacterMat")
 mat.use_nodes = True
 bsdf = mat.node_tree.nodes.get("Principled BSDF")
 bsdf.inputs["Base Color"].default_value = (0.2, 0.6, 0.8, 1.0) # Blueish
+mat.diffuse_color = (0.2, 0.6, 0.8, 1.0)  # Material color for Workbench render
 head.data.materials.append(mat)
 
 # Add Basis shape key

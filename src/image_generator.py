@@ -46,16 +46,10 @@ class GeminiImageProvider(BaseImageProvider):
         try:
             client = genai.Client(api_key=self.api_key)
 
-            # Enhance prompt with full storybook style tokens
+            # Enhance prompt with basic quality tokens if needed, but rely mostly on the detailed prompt
             enhanced_prompt = (
-                "Vibrant 2D flat children's storybook illustration, "
-                "thick black outlines, bold saturated primary colors, "
-                "friendly cute characters, simple clean composition, "
-                "children's picture book art style, cheerful warm mood, "
-                "full-bleed scene filling entire canvas, "
-                "no text overlays, no watermarks, no borders, "
-                "soft glowing light, gouache painterly texture. "
-                "16:9 aspect ratio, professional kids show frame. "
+                "High quality, detailed, masterpiece, 16:9 aspect ratio, professional kids show frame. "
+                "no text overlays, no watermarks, no borders. "
                 f"Scene: {prompt}"
             )
 

@@ -37,6 +37,11 @@ class GeminiCreativeDirector:
         self.settings = load_json(settings_file or (root / "config" / "settings.json"))
         self.characters = load_json(characters_file or (root / "config" / "characters.json"))
         self.prompts_dir = root / "prompts"
+        
+        try:
+            self.character_prompts = load_json(root / "config" / "character_prompts.json")
+        except FileNotFoundError:
+            self.character_prompts = {}
 
         # Resolve API Key and Model Name
         self.api_key = api_key or os.environ.get("GEMINI_API_KEY")
@@ -225,13 +230,11 @@ Number of Scenes: {scenes_count}
 
 Ensure Jack and Jill work together to explore this concept in a hilarious and educational journey.
 CRITICAL: The primary 'text' and 'narration' fields MUST be in {language} for the subtitles. However, if spoken language is different, you MUST also provide 'translated_text' and 'translated_narration' which contain the exact same dialogue translated into natively spoken {spoken_language}.
-Include image_prompt for every scene with full canonical visual descriptors. The image_prompt MUST adhere to this exact style:
-"Best 2.5D layered cartoon illustration, high-res storybook concept art, crisp clean vector lines with soft volumetric shading. Multiplane depth with clearly separated foreground, midground characters, and background layers. Dynamic comic-strip energy, freeze-frame action pose with extreme exaggerated facial expressions.
-[LAYER STRUCTURE]:
-- Foreground: Out-of-focus blades of grass, floating leaves, or stones framing the bottom/sides to establish 3D parallax depth.
-- Midground: Jack and Jill captured mid-action on a steep grassy hill, completely isolated with clear silhouettes.
-- Background: Rolling green countryside, storybook cottage, puffy clouds, and soft blue sky.
-[EXPRESSION & POSE]: Jack is frozen mid-action with an exaggerated open-mouth scream/gasp of excitement, eyes wide with raised arches. Jill mirrors the energy with hands thrown up in shock/delight, jaw dropped in cartoon amazement."
+
+You MUST write the `image_prompt` using the exact Character Emotion Prompts provided below for Jack and Jill based on their emotion in the scene. Combine them into a single coherent prompt for the scene. Do not change their descriptions.
+
+Available Character Emotion Prompts:
+{json.dumps(self.character_prompts, indent=2)}
 
 Ensure video_prompt specifies: "Slow dramatic push-in zoom on Jack and Jill's expressive faces, subtle multiplane horizontal pan to emphasize foreground/background parallax separation."
 Output MUST be strict valid JSON matching EpisodeSchema.

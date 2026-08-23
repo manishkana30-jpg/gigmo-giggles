@@ -282,7 +282,7 @@ class VideoGenerator:
                     # Styling: Bottom Centre (Alignment=2), 52pt Arial Bold, White text, Black outline
                     srt_filter_str = (
                         f"subtitles='{escaped_srt}'"
-                        f":force_style='Alignment=2,FontName=Arial,FontSize=52,Bold=1,"
+                        f":force_style='Alignment=2,FontName=Arial,FontSize=24,Bold=1,"
                         f"PrimaryColour=&H00FFFFFF,OutlineColour=&H00000000,"
                         f"BackColour=&H80000000,Outline=3,Shadow=2,MarginV=60'"
                     )

@@ -1,4 +1,6 @@
 {
     "auto_upload_youtube": false,
-    "youtube_privacy_status": "private"
+    "youtube_privacy_status": "private",
+    "language": "English",
+    "spoken_language": "Hindi"
 }

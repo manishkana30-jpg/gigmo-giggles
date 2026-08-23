@@ -257,12 +257,14 @@ Output MUST be strict valid JSON matching EpisodeSchema.
                     {
                         "character": "Jack",
                         "text": f"Hey Jill! Look at that! I've always wondered, why is {title_raw.lower()}?",
+                        "translated_text": f"हे जिल! वह देखो! मैं हमेशा सोचता था, {title_raw.lower()} क्यों होता है?",
                         "emotion": "curious",
                         "sound_effect": "boing"
                     },
                     {
                         "character": "Jill",
                         "text": "Great question, Jack! Let's activate the Discovery Screen and find out together!",
+                        "translated_text": "बहुत अच्छा सवाल है, जैक! चलो डिस्कवरी स्क्रीन चालू करते हैं और साथ मिलकर पता लगाते हैं!",
                         "emotion": "enthusiastic",
                         "sound_effect": "chime"
                     }

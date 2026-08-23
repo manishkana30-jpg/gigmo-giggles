@@ -203,7 +203,7 @@ class VoiceGenerator:
 
             if dialogue_lines:
                 # Concatenate all dialogues for scene audio
-                combined_text = ". ".join([f"{d.get('character')}: {d.get('translated_text') or d.get('text')}" for d in dialogue_lines])
+                combined_text = ". ".join([f"{d.get('translated_text') or d.get('text')}" for d in dialogue_lines])
                 primary_char = dialogue_lines[0].get("character", "Jack")
                 self.generate_speech(combined_text, primary_char, scene_audio_path, duration_sec=duration)
 

@@ -239,9 +239,8 @@ Output MUST be strict valid JSON matching EpisodeSchema.
 
     def _generate_mock_episode(self, topic: Dict[str, Any], episode_id: str) -> Dict[str, Any]:
         """Deterministic high-quality episode generator for offline testing or fallback."""
-        # When falling back to the mock script, we force the topic to match the hardcoded script (Water Cycle).
-        title_raw = "The Water Cycle"
-        learning_obj = "Understand how clouds collect water droplets and make rain."
+        title_raw = topic.get("title", "The Water Cycle")
+        learning_obj = topic.get("learning_objective", "Understand how clouds collect water droplets and make rain.")
         target_age = self.settings.get("target_age", "6-9")
 
         scenes = [
@@ -506,14 +505,13 @@ Output MUST be strict valid JSON matching EpisodeSchema.
 
         return {
             "episode_id": episode_id,
-            "topic": "The Water Cycle",
+            "topic": title_raw,
             "learning_objective": learning_obj,
             "target_age": target_age,
             "title": f"{title_raw} - Gigmo Giggles Episode",
             "characters": [
-                {"name": "Bobo", "role": "Curious Explorer Bear"},
-                {"name": "Luna", "role": "Clever Science Fox"},
-                {"name": "Milo", "role": "Energetic Robot"}
+                {"name": "Jack", "role": "Adventurous boy"},
+                {"name": "Jill", "role": "Cheerful girl"}
             ],
             "scenes": scenes,
             "quiz": quiz,

@@ -242,285 +242,123 @@ Output MUST be strict valid JSON matching EpisodeSchema.
 
     def _generate_mock_episode(self, topic: Dict[str, Any], episode_id: str) -> Dict[str, Any]:
         """Deterministic high-quality episode generator for offline testing or fallback."""
-        title_raw = topic.get("title", "The Water Cycle")
-        learning_obj = topic.get("learning_objective", "Understand how clouds collect water droplets and make rain.")
-        target_age = self.settings.get("target_age", "6-9")
-
-        scenes = [
-            {
-                "scene_number": 1,
-                "duration_seconds": 15,
-                "location": "The Sunny Hillside",
-                "action": "Jack is looking through a toy telescope, while Jill takes notes on a clipboard.",
-                "narration": "Welcome to another sunny day of wonder on the hill!",
-                "dialogue": [
-                    {
-                        "character": "Jack",
-                        "text": f"Hey Jill! Look at that! I've always wondered, why is {title_raw.lower()}?",
-                        "translated_text": f"हे जिल! वह देखो! मैं हमेशा सोचता था, {title_raw.lower()} क्यों होता है?",
-                        "emotion": "curious",
-                        "sound_effect": "boing"
-                    },
-                    {
-                        "character": "Jill",
-                        "text": "Great question, Jack! Let's activate the Discovery Screen and find out together!",
-                        "translated_text": "बहुत अच्छा सवाल है, जैक! चलो डिस्कवरी स्क्रीन चालू करते हैं और साथ मिलकर पता लगाते हैं!",
-                        "emotion": "enthusiastic",
-                        "sound_effect": "chime"
-                    }
-                ],
-                "image_prompt": "Best 2.5D layered cartoon illustration, high-res storybook concept art, crisp clean vector lines with soft volumetric shading. Multiplane depth with clearly separated foreground, midground characters, and background layers. Dynamic comic-strip energy, freeze-frame action pose with extreme exaggerated facial expressions. Foreground: Out-of-focus blades of grass. Midground: Jack and Jill captured mid-action on a steep grassy hill, completely isolated with clear silhouettes. Background: Rolling green countryside. Jack is frozen mid-action with an exaggerated open-mouth gasp of excitement. Jill mirrors the energy with hands thrown up in shock.",
-                "video_prompt": "Slow dramatic push-in zoom on Jack and Jill's expressive faces, subtle multiplane horizontal pan to emphasize foreground/background parallax separation.",
-                "voice_direction": "Jack speaks with child-like excitement. Jill is cheerful and warm.",
-                "sound_effects": ["outdoor_birds", "happy_chime"]
-            },
-            {
-                "scene_number": 2,
-                "duration_seconds": 18,
-                "location": "The Meadow Observation Deck",
-                "action": "Jill holds up a magnifying glass, showing a glowing diagram of the first step of the educational concept.",
-                "narration": f"Our friends investigate the first secret of {title_raw.lower()}.",
-                "dialogue": [
-                    {
-                        "character": "Jill",
-                        "text": "According to my notes, it all starts right here. See?",
-                        "emotion": "smart",
-                        "sound_effect": "whoosh"
-                    },
-                    {
-                        "character": "Jack",
-                        "text": "Whoa! That is so cool! It's like magic, but real!",
-                        "emotion": "amazed",
-                        "sound_effect": "sparkle"
-                    }
-                ],
-                "image_prompt": "Best 2.5D layered cartoon illustration, high-res storybook concept art, crisp clean vector lines with soft volumetric shading. Multiplane depth with clearly separated foreground, midground characters, and background layers. Dynamic comic-strip energy, freeze-frame action pose with extreme exaggerated facial expressions. Foreground: Out-of-focus blades of grass. Midground: Jack and Jill captured mid-action on a steep grassy hill, completely isolated with clear silhouettes. Background: Rolling green countryside. Jack is frozen mid-action with an exaggerated open-mouth gasp of excitement. Jill mirrors the energy with hands thrown up in shock.",
-                "video_prompt": "Slow dramatic push-in zoom on Jack and Jill's expressive faces, subtle multiplane horizontal pan to emphasize foreground/background parallax separation.",
-                "voice_direction": "Jill is confident. Jack is amazed.",
-                "sound_effects": ["whoosh", "sparkle"]
-            },
-            {
-                "scene_number": 3,
-                "duration_seconds": 18,
-                "location": "The Cloud Science Chamber",
-                "action": "Luna shows a friendly diagram explaining how small particles join together into big wonders.",
-                "narration": "When tiny pieces work together, amazing things happen in nature!",
-                "dialogue": [
-                    {
-                        "character": "Luna",
-                        "text": "Exactly! When warm energy lifts tiny droplets into the sky, they bundle together into big fluffy clouds!",
-                        "emotion": "encouraging",
-                        "sound_effect": "bell"
-                    },
-                    {
-                        "character": "Milo",
-                        "text": "Affirmative! One hundred percent calculation complete! Teamwork makes the dream work!",
-                        "emotion": "proud",
-                        "sound_effect": "tada"
-                    }
-                ],
-                "image_prompt": "Stylized 2D cartoon animation frame: Luna the orange cartoon fox in teal vest explaining a large colorful educational chart with bubbling particles and arrows. Bright sunny pastel colors, whimsical cartoon style.",
-                "video_prompt": "Camera slow zoom-out revealing the full colorful diagram.",
-                "voice_direction": "Luna speaks clearly with pedagogical rhythm. Milo chimes happily.",
-                "sound_effects": ["gentle_breeze", "happy_tada"]
-            },
-            {
-                "scene_number": 4,
-                "duration_seconds": 15,
-                "location": "The Imagination Garden",
-                "action": "Bobo imagines a magical scene where the scientific concept comes alive with sparkling particles and swirling colors.",
-                "narration": "Bobo closes his eyes and imagines what it would look like up close!",
-                "dialogue": [
-                    {
-                        "character": "Bobo",
-                        "text": f"Wow! If I could shrink myself tiny, I could see {title_raw.lower()} happening right before my eyes!",
-                        "emotion": "dreamy",
-                        "sound_effect": "twinkle"
-                    },
-                    {
-                        "character": "Luna",
-                        "text": "That is exactly what scientists do, Bobo! They use powerful tools to see the invisible world!",
-                        "emotion": "impressed",
-                        "sound_effect": "sparkle"
-                    }
-                ],
-                "image_prompt": f"Stylized 2D cartoon animation frame: Bobo the honey-brown bear with eyes closed, dreaming inside a magical thought bubble filled with sparkling particles and swirling colors representing {title_raw.lower()}. Dreamy purple and gold colors, fantasy cartoon style.",
-                "video_prompt": "Zoom-in toward Bobo's dream bubble revealing magical particles.",
-                "voice_direction": "Bobo speaks softly with wonder. Luna is encouraging.",
-                "sound_effects": ["dream_harp", "sparkle_cascade"]
-            },
-            {
-                "scene_number": 5,
-                "duration_seconds": 18,
-                "location": "Milo's Digital Workshop",
-                "action": "Milo displays a step-by-step breakdown of the science on his holographic screen with numbered steps and fun icons.",
-                "narration": "Milo breaks it down into easy steps that everyone can understand!",
-                "dialogue": [
-                    {
-                        "character": "Milo",
-                        "text": f"Step one! Energy from the sun starts the whole process! Step two! Tiny particles begin to move and change! Step three! Something amazing happens!",
-                        "emotion": "teaching",
-                        "sound_effect": "click"
-                    },
-                    {
-                        "character": "Bobo",
-                        "text": "Oh, I get it now! It is like a recipe with three ingredients!",
-                        "emotion": "enlightened",
-                        "sound_effect": "lightbulb"
-                    }
-                ],
-                "image_prompt": "Stylized 2D cartoon animation frame: Milo the sky-blue robot projecting a holographic numbered step-by-step guide with colorful icons. Bobo and Luna watching attentively in a high-tech digital workshop with glowing screens. Cyan and purple neon accents.",
-                "video_prompt": "Pan right revealing each step on the holographic display.",
-                "voice_direction": "Milo speaks rhythmically counting each step. Bobo has a eureka moment.",
-                "sound_effects": ["digital_click", "lightbulb_ding"]
-            },
-            {
-                "scene_number": 6,
-                "duration_seconds": 15,
-                "location": "The Outdoor Experiment Field",
-                "action": "The three friends conduct a simple hands-on experiment related to the topic using everyday objects.",
-                "narration": "Now it is time to try it themselves with a fun experiment!",
-                "dialogue": [
-                    {
-                        "character": "Luna",
-                        "text": f"Let us try our own experiment! We can see {title_raw.lower()} happen right here!",
-                        "emotion": "excited",
-                        "sound_effect": "pop"
-                    },
-                    {
-                        "character": "Bobo",
-                        "text": "Look! It is working! Science is SO cool!",
-                        "emotion": "thrilled",
-                        "sound_effect": "wow"
-                    }
-                ],
-                "image_prompt": f"Stylized 2D cartoon animation frame: Bobo the bear, Luna the fox, and Milo the robot conducting a colorful outdoor experiment with beakers, tubes, and bubbling liquids in a sunny garden. Bright greens and blues, educational cartoon style.",
-                "video_prompt": "Zoom-in toward the bubbling experiment revealing colorful reactions.",
-                "voice_direction": "Luna is enthusiastic about the experiment. Bobo is amazed at the results.",
-                "sound_effects": ["bubble_pop", "amazement_sound"]
-            },
-            {
-                "scene_number": 7,
-                "duration_seconds": 15,
-                "location": "The Wrap-Up Campfire",
-                "action": "The friends sit together around a cozy campfire under a starry sky, reviewing what they learned today.",
-                "narration": "As the sun sets, our friends share what they discovered!",
-                "dialogue": [
-                    {
-                        "character": "Luna",
-                        "text": f"So today we learned that {title_raw.lower()} is all about energy, particles, and nature working together!",
-                        "emotion": "satisfied",
-                        "sound_effect": "gentle_chime"
-                    },
-                    {
-                        "character": "Milo",
-                        "text": "Data log complete! Today's adventure was rated five stars! Do not forget to tell your friends what you learned!",
-                        "emotion": "happy",
-                        "sound_effect": "star_sound"
-                    }
-                ],
-                "image_prompt": "Stylized 2D cartoon animation frame: Bobo the bear, Luna the fox, and Milo the robot sitting around a warm campfire under a beautiful starry purple sky. Warm orange and purple tones, cozy and magical atmosphere.",
-                "video_prompt": "Slow zoom-out revealing the starry sky above the campfire.",
-                "voice_direction": "Luna summarizes warmly. Milo gives an upbeat sign-off.",
-                "sound_effects": ["campfire_crackle", "night_crickets"]
-            },
-            {
-                "scene_number": 8,
-                "duration_seconds": 18,
-                "location": "The Interactive Quiz Studio",
-                "action": "Bobo, Luna, and Milo smile directly at the screen, pointing at three glowing colorful letter buttons A, B, and C.",
-                "narration": "Now it is time for the Super Gigmo Quiz Question!",
-                "dialogue": [
-                    {
-                        "character": "Bobo",
-                        "text": "Are you ready, Super Thinkers? Here comes our question of the day!",
-                        "emotion": "thrilled",
-                        "sound_effect": "drumroll"
-                    },
-                    {
-                        "character": "Luna",
-                        "text": "What is the key superpower behind today's discovery?",
-                        "emotion": "smiling",
-                        "sound_effect": "quiz_pop"
-                    },
-                    {
-                        "character": "Milo",
-                        "text": "Think carefully and shout out your answer! Remember, you are a super scientist!",
-                        "emotion": "cheering",
-                        "sound_effect": "bell"
-                    }
-                ],
-                "image_prompt": "Stylized 2D cartoon animation frame: Bobo the bear, Luna the fox, and Milo the robot standing side by side waving at the camera in a vibrant TV game show studio with colorful question marks and glowing A B C buttons. High contrast, sunny yellow and cyan background.",
-                "video_prompt": "Static shot with lively pulse bounce effect to spotlight the quiz choices.",
-                "voice_direction": "High energy call-and-response tone engaging young viewers.",
-                "sound_effects": ["drumroll", "fanfare"]
-            }
-        ]
-
-        quiz = [
-            {
-                "question": f"What did Bobo and Luna learn about {title_raw.lower()}?",
-                "options": [
-                    "A) Nature's energy and science make it happen!",
-                    "B) Sleeping bears cause it to happen",
-                    "C) It is made of strawberry jam"
-                ],
-                "correct_answer": "A) Nature's energy and science make it happen!",
-                "explanation": f"Sunlight, air, and teamwork in nature work together to create {title_raw.lower()}!"
-            }
-        ]
-
-        youtube_meta = {
-            "title": f"{title_raw} 🌟 | Fun Science for Kids | Gigmo Giggles",
-            "description": f"Join Bobo the Bear, Luna the Fox, and Milo the Robot on an exciting educational adventure!\n\nIn this episode, we explore: {learning_obj}\n\n🔔 Subscribe to Gigmo Giggles for daily colorful learning cartoon episodes!\n\n#GigmoGiggles #KidsLearning #ScienceForKids #EducationalCartoon",
-            "tags": [
-                "kids educational cartoon",
-                title_raw.lower(),
-                "science for kids",
-                "learning videos for children",
-                "gigmo giggles",
-                "bobo and luna",
-                "cartoon for toddlers",
-                "preschool education"
-            ],
-            "hashtags": ["#KidsLearning", "#ScienceForKids", "#GigmoGiggles", "#Animation"],
-            "category": "Education",
-            "target_audience": "Children (Made for Kids)"
-        }
-
-        thumbnail_meta = {
-            "prompt": f"Vibrant 2D cartoon YouTube thumbnail: Bobo the friendly brown bear with sunny yellow scarf pointing up at {title_raw.lower()} with Milo the cute blue robot smiling. Bold bright yellow background, high contrast, clean vector style.",
-            "overlay_text": title_raw.upper()
-        }
-
-        shorts_list = [
-            {
-                "title": f"The Secret of {title_raw}! 🌟 #Shorts",
-                "hook": f"Did you know how {title_raw.lower()} works? Let's check with Milo!",
-                "scene_reference": 2,
-                "duration_seconds": 25
-            },
-            {
-                "title": f"Bobo's Fun Science Quiz! 🧠 #Shorts",
-                "hook": "Can you solve today's Gigmo brain teaser in 10 seconds?",
-                "scene_reference": 4,
-                "duration_seconds": 20
-            }
-        ]
-
         return {
-            "episode_id": episode_id,
-            "topic": title_raw,
-            "learning_objective": learning_obj,
-            "target_age": target_age,
-            "title": f"{title_raw} - Gigmo Giggles Episode",
-            "characters": [
-                {"name": "Jack", "role": "Adventurous boy"},
-                {"name": "Jill", "role": "Cheerful girl"}
+            "title": "The Lost Compass Adventure",
+            "learning_objective": "Learn how a compass works and the value of teamwork.",
+            "target_age_group": "6-9",
+            "scenes": [
+                {
+                    "scene_number": 1,
+                    "duration_seconds": 15,
+                    "location": "A vibrant, sun-drenched enchanted meadow",
+                    "action": "Jack crouches near a glowing wooden stump pointing eagerly. Jill leans over his shoulder.",
+                    "narration": "What a beautiful day to explore the enchanted meadow!",
+                    "dialogue": [
+                        {
+                            "character": "Jack",
+                            "text": "Look at this glowing stump, Jill! I wonder if there is a treasure inside?",
+                            "translated_text": "जिल, इस चमकते हुए ठूंठ को देखो! मुझे आश्चर्य है कि क्या इसके अंदर कोई खजाना है?",
+                            "emotion": "curious",
+                            "sound_effect": "magical_chime"
+                        },
+                        {
+                            "character": "Jill",
+                            "text": "It looks like something is hidden there! Let's check it out together!",
+                            "translated_text": "ऐसा लगता है जैसे वहां कुछ छिपा हुआ है! चलो मिलकर इसका पता लगाते हैं!",
+                            "emotion": "excited",
+                            "sound_effect": "happy_pop"
+                        }
+                    ],
+                    "image_prompt": "A vibrant, sun-drenched enchanted meadow, lush green rolling hills under warm golden-hour light. Jack crouches near a glowing wooden stump with wide eyes and an open-mouth grin, pointing eagerly. Jill leans over his shoulder with pigtails bouncing, hands clasped in awe, eyebrows arched high. Cinematic 3D render, Pixar style...",
+                    "video_prompt": "Slow dramatic push-in zoom on Jack and Jill's expressive faces",
+                    "voice_direction": "Jack is extremely curious, Jill is supportive and excited.",
+                    "sound_effects": ["outdoor_ambience", "magical_chime"]
+                },
+                {
+                    "scene_number": 2,
+                    "duration_seconds": 15,
+                    "location": "Rocky trail leading up a mist-covered hill",
+                    "action": "Jack stands firmly, holding a wooden walking stick. Jill looks down at the steep drop biting her lip.",
+                    "narration": "The journey up the hill was going to be tough.",
+                    "dialogue": [
+                        {
+                            "character": "Jack",
+                            "text": "This path looks steep, but I know we can make it if we are careful.",
+                            "translated_text": "यह रास्ता खड़ी चढ़ाई वाला लग रहा है, लेकिन मुझे पता है कि अगर हम सावधान रहें तो हम इसे पार कर सकते हैं।",
+                            "emotion": "determined",
+                            "sound_effect": "footsteps_dirt"
+                        },
+                        {
+                            "character": "Jill",
+                            "text": "I'm a little scared of how high we are, Jack. Please hold my hand.",
+                            "translated_text": "मुझे थोड़ा डर लग रहा है कि हम कितनी ऊंचाई पर हैं, जैक। कृपया मेरा हाथ पकड़ो।",
+                            "emotion": "hesitant",
+                            "sound_effect": "wind_howl"
+                        }
+                    ],
+                    "image_prompt": "Rocky trail leading up a mist-covered hill. Jack stands firmly, one foot on a boulder, jaw set with determined grit, holding a wooden walking stick. Jill looks down at the steep drop with raised inner eyebrows, biting her lip in mild worry, clutching Jack's sleeve. Dynamic wide-angle, atmospheric haze...",
+                    "video_prompt": "Subtle multiplane horizontal pan to emphasize steep drop",
+                    "voice_direction": "Jack is brave and resolute, Jill is slightly nervous but trusting.",
+                    "sound_effects": ["wind_howl", "footsteps"]
+                },
+                {
+                    "scene_number": 3,
+                    "duration_seconds": 15,
+                    "location": "Slick mossy stone path",
+                    "action": "Jack slips, arms pinwheeling. Jill gasps and leans to catch him.",
+                    "narration": "Oh no! Watch your step, Jack!",
+                    "dialogue": [
+                        {
+                            "character": "Jack",
+                            "text": "Whoa! This moss is super slippery! Help!",
+                            "translated_text": "अरे! यह काई बहुत फिसलन भरी है! बचाओ!",
+                            "emotion": "panic",
+                            "sound_effect": "slip_slide"
+                        },
+                        {
+                            "character": "Jill",
+                            "text": "I got you, Jack! Grab my arm!",
+                            "translated_text": "मैंने तुम्हें पकड़ लिया है, जैक! मेरा हाथ पकड़ो!",
+                            "emotion": "shocked",
+                            "sound_effect": "gasp"
+                        }
+                    ],
+                    "image_prompt": "Jack slips on a slick mossy stone, arms pinwheeling in exaggerated slapstick motion, eyes wide in comic shock. Jill gasps with both hands covering her cheeks, mouth shaped in a round 'O', leaning sideways to catch him. Freeze-frame action shot, slight motion blur...",
+                    "video_prompt": "Fast frantic shake effect with motion blur on Jack",
+                    "voice_direction": "Jack is in comic panic, Jill yells out in surprise.",
+                    "sound_effects": ["slip_slide", "comic_gasp"]
+                },
+                {
+                    "scene_number": 4,
+                    "duration_seconds": 15,
+                    "location": "Top of the hill overlooking a sparkling river valley",
+                    "action": "Jack and Jill sit side-by-side on a wooden bench, holding up the shiny golden compass.",
+                    "narration": "They finally reached the top and found the shiny golden compass!",
+                    "dialogue": [
+                        {
+                            "character": "Jack",
+                            "text": "We did it, Jill! We worked together and found the lost compass!",
+                            "translated_text": "हमने कर दिखाया, जिल! हमने मिलकर काम किया और खोया हुआ कम्पास ढूंढ लिया!",
+                            "emotion": "joyful",
+                            "sound_effect": "success_fanfare"
+                        },
+                        {
+                            "character": "Jill",
+                            "text": "It's beautiful! And teamwork made the whole adventure so much fun!",
+                            "translated_text": "यह खूबसूरत है! और टीमवर्क ने पूरे रोमांच को बहुत मजेदार बना दिया!",
+                            "emotion": "proud",
+                            "sound_effect": "happy_laugh"
+                        }
+                    ],
+                    "image_prompt": "Top of the hill overlooking a sparkling river valley at sunset. Jack and Jill sit side-by-side on a wooden bench, laughing joyfully with crinkled eyes and rosy cheeks, holding up the shiny golden compass together. Warm rim lighting, rich sunset hues, heartfelt storytelling composition...",
+                    "video_prompt": "Warm slow pan revealing the beautiful sunset valley",
+                    "voice_direction": "Jack is victorious and thrilled, Jill is relieved and happy.",
+                    "sound_effects": ["success_fanfare", "happy_laugh"]
+                }
             ],
-            "scenes": scenes,
-            "quiz": quiz,
-            "youtube": youtube_meta,
-            "thumbnail": thumbnail_meta,
-            "shorts": shorts_list
+            "metadata": {
+                "characters_used": ["Jack", "Jill"],
+                "tone": "adventurous and educational",
+                "estimated_duration_seconds": 60
+            }
         }

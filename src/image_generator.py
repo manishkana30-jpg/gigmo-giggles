@@ -315,6 +315,9 @@ class ImageGenerator:
         context: Optional[Dict[str, Any]] = None
     ) -> bool:
         """Generate a single image file with cascading provider fallback."""
+        if output_path.exists():
+            logger.info(f"Image already exists, skipping generation: {output_path.name}")
+            return True
         success = self.provider.generate(prompt, output_path, width, height, context)
 
         # Fallback cascade: Gemini → HuggingFace → PIL

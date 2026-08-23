@@ -18,6 +18,7 @@ class CharacterEntry(BaseModel):
 class DialogueLine(BaseModel):
     character: str = Field(..., description="Name of speaking character")
     text: str = Field(..., description="Spoken dialogue line")
+    translated_text: Optional[str] = Field(default="", description="Spoken dialogue line translated to the spoken_language")
     emotion: Optional[str] = Field(default="happy", description="Emotional tone")
     sound_effect: Optional[str] = Field(default=None, description="Accompanying SFX")
 
@@ -28,6 +29,7 @@ class SceneModel(BaseModel):
     location: str = Field(..., description="Scene background/location")
     action: str = Field(..., description="Visual action happening in scene")
     narration: Optional[str] = Field(default="", description="Optional narrator line")
+    translated_narration: Optional[str] = Field(default="", description="Optional narrator line translated to the spoken_language")
     dialogue: List[DialogueLine] = Field(default_factory=list, description="Character dialogues")
     image_prompt: str = Field(..., description="Prompt for 2D cartoon image generator")
     video_prompt: Optional[str] = Field(default="", description="Ken Burns / motion camera instructions")

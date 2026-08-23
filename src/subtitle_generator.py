@@ -52,9 +52,9 @@ class SubtitleGenerator:
                 for line in dialogues:
                     start_t = current_time
                     end_t = start_t + line_duration
-                    char = line.get("character", "Bobo")
+                    char = line.get("character", "Jack")
                     text = line.get("text", "")
-                    subtitle_text = f"<b>{char}:</b> {text}"
+                    subtitle_text = f"{char}: {text}"
 
                     # SRT entry
                     srt_entries.append(
@@ -75,7 +75,7 @@ class SubtitleGenerator:
             elif narration:
                 start_t = current_time
                 end_t = start_t + scene_duration
-                subtitle_text = f"<i>{narration}</i>"
+                subtitle_text = narration
 
                 srt_entries.append(
                     f"{entry_index}\n"

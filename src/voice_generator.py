@@ -4,7 +4,7 @@ import os
 import subprocess
 from pathlib import Path
 from typing import Dict, Any, List, Optional
-from src.utils import save_json, generate_simple_tone_wav, generate_melodic_chime_wav, check_ffmpeg_available, setup_logger
+from src.utils import save_json, generate_simple_tone_wav, generate_melodic_chime_wav, check_ffmpeg_available, setup_logger, get_project_root, load_json
 
 logger = setup_logger("VoiceGenerator")
 
@@ -21,32 +21,25 @@ class VoiceGenerator:
 
     # Character voice profiles with pitch/speed adjustments for differentiation
     CHARACTER_PROFILES = {
-        "Bobo": {
-            "pitch_hz": 260.0,
-            "tone": "warm_bear",
-            "gtts_tld": "com",
-            "speed_factor": 0.92,     # Slightly slower for warm bear voice
-            "pitch_semitones": -3,     # Lower pitch for bear
+        "Jack": {
+            "pitch_hz": 340.0,
+            "tone": "adventurous_boy",
+            "gtts_tld": "co.in",
+            "speed_factor": 1.0,
+            "pitch_semitones": 2,      # Slightly higher for young boy
         },
-        "Luna": {
+        "Jill": {
             "pitch_hz": 440.0,
-            "tone": "cheerful_fox",
-            "gtts_tld": "co.uk",
-            "speed_factor": 1.0,      # Normal speed
-            "pitch_semitones": 2,      # Slightly higher for cheerful fox
-        },
-        "Milo": {
-            "pitch_hz": 620.0,
-            "tone": "cute_robot",
-            "gtts_tld": "com.au",
-            "speed_factor": 1.08,     # Slightly faster for energetic robot
-            "pitch_semitones": 4,      # Higher pitch for robot
+            "tone": "cheerful_girl",
+            "gtts_tld": "co.in",
+            "speed_factor": 0.95,     # Slightly slower for warm tone
+            "pitch_semitones": 4,      # Higher pitch for young girl
         },
         "Narrator": {
             "pitch_hz": 350.0,
             "tone": "narrator",
-            "gtts_tld": "com",
-            "speed_factor": 0.95,
+            "gtts_tld": "co.in",
+            "speed_factor": 0.90,     # Slightly slower for children
             "pitch_semitones": 0,
         }
     }
@@ -54,6 +47,10 @@ class VoiceGenerator:
     def __init__(self, enabled: bool = True):
         self.enabled = enabled
         self.ffmpeg_available = check_ffmpeg_available()
+        root = get_project_root()
+        self.settings = load_json(root / "config" / "settings.json")
+        self.language_setting = self.settings.get("spoken_language", "English").lower()
+        self.gtts_lang = "hi" if "hindi" in self.language_setting else "en"
 
     def _convert_mp3_to_wav(self, mp3_path: Path, wav_path: Path, character: str = "Narrator") -> bool:
         """Convert MP3 to WAV using FFmpeg with character-specific voice adjustments."""
@@ -90,7 +87,7 @@ class VoiceGenerator:
             "ffmpeg", "-y",
             "-i", str(mp3_path),
             "-af", filter_str,
-            "-ar", "22050",
+            "-ar", "44100",
             "-ac", "1",
             "-sample_fmt", "s16",
             str(wav_path)
@@ -101,6 +98,15 @@ class VoiceGenerator:
             if res.returncode == 0 and wav_path.exists():
                 # Clean up mp3
                 mp3_path.unlink(missing_ok=True)
+                # Add 400ms silence padding for smooth scene transitions
+                try:
+                    from pydub import AudioSegment
+                    audio = AudioSegment.from_wav(str(wav_path))
+                    silence = AudioSegment.silent(duration=400)
+                    padded = silence + audio + silence
+                    padded.export(str(wav_path), format="wav")
+                except Exception as pad_err:
+                    logger.warning(f"Silence padding skipped: {pad_err}")
                 return True
             else:
                 logger.warning(f"FFmpeg MP3→WAV conversion failed (exit {res.returncode})")
@@ -131,7 +137,7 @@ class VoiceGenerator:
                 char_profile = self.CHARACTER_PROFILES.get(character, {"gtts_tld": "com"})
                 # Generate TTS as MP3 first
                 tts_mp3_path = output_path.with_suffix(".mp3")
-                tts = gTTS(text=text, lang="en", tld=char_profile.get("gtts_tld", "com"), slow=False)
+                tts = gTTS(text=text, lang=self.gtts_lang, tld=char_profile.get("gtts_tld", "com"), slow=False)
                 tts.save(str(tts_mp3_path))
 
                 # Convert MP3 → WAV with character voice adjustments
@@ -197,8 +203,8 @@ class VoiceGenerator:
 
             if dialogue_lines:
                 # Concatenate all dialogues for scene audio
-                combined_text = ". ".join([f"{d.get('character')}: {d.get('text')}" for d in dialogue_lines])
-                primary_char = dialogue_lines[0].get("character", "Bobo")
+                combined_text = ". ".join([f"{d.get('character')}: {d.get('translated_text') or d.get('text')}" for d in dialogue_lines])
+                primary_char = dialogue_lines[0].get("character", "Jack")
                 self.generate_speech(combined_text, primary_char, scene_audio_path, duration_sec=duration)
 
                 for idx, line in enumerate(dialogue_lines, start=1):
@@ -210,7 +216,8 @@ class VoiceGenerator:
                         "sound_effect": line.get("sound_effect")
                     })
             elif narration:
-                self.generate_speech(narration, "Narrator", scene_audio_path, duration_sec=duration)
+                narr_text = scene.get("translated_narration") or narration
+                self.generate_speech(narr_text, "Narrator", scene_audio_path, duration_sec=duration)
                 line_entries.append({
                     "line_id": f"scene_{scene_num:02d}_narration",
                     "character": "Narrator",

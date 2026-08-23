@@ -212,6 +212,8 @@ Output ONLY valid JSON.
         """Construct the prompt for generating the day's specific episode."""
         scenes_count = self.settings.get("scenes_per_episode", 10)
         target_age = self.settings.get("target_age", "6-9")
+        language = self.settings.get("language", "English")
+        spoken_language = self.settings.get("spoken_language", "English")
 
         return f"""
 Generate Episode ID: {episode_id}
@@ -221,68 +223,77 @@ Learning Objective: {topic.get('learning_objective')}
 Target Child Age: {target_age}
 Number of Scenes: {scenes_count}
 
-Ensure Bobo, Luna, and Milo work together to explore this concept in a hilarious and educational journey.
-Include image_prompt for every scene with full canonical visual descriptors.
-Ensure video_prompt specifies Ken Burns camera motion.
+Ensure Jack and Jill work together to explore this concept in a hilarious and educational journey.
+CRITICAL: The primary 'text' and 'narration' fields MUST be in {language} for the subtitles. However, if spoken language is different, you MUST also provide 'translated_text' and 'translated_narration' which contain the exact same dialogue translated into natively spoken {spoken_language}.
+Include image_prompt for every scene with full canonical visual descriptors. The image_prompt MUST adhere to this exact style:
+"Best 2.5D layered cartoon illustration, high-res storybook concept art, crisp clean vector lines with soft volumetric shading. Multiplane depth with clearly separated foreground, midground characters, and background layers. Dynamic comic-strip energy, freeze-frame action pose with extreme exaggerated facial expressions.
+[LAYER STRUCTURE]:
+- Foreground: Out-of-focus blades of grass, floating leaves, or stones framing the bottom/sides to establish 3D parallax depth.
+- Midground: Jack and Jill captured mid-action on a steep grassy hill, completely isolated with clear silhouettes.
+- Background: Rolling green countryside, storybook cottage, puffy clouds, and soft blue sky.
+[EXPRESSION & POSE]: Jack is frozen mid-action with an exaggerated open-mouth scream/gasp of excitement, eyes wide with raised arches. Jill mirrors the energy with hands thrown up in shock/delight, jaw dropped in cartoon amazement."
+
+Ensure video_prompt specifies: "Slow dramatic push-in zoom on Jack and Jill's expressive faces, subtle multiplane horizontal pan to emphasize foreground/background parallax separation."
 Output MUST be strict valid JSON matching EpisodeSchema.
 """
 
     def _generate_mock_episode(self, topic: Dict[str, Any], episode_id: str) -> Dict[str, Any]:
         """Deterministic high-quality episode generator for offline testing or fallback."""
-        title_raw = topic.get("title", "Why Does Rain Happen?")
-        learning_obj = topic.get("learning_objective", "Understand how clouds collect water droplets and make rain.")
+        # When falling back to the mock script, we force the topic to match the hardcoded script (Water Cycle).
+        title_raw = "The Water Cycle"
+        learning_obj = "Understand how clouds collect water droplets and make rain."
         target_age = self.settings.get("target_age", "6-9")
 
         scenes = [
             {
                 "scene_number": 1,
                 "duration_seconds": 15,
-                "location": "The Sunny Treehouse Laboratory",
-                "action": "Bobo the bear is looking through a toy telescope, while Luna the fox takes notes on a clipboard and Milo the robot rolls in with a spinning antenna.",
-                "narration": "Welcome to another sunny day of wonder at the Gigmo Treehouse!",
+                "location": "The Sunny Hillside",
+                "action": "Jack is looking through a toy telescope, while Jill takes notes on a clipboard.",
+                "narration": "Welcome to another sunny day of wonder on the hill!",
                 "dialogue": [
                     {
-                        "character": "Bobo",
-                        "text": f"Hey Luna! Look at that! I've always wondered, why is {title_raw.lower()}?",
+                        "character": "Jack",
+                        "text": f"Hey Jill! Look at that! I've always wondered, why is {title_raw.lower()}?",
                         "emotion": "curious",
                         "sound_effect": "boing"
                     },
                     {
-                        "character": "Luna",
-                        "text": "Great question, Bobo! Let's activate the Discovery Screen and find out together!",
+                        "character": "Jill",
+                        "text": "Great question, Jack! Let's activate the Discovery Screen and find out together!",
                         "emotion": "enthusiastic",
                         "sound_effect": "chime"
                     }
                 ],
-                "image_prompt": "Stylized 2D cartoon animation frame: Bobo the honey-brown cartoon bear with sunny yellow neckerchief pointing excitedly at a glowing screen with Luna the orange fox in teal vest and Milo the sky-blue robot in a cozy sunlit treehouse. Bright vivid colors, clean outlines, storybook illustration.",
-                "video_prompt": "Smooth slow zoom-in toward Bobo and Luna as they examine the discovery screen.",
-                "voice_direction": "Bobo speaks with child-like excitement. Luna is cheerful and warm.",
-                "sound_effects": ["treehouse_birds", "happy_chime"]
+                "image_prompt": "Best 2.5D layered cartoon illustration, high-res storybook concept art, crisp clean vector lines with soft volumetric shading. Multiplane depth with clearly separated foreground, midground characters, and background layers. Dynamic comic-strip energy, freeze-frame action pose with extreme exaggerated facial expressions. Foreground: Out-of-focus blades of grass. Midground: Jack and Jill captured mid-action on a steep grassy hill, completely isolated with clear silhouettes. Background: Rolling green countryside. Jack is frozen mid-action with an exaggerated open-mouth gasp of excitement. Jill mirrors the energy with hands thrown up in shock.",
+                "video_prompt": "Slow dramatic push-in zoom on Jack and Jill's expressive faces, subtle multiplane horizontal pan to emphasize foreground/background parallax separation.",
+                "voice_direction": "Jack speaks with child-like excitement. Jill is cheerful and warm.",
+                "sound_effects": ["outdoor_birds", "happy_chime"]
             },
             {
                 "scene_number": 2,
                 "duration_seconds": 18,
                 "location": "The Meadow Observation Deck",
-                "action": "Milo the robot projects a glowing hologram showing the first step of the educational concept.",
+                "action": "Jill holds up a magnifying glass, showing a glowing diagram of the first step of the educational concept.",
                 "narration": f"Our friends investigate the first secret of {title_raw.lower()}.",
                 "dialogue": [
                     {
-                        "character": "Milo",
-                        "text": "Beep-boop! Scanning parameters! The secret begins with sunlight and energy!",
-                        "emotion": "energetic",
-                        "sound_effect": "robot_beep"
+                        "character": "Jill",
+                        "text": "According to my notes, it all starts right here. See?",
+                        "emotion": "smart",
+                        "sound_effect": "whoosh"
                     },
                     {
-                        "character": "Bobo",
-                        "text": "Whoa! It looks like magic, but it is actually science!",
+                        "character": "Jack",
+                        "text": "Whoa! That is so cool! It's like magic, but real!",
                         "emotion": "amazed",
                         "sound_effect": "sparkle"
                     }
                 ],
-                "image_prompt": "Stylized 2D cartoon animation frame: Milo the sky-blue compact robot with lime-green glowing digital eyes projecting a sparkling educational holographic diagram in a sunny meadow. Bobo the friendly bear watches with wide sparkling eyes. Vibrant colors, clean lines.",
-                "video_prompt": "Gentle pan left-to-right following Milo's holographic projection.",
-                "voice_direction": "Milo has cute melodic robotic pitch. Bobo gasps with joy.",
-                "sound_effects": ["robot_scan", "magic_whoosh"]
+                "image_prompt": "Best 2.5D layered cartoon illustration, high-res storybook concept art, crisp clean vector lines with soft volumetric shading. Multiplane depth with clearly separated foreground, midground characters, and background layers. Dynamic comic-strip energy, freeze-frame action pose with extreme exaggerated facial expressions. Foreground: Out-of-focus blades of grass. Midground: Jack and Jill captured mid-action on a steep grassy hill, completely isolated with clear silhouettes. Background: Rolling green countryside. Jack is frozen mid-action with an exaggerated open-mouth gasp of excitement. Jill mirrors the energy with hands thrown up in shock.",
+                "video_prompt": "Slow dramatic push-in zoom on Jack and Jill's expressive faces, subtle multiplane horizontal pan to emphasize foreground/background parallax separation.",
+                "voice_direction": "Jill is confident. Jack is amazed.",
+                "sound_effects": ["whoosh", "sparkle"]
             },
             {
                 "scene_number": 3,
@@ -495,7 +506,7 @@ Output MUST be strict valid JSON matching EpisodeSchema.
 
         return {
             "episode_id": episode_id,
-            "topic": title_raw,
+            "topic": "The Water Cycle",
             "learning_objective": learning_obj,
             "target_age": target_age,
             "title": f"{title_raw} - Gigmo Giggles Episode",

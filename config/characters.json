@@ -1,38 +1,26 @@
 [
   {
-    "id": "bobo",
-    "name": "Bobo",
-    "type": "friendly cartoon bear",
-    "personality": "curious, funny, enthusiastic",
-    "canonical_visual_description": "Bobo is a chubby, smiling honey-brown cartoon teddy bear with round fuzzy ears, big friendly sparkling eyes, wearing a cheerful sunny yellow neckerchief. Stylized 2D cartoon animation aesthetic, bright vibrant colors, clean outlines.",
-    "voice_style": "warm, playful, friendly",
+    "id": "jack",
+    "name": "Jack",
+    "type": "adventurous young boy",
+    "personality": "energetic, curious, adventurous",
+    "canonical_visual_description": "Jack is an adventurous young cartoon boy with curly brown hair peeking out from under a bright orange cap. He has big expressive green eyes, a sweet smile, and wears a white collared shirt with an orange vest, a red neckerchief, green shorts, and grey shoes.",
+    "voice_style": "energetic, boyish, enthusiastic",
     "color_palette": {
-      "primary": "#D27D2D",
-      "accent": "#FFD700"
+      "primary": "#FFA500",
+      "accent": "#008000"
     }
   },
   {
-    "id": "luna",
-    "name": "Luna",
-    "type": "clever cartoon fox",
-    "personality": "thoughtful, playful, helpful",
-    "canonical_visual_description": "Luna is a bright playful orange cartoon fox with soft creamy-white chest fur, large expressive inquisitive amber eyes, a sleek fluffy tail with a white tip, and a tiny teal-blue explorer vest. Stylized 2D cartoon animation aesthetic, bright vibrant colors, clean outlines.",
-    "voice_style": "energetic, clever, cheerful",
+    "id": "jill",
+    "name": "Jill",
+    "type": "cheerful young girl",
+    "personality": "cheerful, bright, observant",
+    "canonical_visual_description": "Jill is a cheerful young cartoon girl with dark brown hair tied in a ponytail featuring a bright red bow headband. She has large expressive brown eyes, cute freckles, and wears a bright red button-up dress.",
+    "voice_style": "sweet, bright, curious",
     "color_palette": {
-      "primary": "#FF7F50",
-      "accent": "#008080"
-    }
-  },
-  {
-    "id": "milo",
-    "name": "Milo",
-    "type": "young cartoon robot",
-    "personality": "energetic, asks questions",
-    "canonical_visual_description": "Milo is a friendly sky-blue compact cartoon robot with rounded corners, glowing warm lime-green digital screen eyes, a flexible spiral head antenna with an orange light bulb tip, and playful roller wheels. Stylized 2D cartoon animation aesthetic, bright vibrant colors, clean outlines.",
-    "voice_style": "robotic but cute, melodic, cheerful",
-    "color_palette": {
-      "primary": "#4682B4",
-      "accent": "#32CD32"
+      "primary": "#FF0000",
+      "accent": "#8B4513"
     }
   }
 ]

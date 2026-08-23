@@ -50,3 +50,11 @@ episodes/*/*/thumbnail/*.png
 *.swo
 .DS_Store
 Thumbs.db
+
+# Generated Data and Secrets
+client_secret.json
+daily-episode-*/
+latest_run/
+.tmp.driveupload/
+rhubarb.zip
+episodes/

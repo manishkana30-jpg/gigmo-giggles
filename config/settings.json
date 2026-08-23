@@ -3,6 +3,7 @@
   "episode_length_minutes": 3,
   "scenes_per_episode": 10,
   "language": "English",
+  "spoken_language": "Hindi",
   "youtube_format": "16:9",
   "shorts_format": "9:16",
   "video_resolution": {
@@ -13,7 +14,7 @@
     "width": 1080,
     "height": 1920
   },
-  "frame_rate": 24,
+  "frame_rate": 30,
   "auto_upload_youtube": true,
   "youtube_privacy_status": "private",
   "image_generation_enabled": true,

@@ -36,7 +36,7 @@ class GeminiImageProvider(BaseImageProvider):
 
     def __init__(self, api_key: Optional[str] = None):
         self.api_key = api_key or os.environ.get("GEMINI_API_KEY")
-        self.model_name = "gemini-2.0-flash-preview-image-generation"
+        self.model_name = "gemini-2.5-flash-image"
 
     def generate(self, prompt: str, output_path: Path, width: int = 1920, height: int = 1080, context: Optional[Dict[str, Any]] = None) -> bool:
         if not self.api_key or not GENAI_AVAILABLE:

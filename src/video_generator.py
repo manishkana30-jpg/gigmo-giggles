@@ -65,7 +65,11 @@ class PipelineTempDir:
 def cleanup_orphaned_resources(target_dirs: List[Path] = None):
     """Scan directories for files older than 1 hour matching pipeline patterns and purge them."""
     if not target_dirs:
-        target_dirs = [Path("/tmp"), Path("./episodes"), Path(".")]
+        # Avoid scanning the root directory recursively as it deletes config/ JSON files.
+        # Instead, scan specific temporary output and system temp directories.
+        target_dirs = [Path("./episodes")]
+        if os.name != 'nt':  # Only check /tmp on Unix-like systems
+            target_dirs.append(Path("/tmp"))
     
     current_time = time.time()
     one_hour_sec = 3600

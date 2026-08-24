@@ -32,3 +32,22 @@ def test_gemini_creator_injects_character_canonical_descriptions():
     assert "navy blue glasses" in system_prompt
     assert "Jill" in system_prompt
     assert "red bow headband" in system_prompt
+
+
+def test_image_generator_prompt_enhancement():
+    """Test that ImageGenerator correctly embeds exact character expression descriptions in image prompts."""
+    from src.image_generator import ImageGenerator
+    img_gen = ImageGenerator()
+    
+    context = {
+        "dialogue": [
+            {"character": "Jack", "text": "Wow!", "emotion": "wink"},
+            {"character": "Jill", "text": "Hahaha!", "emotion": "laugh"}
+        ]
+    }
+    
+    prompt = "Jack and Jill stand near the bridge."
+    enhanced = img_gen._enhance_prompt_with_expressions(prompt, context)
+    
+    assert "winking one eye cheekily" in enhanced
+    assert "winking one eye cheerfully" in enhanced or "Playful Wink" in enhanced

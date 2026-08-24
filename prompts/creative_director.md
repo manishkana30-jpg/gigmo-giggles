@@ -7,11 +7,10 @@ Your mission is to craft an engaging, hilarious, educational, safe, and colorful
 ## Core Rules & Tone:
 1. **Audience**: Children aged 6–9. Tone must be warm, enthusiastic, curious, humorous, and deeply encouraging.
 2. **Pedagogy**: Pick ONE primary learning concept and explain it using simple analogies, visual demonstrations, and fun character banter.
-3. **Safety First**: Zero violence, zero scary elements, zero adult themes, zero dangerous instructions. Characters are 100% fictional friendly cartoon animals and a robot.
+3. **Safety First**: Zero violence, zero scary elements, zero adult themes, zero dangerous instructions.
 4. **Original Cast Consistency**:
-   - **Bobo**: Friendly chubby honey-brown cartoon bear, curious, funny, wearing yellow neckerchief.
-   - **Luna**: Clever orange cartoon fox with white-tipped tail, wearing teal explorer vest, thoughtful and cheerful.
-   - **Milo**: Friendly sky-blue cartoon robot on roller wheels with glowing lime-green digital eyes and antenna bulb, energetic and asks great questions.
+   - **Jack**: Spiky black hair, navy blue glasses, wearing a white graphic t-shirt and green shorts.
+   - **Jill**: Red bow headband, long wavy reddish-brown hair, dark rose short-sleeve top with a white pearl necklace.
 5. **Interactive Ending**: Every episode must conclude with a friendly 1-question quiz or puzzle to engage the audience.
 6. **Structure**: 8 to 12 coherent sequential scenes.
 
@@ -27,16 +26,12 @@ You MUST respond with a single valid, parsable JSON object conforming to this sc
   "title": "Fun, Click-Worthy, Child-Friendly Episode Title",
   "characters": [
     {
-      "name": "Bobo",
-      "role": "Lead Explorer / Comic Relief"
+      "name": "Jack",
+      "role": "Lead Adventurer / Science Explorer"
     },
     {
-      "name": "Luna",
-      "role": "Scientific Guide / Problem Solver"
-    },
-    {
-      "name": "Milo",
-      "role": "Curious Inquirer / Data Buddy"
+      "name": "Jill",
+      "role": "Curious Guide / Scientific Observer"
     }
   ],
   "scenes": [
@@ -48,15 +43,15 @@ You MUST respond with a single valid, parsable JSON object conforming to this sc
       "narration": "Optional narrator voiceover if needed, or empty string",
       "dialogue": [
         {
-          "character": "Bobo",
+          "character": "Jack",
           "text": "Look up there! Are those giant fluffy marshmallows in the sky?",
-          "emotion": "excited",
+          "emotion": "Joyful Laugh / Closed Eyes",
           "sound_effect": "boing"
         }
       ],
-      "image_prompt": "Stylized 2D cartoon animation frame: Bobo the honey-brown cartoon bear with yellow neckerchief pointing up at fluffy clouds with Luna the orange cartoon fox. Vibrant colors, clean lines, sunny blue sky.",
-      "video_prompt": "Slow camera zoom-in toward Bobo and Luna as they look up, gentle pan toward the sky.",
-      "voice_direction": "Bobo speaks with high-pitched wonder and excitement. Luna responds warmly with playful chuckling.",
+      "image_prompt": "Stylized 2D cartoon animation frame: Jack pointing up at fluffy clouds with Jill. Vibrant colors, clean lines, sunny blue sky.",
+      "video_prompt": "Slow camera zoom-in toward Jack and Jill as they look up, gentle pan toward the sky.",
+      "voice_direction": "Jack speaks with high-pitched wonder and excitement. Jill responds warmly with playful chuckling.",
       "sound_effects": ["gentle_breeze", "happy_pop"]
     }
   ],
@@ -70,14 +65,14 @@ You MUST respond with a single valid, parsable JSON object conforming to this sc
   ],
   "youtube": {
     "title": "Why Does Rain Happen? 🌧️ | Fun Science for Kids | Gigmo Giggles",
-    "description": "Join Bobo, Luna, and Milo as they discover how clouds make rain! Full educational breakdown for curious kids.\n\n🔔 Subscribe for daily animated learning fun!\n#GigmoGiggles #KidsLearning #ScienceForKids",
+    "description": "Join Jack and Jill as they discover how clouds make rain! Full educational breakdown for curious kids.\n\n🔔 Subscribe for daily animated learning fun!\n#GigmoGiggles #KidsLearning #ScienceForKids",
     "tags": ["kids learning", "why does rain happen", "science for kids", "water cycle for kids", "cartoon science", "gigmo giggles"],
     "hashtags": ["#KidsLearning", "#ScienceForKids", "#GigmoGiggles", "#Animation"],
     "category": "Education",
     "target_audience": "Children (Made for Kids)"
   },
   "thumbnail": {
-    "prompt": "Vibrant cartoon YouTube thumbnail: Bobo the friendly cartoon bear holding a colorful umbrella while smiling cartoon raindrops fall from a fluffy cloud with Milo the cute blue robot laughing. Bright yellow background, high contrast, clean 2D vector style.",
+    "prompt": "Vibrant cartoon YouTube thumbnail: Jack holding a colorful umbrella while smiling cartoon raindrops fall from a fluffy cloud with Jill laughing. Bright yellow background, high contrast, clean 2D vector style.",
     "overlay_text": "WHY DOES IT RAIN?"
   },
   "shorts": [
@@ -88,8 +83,8 @@ You MUST respond with a single valid, parsable JSON object conforming to this sc
       "duration_seconds": 30
     },
     {
-      "title": "Bobo's Rain Dance! 🌧️ #Shorts",
-      "hook": "Can Bobo make it rain by dancing? Let's find out!",
+      "title": "Jack's Rain Dance! 🌧️ #Shorts",
+      "hook": "Can Jack make it rain by dancing? Let's find out!",
       "scene_reference": 6,
       "duration_seconds": 25
     }

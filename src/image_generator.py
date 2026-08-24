@@ -1,6 +1,7 @@
 """Multi-provider image generation with Gemini AI and comic-cartoon procedural fallback."""
 
 import os
+import re
 import math
 import random
 import time
@@ -502,13 +503,15 @@ class ImageGenerator:
         if output_path.exists():
             logger.info(f"Image already exists, skipping generation: {output_path.name}")
             return True
-        success = self.provider.generate(prompt, output_path, width, height, context)
+            
+        enhanced_prompt = self._enhance_prompt_with_expressions(prompt, context)
+        success = self.provider.generate(enhanced_prompt, output_path, width, height, context)
 
         # Fallback cascade: Gemini → HuggingFace → PIL
         if not success and isinstance(self.provider, GeminiImageProvider):
             logger.info("Gemini image gen failed. Trying HuggingFace...")
             hf = HuggingFaceImageProvider()
-            success = hf.generate(prompt, output_path, width, height, context)
+            success = hf.generate(enhanced_prompt, output_path, width, height, context)
 
         if not success and not isinstance(self.provider, PILComicProceduralProvider):
             logger.info("External image providers failed. Falling back to PIL Comic Generator...")
@@ -516,6 +519,111 @@ class ImageGenerator:
             return fallback.generate(prompt, output_path, width, height, context)
 
         return success
+
+    def _enhance_prompt_with_expressions(self, prompt: str, context: Optional[Dict[str, Any]] = None) -> str:
+        """
+        Enhance the text prompt by injecting the exact visual descriptions and 
+        emotional expressions from character_prompts.json.
+        """
+        try:
+            from src.utils import get_project_root, load_json
+            root = get_project_root()
+            char_prompts = load_json(root / "config" / "character_prompts.json")
+        except Exception:
+            char_prompts = {}
+
+        # Resolve emotions/expressions based on context
+        jack_emotion = "happy"
+        jill_emotion = "happy"
+
+        if context and "dialogue" in context:
+            for dial in context["dialogue"]:
+                speaker = str(dial.get("character", "")).strip().lower()
+                emo = str(dial.get("emotion", "")).strip().lower()
+                if not emo:
+                    txt = str(dial.get("text", "")).lower()
+                    if "wink" in txt: emo = "wink"
+                    elif "sad" in txt or "sorry" in txt or "hurt" in txt: emo = "sad"
+                    elif "wow" in txt or "look" in txt or "!" in txt: emo = "surprised"
+                    elif "think" in txt or "why" in txt or "?" in txt: emo = "thoughtful"
+
+                if emo:
+                    if speaker == "jack":
+                        jack_emotion = emo
+                    elif speaker == "jill":
+                        jill_emotion = emo
+
+        # Context action/prompt text backup keyword search
+        action_text = ""
+        if context and "action" in context:
+            action_text += context["action"].lower()
+        if prompt:
+            action_text += " " + prompt.lower()
+
+        if jack_emotion == "happy":
+            if "wink" in action_text: jack_emotion = "wink"
+            elif "sad" in action_text or "frown" in action_text or "pout" in action_text: jack_emotion = "sad"
+            elif "shock" in action_text or "surprise" in action_text or "gasp" in action_text: jack_emotion = "surprised"
+            elif "think" in action_text or "curious" in action_text: jack_emotion = "thoughtful"
+            elif "angry" in action_text or "furious" in action_text or "shout" in action_text: jack_emotion = "angry"
+            elif "laugh" in action_text or "giggle" in action_text: jack_emotion = "laugh"
+
+        if jill_emotion == "happy":
+            if "wink" in action_text: jill_emotion = "wink"
+            elif "sad" in action_text or "cry" in action_text or "pout" in action_text: jill_emotion = "sad"
+            elif "shock" in action_text or "surprise" in action_text or "gasp" in action_text or "awe" in action_text: jill_emotion = "surprised"
+            elif "think" in action_text or "curious" in action_text: jill_emotion = "thoughtful"
+            elif "angry" in action_text or "annoyed" in action_text: jill_emotion = "angry"
+            elif "laugh" in action_text or "giggle" in action_text: jill_emotion = "laugh"
+
+        # Map to character_prompts.json keys
+        jack_map = {
+            "sad": "Sad / Pouting",
+            "angry": "Furious / Shouting",
+            "laugh": "Joyful Laugh / Closed Eyes",
+            "surprised": "Gasp / Astonished",
+            "thoughtful": "Joyful Laugh / Closed Eyes",
+            "wink": "Winking Mischief / Laugh",
+            "love": "Shy Love / Flattered",
+            "hyped": "Hyped / Celebrating",
+            "happy": "Joyful Laugh / Closed Eyes"
+        }
+
+        jill_map = {
+            "sad": "Crying / Distressed",
+            "angry": "Annoyed / Pouting",
+            "laugh": "Playful Wink / Joy",
+            "surprised": "Shocked / Surprised",
+            "thoughtful": "Pensive / Curious",
+            "wink": "Playful Wink / Joy",
+            "love": "Infatuated / In Love",
+            "happy": "Gentle Smile / Content"
+        }
+
+        # Retrieve exact visual prompt text
+        jack_visual = ""
+        jill_visual = ""
+
+        if "Jack" in char_prompts:
+            key = jack_map.get(jack_emotion, "Joyful Laugh / Closed Eyes")
+            jack_visual = char_prompts["Jack"].get(key, "")
+
+        if "Jill" in char_prompts:
+            key = jill_map.get(jill_emotion, "Gentle Smile / Content")
+            jill_visual = char_prompts["Jill"].get(key, "")
+
+        # Rebuild prompt incorporating the visual prompt text
+        enhanced = prompt
+        
+        # Inject Jack description if Jack is mentioned in prompt
+        if "jack" in prompt.lower() and jack_visual:
+            enhanced = re.sub(r"\bjack\b", f"Jack ({jack_visual})", enhanced, flags=re.IGNORECASE)
+        
+        # Inject Jill description if Jill is mentioned in prompt
+        if "jill" in prompt.lower() and jill_visual:
+            enhanced = re.sub(r"\bjill\b", f"Jill ({jill_visual})", enhanced, flags=re.IGNORECASE)
+
+        return enhanced
 
     def generate_all_scenes(self, episode_data: Dict[str, Any], output_dir: Path) -> Dict[str, Any]:
         """Generate images for all scenes in episode and save image_prompts.json manifest."""

@@ -168,8 +168,8 @@ class PILComicProceduralProvider(BaseImageProvider):
             # 1. Background sky gradient & scenery
             self._draw_scenery(draw, width, height, scene_num)
 
-            # 2. Draw cartoon cast (Bobo, Luna, Milo)
-            self._draw_characters(draw, width, height, scene_num)
+            # 2. Draw cartoon cast (Jack and Jill with dynamic expressions)
+            self._draw_characters(draw, width, height, scene_num, context, prompt)
 
             # 3. Speech bubble or educational banner
             self._draw_dialogue_bubble(draw, width, height, dialogues, location, scene_num)
@@ -216,8 +216,8 @@ class PILComicProceduralProvider(BaseImageProvider):
         draw.ellipse([width // 3, hill_y - 40, width + 400, height + 400], fill="#66BB6A")
         draw.rectangle([0, int(height * 0.72), width, height], fill="#43A047")
 
-    def _draw_characters(self, draw: ImageDraw.ImageDraw, width: int, height: int, scene_num: int):
-        """Draw canonical kids show characters: Jack (Left) and Jill (Right)."""
+    def _draw_characters(self, draw: ImageDraw.ImageDraw, width: int, height: int, scene_num: int, context: Optional[Dict[str, Any]] = None, prompt: Optional[str] = None):
+        """Draw canonical kids show characters: Jack (Left) and Jill (Right) with expressions matching context."""
         base_y = int(height * 0.58)
 
         flesh_color = "#FFD1A4"
@@ -230,6 +230,50 @@ class PILComicProceduralProvider(BaseImageProvider):
         jill_top_color = "#C2185B" # Dark Rose
         jill_headband_color = "#D50000" # Red
         pearl_color = "#E0E0E0"
+
+        # Resolve emotions/expressions based on context
+        jack_emotion = "happy"
+        jill_emotion = "happy"
+
+        if context and "dialogue" in context:
+            for dial in context["dialogue"]:
+                speaker = str(dial.get("character", "")).strip().lower()
+                emo = str(dial.get("emotion", "")).strip().lower()
+                if not emo:
+                    txt = str(dial.get("text", "")).lower()
+                    if "wink" in txt: emo = "wink"
+                    elif "sad" in txt or "sorry" in txt or "hurt" in txt: emo = "sad"
+                    elif "wow" in txt or "look" in txt or "!" in txt: emo = "surprised"
+                    elif "think" in txt or "why" in txt or "?" in txt: emo = "thoughtful"
+
+                if emo:
+                    if speaker == "jack":
+                        jack_emotion = emo
+                    elif speaker == "jill":
+                        jill_emotion = emo
+
+        # Context action / prompt text backup keyword search
+        action_text = ""
+        if context and "action" in context:
+            action_text += context["action"].lower()
+        if prompt:
+            action_text += " " + prompt.lower()
+
+        if jack_emotion == "happy":
+            if "wink" in action_text: jack_emotion = "wink"
+            elif "sad" in action_text or "frown" in action_text or "pout" in action_text: jack_emotion = "sad"
+            elif "shock" in action_text or "surprise" in action_text or "gasp" in action_text: jack_emotion = "surprised"
+            elif "think" in action_text or "curious" in action_text: jack_emotion = "thoughtful"
+            elif "angry" in action_text or "furious" in action_text or "shout" in action_text: jack_emotion = "angry"
+            elif "laugh" in action_text or "giggle" in action_text: jack_emotion = "laugh"
+
+        if jill_emotion == "happy":
+            if "wink" in action_text: jill_emotion = "wink"
+            elif "sad" in action_text or "cry" in action_text or "pout" in action_text: jill_emotion = "sad"
+            elif "shock" in action_text or "surprise" in action_text or "gasp" in action_text or "awe" in action_text: jill_emotion = "surprised"
+            elif "think" in action_text or "curious" in action_text: jill_emotion = "thoughtful"
+            elif "angry" in action_text or "annoyed" in action_text: jill_emotion = "angry"
+            elif "laugh" in action_text or "giggle" in action_text: jill_emotion = "laugh"
 
         # ----------------------------------------------------
         # Draw Jack (Left side of the screen)
@@ -251,26 +295,65 @@ class PILComicProceduralProvider(BaseImageProvider):
         # Jack's Head
         draw.ellipse([jack_x - 20, base_y - 60, jack_x + 85, base_y + 40], fill=flesh_color, outline="#3E2723", width=4)
 
-        # Jack's Eyes & Navy Blue Glasses
-        draw.ellipse([jack_x + 5, base_y - 25, jack_x + 30, base_y], fill="#FFFFFF", outline="#000000", width=2)
-        draw.ellipse([jack_x + 40, base_y - 25, jack_x + 65, base_y], fill="#FFFFFF", outline="#000000", width=2)
-        # Pupils
-        draw.ellipse([jack_x + 12, base_y - 18, jack_x + 22, base_y - 8], fill="#000000")
-        draw.ellipse([jack_x + 47, base_y - 18, jack_x + 57, base_y - 8])
-        # Glasses frames (Navy Blue)
+        # Draw Jack's eyes based on emotion
+        if jack_emotion == "wink":
+            # Left eye closed crescent
+            draw.arc([jack_x + 5, base_y - 20, jack_x + 25, base_y - 5], start=0, end=180, fill="#000000", width=3)
+            # Right eye open
+            draw.ellipse([jack_x + 40, base_y - 25, jack_x + 65, base_y], fill="#FFFFFF", outline="#000000", width=2)
+            draw.ellipse([jack_x + 47, base_y - 18, jack_x + 57, base_y - 8], fill="#000000")
+        elif jack_emotion == "laugh":
+            # Both eyes closed crescents
+            draw.arc([jack_x + 5, base_y - 20, jack_x + 25, base_y - 5], start=0, end=180, fill="#000000", width=3)
+            draw.arc([jack_x + 40, base_y - 20, jack_x + 60, base_y - 5], start=0, end=180, fill="#000000", width=3)
+        elif jack_emotion == "surprised":
+            # Extra large open eyes
+            draw.ellipse([jack_x + 2, base_y - 28, jack_x + 28, base_y + 2], fill="#FFFFFF", outline="#000000", width=2)
+            draw.ellipse([jack_x + 38, base_y - 28, jack_x + 64, base_y + 2], fill="#FFFFFF", outline="#000000", width=2)
+            draw.ellipse([jack_x + 10, base_y - 18, jack_x + 20, base_y - 8], fill="#000000")
+            draw.ellipse([jack_x + 46, base_y - 18, jack_x + 56, base_y - 8], fill="#000000")
+        else:
+            # Normal open eyes
+            draw.ellipse([jack_x + 5, base_y - 25, jack_x + 30, base_y], fill="#FFFFFF", outline="#000000", width=2)
+            draw.ellipse([jack_x + 40, base_y - 25, jack_x + 65, base_y], fill="#FFFFFF", outline="#000000", width=2)
+            draw.ellipse([jack_x + 12, base_y - 18, jack_x + 22, base_y - 8], fill="#000000")
+            draw.ellipse([jack_x + 47, base_y - 18, jack_x + 57, base_y - 8], fill="#000000")
+
+        # Glasses frames (Navy Blue) - always draw over eyes
         draw.rectangle([jack_x + 1, base_y - 28, jack_x + 34, base_y + 3], outline=jack_glasses_color, width=4)
         draw.rectangle([jack_x + 36, base_y - 28, jack_x + 69, base_y + 3], outline=jack_glasses_color, width=4)
-        # Glasses bridge & temples
         draw.line([jack_x + 34, base_y - 12, jack_x + 36, base_y - 12], fill=jack_glasses_color, width=4)
         draw.line([jack_x - 10, base_y - 12, jack_x + 1, base_y - 12], fill=jack_glasses_color, width=4)
         draw.line([jack_x + 69, base_y - 12, jack_x + 80, base_y - 12], fill=jack_glasses_color, width=4)
 
-        # Jack's Mouth (smiling)
-        draw.arc([jack_x + 20, base_y, jack_x + 50, base_y + 20], start=0, end=180, fill="#3E2723", width=4)
+        # Eyebrows based on emotion
+        if jack_emotion == "sad":
+            draw.line([jack_x + 5, base_y - 30, jack_x + 25, base_y - 38], fill="#3E2723", width=3)
+            draw.line([jack_x + 45, base_y - 38, jack_x + 65, base_y - 30], fill="#3E2723", width=3)
+        elif jack_emotion == "angry":
+            draw.line([jack_x + 5, base_y - 38, jack_x + 25, base_y - 30], fill="#3E2723", width=3)
+            draw.line([jack_x + 45, base_y - 30, jack_x + 65, base_y - 38], fill="#3E2723", width=3)
+        elif jack_emotion == "surprised":
+            draw.arc([jack_x + 2, base_y - 42, jack_x + 28, base_y - 32], start=180, end=360, fill="#3E2723", width=3)
+            draw.arc([jack_x + 38, base_y - 42, jack_x + 64, base_y - 32], start=180, end=360, fill="#3E2723", width=3)
+        else:
+            draw.line([jack_x + 5, base_y - 34, jack_x + 25, base_y - 34], fill="#3E2723", width=3)
+            draw.line([jack_x + 45, base_y - 34, jack_x + 65, base_y - 34], fill="#3E2723", width=3)
+
+        # Mouth based on emotion
+        if jack_emotion in ["happy", "wink"]:
+            draw.arc([jack_x + 20, base_y, jack_x + 50, base_y + 20], start=0, end=180, fill="#3E2723", width=4)
+        elif jack_emotion == "laugh":
+            draw.chord([jack_x + 20, base_y - 5, jack_x + 50, base_y + 25], start=0, end=180, fill="#C2185B", outline="#3E2723", width=2)
+        elif jack_emotion == "sad":
+            draw.arc([jack_x + 20, base_y + 10, jack_x + 50, base_y + 30], start=180, end=360, fill="#3E2723", width=4)
+        elif jack_emotion in ["angry", "surprised"]:
+            draw.ellipse([jack_x + 25, base_y + 5, jack_x + 45, base_y + 25], fill="#880E4F", outline="#3E2723", width=2)
+        elif jack_emotion == "thoughtful":
+            draw.line([jack_x + 22, base_y + 10, jack_x + 48, base_y + 10], fill="#3E2723", width=4)
 
         # Jack's Torso: White Graphic T-Shirt
         draw.rectangle([jack_x - 15, base_y + 40, jack_x + 80, base_y + 160], fill=jack_shirt_color, outline="#3E2723", width=4)
-        # Small blue circle graphic on the t-shirt
         draw.ellipse([jack_x + 15, base_y + 80, jack_x + 50, base_y + 115], fill="#0288D1", outline="#01579B", width=2)
 
         # Jack's Pants: Green Shorts
@@ -291,20 +374,58 @@ class PILComicProceduralProvider(BaseImageProvider):
 
         # Red headband
         draw.arc([jill_x - 15, base_y - 62, jill_x + 95, base_y - 30], start=180, end=360, fill=jill_headband_color, width=10)
-        # Red Bow on headband
         draw.polygon([(jill_x - 10, base_y - 55), (jill_x - 25, base_y - 70), (jill_x - 25, base_y - 40)], fill=jill_headband_color)
         draw.polygon([(jill_x - 10, base_y - 55), (jill_x + 5, base_y - 70), (jill_x + 5, base_y - 40)], fill=jill_headband_color)
         draw.ellipse([jill_x - 14, base_y - 59, jill_x - 6, base_y - 51], fill="#FFFFFF")
 
-        # Jill's Eyes (Big expressive eyes)
-        draw.ellipse([jill_x + 10, base_y - 25, jill_x + 38, base_y + 2], fill="#FFFFFF", outline="#000000", width=2)
-        draw.ellipse([jill_x + 45, base_y - 25, jill_x + 73, base_y + 2], fill="#FFFFFF", outline="#000000", width=2)
-        # Pupils
-        draw.ellipse([jill_x + 19, base_y - 17, jill_x + 29, base_y - 7], fill="#3E2723")
-        draw.ellipse([jill_x + 54, base_y - 17, jill_x + 64, base_y - 7], fill="#3E2723")
+        # Draw Jill's eyes based on emotion
+        if jill_emotion == "wink":
+            # Right eye winking closed crescent
+            draw.ellipse([jill_x + 10, base_y - 25, jill_x + 38, base_y + 2], fill="#FFFFFF", outline="#000000", width=2)
+            draw.ellipse([jill_x + 19, base_y - 17, jill_x + 29, base_y - 7], fill="#3E2723")
+            draw.arc([jill_x + 45, base_y - 20, jill_x + 65, base_y - 5], start=0, end=180, fill="#000000", width=3)
+        elif jill_emotion == "laugh":
+            # Both eyes winking/closed crescents
+            draw.arc([jill_x + 10, base_y - 20, jill_x + 30, base_y - 5], start=0, end=180, fill="#000000", width=3)
+            draw.arc([jill_x + 45, base_y - 20, jill_x + 65, base_y - 5], start=0, end=180, fill="#000000", width=3)
+        elif jill_emotion == "surprised":
+            # Large circular eyes
+            draw.ellipse([jill_x + 7, base_y - 28, jill_x + 41, base_y + 5], fill="#FFFFFF", outline="#000000", width=2)
+            draw.ellipse([jill_x + 42, base_y - 28, jill_x + 76, base_y + 5], fill="#FFFFFF", outline="#000000", width=2)
+            draw.ellipse([jill_x + 20, base_y - 17, jill_x + 30, base_y - 7], fill="#3E2723")
+            draw.ellipse([jill_x + 55, base_y - 17, jill_x + 65, base_y - 7], fill="#3E2723")
+        else:
+            # Normal open eyes
+            draw.ellipse([jill_x + 10, base_y - 25, jill_x + 38, base_y + 2], fill="#FFFFFF", outline="#000000", width=2)
+            draw.ellipse([jill_x + 45, base_y - 25, jill_x + 73, base_y + 2], fill="#FFFFFF", outline="#000000", width=2)
+            draw.ellipse([jill_x + 19, base_y - 17, jill_x + 29, base_y - 7], fill="#3E2723")
+            draw.ellipse([jill_x + 54, base_y - 17, jill_x + 64, base_y - 7], fill="#3E2723")
 
-        # Jill's Mouth
-        draw.arc([jill_x + 25, base_y + 5, jill_x + 58, base_y + 25], start=0, end=180, fill="#3E2723", width=4)
+        # Eyebrows based on emotion
+        if jill_emotion == "sad":
+            draw.line([jill_x + 10, base_y - 30, jill_x + 30, base_y - 38], fill="#3E2723", width=3)
+            draw.line([jill_x + 50, base_y - 38, jill_x + 70, base_y - 30], fill="#3E2723", width=3)
+        elif jill_emotion == "angry":
+            draw.line([jill_x + 10, base_y - 38, jill_x + 30, base_y - 30], fill="#3E2723", width=3)
+            draw.line([jill_x + 50, base_y - 30, jill_x + 70, base_y - 38], fill="#3E2723", width=3)
+        elif jill_emotion == "surprised":
+            draw.arc([jill_x + 7, base_y - 42, jill_x + 37, base_y - 32], start=180, end=360, fill="#3E2723", width=3)
+            draw.arc([jill_x + 42, base_y - 42, jill_x + 72, base_y - 32], start=180, end=360, fill="#3E2723", width=3)
+        else:
+            draw.line([jill_x + 10, base_y - 33, jill_x + 30, base_y - 33], fill="#3E2723", width=3)
+            draw.line([jill_x + 50, base_y - 33, jill_x + 70, base_y - 33], fill="#3E2723", width=3)
+
+        # Mouth based on emotion
+        if jill_emotion in ["happy", "wink"]:
+            draw.arc([jill_x + 25, base_y + 5, jill_x + 58, base_y + 25], start=0, end=180, fill="#3E2723", width=4)
+        elif jill_emotion == "laugh":
+            draw.chord([jill_x + 25, base_y, jill_x + 58, base_y + 30], start=0, end=180, fill="#880E4F", outline="#3E2723", width=2)
+        elif jill_emotion == "sad":
+            draw.arc([jill_x + 25, base_y + 15, jill_x + 58, base_y + 35], start=180, end=360, fill="#3E2723", width=4)
+        elif jill_emotion in ["angry", "surprised"]:
+            draw.ellipse([jill_x + 32, base_y + 10, jill_x + 52, base_y + 30], fill="#880E4F", outline="#3E2723", width=2)
+        elif jill_emotion == "thoughtful":
+            draw.line([jill_x + 27, base_y + 15, jill_x + 55, base_y + 15], fill="#3E2723", width=4)
 
         # Jill's Torso: Dark Rose Short-Sleeve Top
         draw.rectangle([jill_x - 15, base_y + 40, jill_x + 95, base_y + 160], fill=jill_top_color, outline="#3E2723", width=4)

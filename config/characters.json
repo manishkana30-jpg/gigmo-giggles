@@ -4,11 +4,11 @@
     "name": "Jack",
     "type": "adventurous young boy",
     "personality": "energetic, curious, adventurous",
-    "canonical_visual_description": "Jack is an adventurous young cartoon boy with curly brown hair peeking out from under a bright orange cap. He has big expressive green eyes, a sweet smile, and wears a white collared shirt with an orange vest, a red neckerchief, green shorts, and grey shoes.",
+    "canonical_visual_description": "Jack is an adventurous young cartoon boy with spiky black hair and navy blue glasses, wearing a white graphic t-shirt and green shorts.",
     "voice_style": "energetic, boyish, enthusiastic",
     "color_palette": {
-      "primary": "#FFA500",
-      "accent": "#008000"
+      "primary": "#1A237E",
+      "accent": "#4CAF50"
     }
   },
   {
@@ -16,7 +16,7 @@
     "name": "Jill",
     "type": "cheerful young girl",
     "personality": "cheerful, bright, observant",
-    "canonical_visual_description": "Jill is a cheerful young cartoon girl with dark brown hair tied in a ponytail featuring a bright red bow headband. She has large expressive brown eyes, cute freckles, and wears a bright red button-up dress.",
+    "canonical_visual_description": "Jill is a cheerful young cartoon girl with a red bow headband and long wavy reddish-brown hair, wearing a dark rose short-sleeve top with a white pearl necklace.",
     "voice_style": "sweet, bright, curious",
     "color_palette": {
       "primary": "#FF0000",

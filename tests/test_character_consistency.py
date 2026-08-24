@@ -28,7 +28,7 @@ def test_gemini_creator_injects_character_canonical_descriptions():
     system_prompt = director._build_system_prompt()
 
     assert "Jack" in system_prompt
-    assert "orange cap" in system_prompt
-    assert "green shorts" in system_prompt
+    assert "spiky black hair" in system_prompt
+    assert "navy blue glasses" in system_prompt
     assert "Jill" in system_prompt
     assert "red bow headband" in system_prompt

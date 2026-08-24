@@ -48,7 +48,7 @@ class GeminiCreativeDirector:
         self.model_name = (
             model_name
             or os.environ.get("GEMINI_MODEL")
-            or self.settings.get("default_gemini_model", "gemini-2.5-flash")
+            or self.settings.get("default_gemini_model", "gemini-3.6-flash")
         )
 
         self.client = None

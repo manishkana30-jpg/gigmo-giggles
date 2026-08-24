@@ -83,6 +83,7 @@ jobs:
           YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
           YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
         run: |
+          set -euo pipefail
           TOPIC_FLAG=""
           if [ -n "${{ inputs.topic }}" ]; then
             TOPIC_FLAG="--topic \"${{ inputs.topic }}\""
@@ -94,7 +95,7 @@ jobs:
             MOCK_FLAG="--mock"
           fi
           
-          python -m src.main $TOPIC_FLAG $MOCK_FLAG
+          python -m src.main $TOPIC_FLAG $MOCK_FLAG --no-publish
 
       - name: Upload Episode Artifacts
         if: always()

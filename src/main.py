@@ -30,7 +30,8 @@ def run_pipeline(
     forced_topic: Optional[str] = None,
     date_str: Optional[str] = None,
     mock_mode: bool = False,
-    custom_output_dir: Optional[Path] = None
+    custom_output_dir: Optional[Path] = None,
+    force_publish: Optional[bool] = None
 ) -> Dict[str, Any]:
     """
     Execute the complete Gigmo Giggles daily episode generation pipeline.
@@ -146,8 +147,18 @@ def run_pipeline(
         with open(settings_path, 'r', encoding='utf-8') as f:
             settings = json.load(f)
         
+        publish_enabled = settings.get("auto_upload_youtube", False)
+        if force_publish is not None:
+            publish_enabled = force_publish
+        else:
+            env_publish = os.environ.get("PUBLISH_TO_YOUTUBE", "").lower()
+            if env_publish in ("true", "1", "yes"):
+                publish_enabled = True
+            elif env_publish in ("false", "0", "no"):
+                publish_enabled = False
+
         publisher = YouTubePublisher(
-            enabled=settings.get("auto_upload_youtube", False),
+            enabled=publish_enabled,
             privacy_status=settings.get("youtube_privacy_status", "private")
         )
         
@@ -201,6 +212,8 @@ def main():
     parser.add_argument("--topic", type=str, default=None, help="Force a specific educational topic title")
     parser.add_argument("--date", type=str, default=None, help="Episode date identifier (YYYY-MM-DD)")
     parser.add_argument("--mock", action="store_true", help="Force offline mock generation mode")
+    parser.add_argument("--publish", action="store_true", dest="publish", default=None, help="Force publish to YouTube")
+    parser.add_argument("--no-publish", action="store_false", dest="publish", help="Disable publishing to YouTube")
     parser.add_argument("--output-dir", type=str, default=None, help="Custom output directory")
 
     args = parser.parse_args()
@@ -210,7 +223,8 @@ def main():
         forced_topic=args.topic,
         date_str=args.date,
         mock_mode=args.mock,
-        custom_output_dir=custom_out
+        custom_output_dir=custom_out,
+        force_publish=args.publish
     )
 
     if result.get("status") == "success":

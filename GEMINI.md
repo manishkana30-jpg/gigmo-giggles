@@ -8,18 +8,17 @@ This file defines the canonical rules, constraints, and guidelines for the Gigmo
 
 The show features **Jack** and **Jill** as the main characters. Ensure that their visual descriptions and emotion prompts are preserved exactly:
 
-- **Jack**: Brown tousled hair, round cheeks, button nose, wide expressive hazel eyes. Default Attire: Blue overalls, yellow t-shirt underneath, red sneakers.
-- **Jill**: Dark brown pigtails with pink ribbons, freckles across the nose, bright animated eyes. Default Attire: Pink dungaree dress/pinafore, striped pastel inner shirt, white canvas shoes.
-- Visual prompts must match the specs defined in `config/characters.json` and `config/character_prompts.json`.
+- **Jack**: 3D stylized cartoon boy, mop of curly brown hair, large round expressive eyes, small button nose, light freckles on rosy cheeks. Default Attire: Solid bright-yellow crew-neck t-shirt, blue denim rolled-up trousers, red canvas sneakers.
+- **Jill**: 3D stylized cartoon girl, black hair styled in twin braided pigtails tied with pink ribbon clips, side fringe, large animated dark eyes. Default Attire: Pastel pink inner t-shirt layered under bright grass-green dungarees, pinkish-red canvas sneakers.
+- Visual prompts must match the specs defined in `config/characters.json` and `config/character_prompts.json` and the MASTER SYSTEM PROMPT 3D guidelines.
 
 ---
 
-## 🎨 Sprite Sheet Cropping & Sticker Paste Rendering
+## 🎨 3D Generative Image Pipeline
 
-Instead of procedurally drawing or using generated avatar styles, the pipeline overlays the exact character graphics provided:
-1. **Source Sprite Sheets**: Grid sheets exist in `assets/characters/Jack.png` (3x3 Jack expressions) and `assets/characters/Jill.png` (3x3 Jill expressions).
-2. **Auto-Cropping**: Sliced versions are produced into `assets/characters/jack/` and `assets/characters/jill/` using a 3x3 uniform grid divider.
-3. **Rendering Layer**: If the files exist, the image generator overlays the matching cropped PNG expression directly onto the rolling green hill background (scaled to height of `450` pixels with Lanczos filter and pasted using the alpha channel transparency mask) instead of using fallback procedural drawings.
+The visual engine exclusively generates images via LLM prompt construction (Gemini/HF):
+1. **Fully Integrated Scenes**: The pipeline strictly bans sticker pasting or separating characters from the background. All scenes are generated using the `prompts/image.md` 3D Pixar/Disney style guidelines where characters are fully drawn into the environment.
+2. **3D Conversion Engine**: Follow the dynamic script conversion schema to create highly detailed, cinematic 3D scenes using Unreal Engine 5 aesthetic prompts.
 
 ---
 

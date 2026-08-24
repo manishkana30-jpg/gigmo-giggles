@@ -298,53 +298,18 @@ class PILComicProceduralProvider(BaseImageProvider):
         jill_fname = jill_files.get(jill_emotion, "gentle_smile_content.png")
         jill_img_path = root / "assets" / "characters" / "jill" / jill_fname
 
-        if jack_img_path.exists() and jill_img_path.exists():
-            try:
-                def remove_background(image, tolerance=30):
-                    image = image.convert("RGBA")
-                    data = image.getdata()
-                    bg = data[0]
-                    new_data = []
-                    for item in data:
-                        if abs(item[0]-bg[0])<tolerance and abs(item[1]-bg[1])<tolerance and abs(item[2]-bg[2])<tolerance:
-                            new_data.append((255, 255, 255, 0))
-                        else:
-                            new_data.append(item)
-                    image.putdata(new_data)
-                    return image
+        # Sticker pasting removed for 3D integrated scene generation
 
-                # Paste Jack sticker
-                with Image.open(jack_img_path) as j_img:
-                    j_img = remove_background(j_img)
-                    j_w, j_h = j_img.size
-                    scale = 450.0 / j_h
-                    new_w = int(j_w * scale)
-                    jack_resized = j_img.resize((new_w, 450), Image.Resampling.LANCZOS)
-                img.paste(jack_resized, (int(width * 0.18), height - 490), jack_resized)
-
-                # Paste Jill sticker
-                with Image.open(jill_img_path) as jl_img:
-                    jl_img = remove_background(jl_img)
-                    jl_w, jl_h = jl_img.size
-                    scale = 450.0 / jl_h
-                    new_w_jill = int(jl_w * scale)
-                    jill_resized = jl_img.resize((new_w_jill, 450), Image.Resampling.LANCZOS)
-                img.paste(jill_resized, (int(width * 0.58), height - 490), jill_resized)
-                
-                return # Successful sticker overlay, skip procedural drawing
-            except Exception as e:
-                logger.warning(f"Failed to paste cropped PNGs: {e}. Falling back to procedural drawing.")
-
-        # Procedural fallback drawing variables (matching 3D Pixar specs)
+        # Procedural fallback drawing variables (matching 2D Vector specs)
         flesh_color = "#FFD1A4"
-        jack_hair_color = "#6B4226" # Brown tousled hair
-        jack_overalls_color = "#1565C0" # Blue overalls
-        jack_shirt_color = "#FFD600" # Yellow t-shirt
-        jack_sneakers_color = "#D32F2F" # Red sneakers
+        jack_hair_color = "#6B4226" # Brown tousled curly hair
+        jack_overalls_color = "#1565C0" # Blue denim pants (reusing variable name)
+        jack_shirt_color = "#FFEB3B" # Solid bright-yellow t-shirt
+        jack_sneakers_color = "#D32F2F" # Red canvas sneakers
         
-        jill_hair_color = "#3E2723" # Dark brown pigtails
-        jill_dungaree_color = "#F48FB1" # Pink dungaree dress
-        jill_inner_shirt_color = "#E8D5E0" # Striped pastel inner shirt
+        jill_hair_color = "#000000" # Black hair pigtails
+        jill_dungaree_color = "#4CAF50" # Grass-green dungarees
+        jill_inner_shirt_color = "#F8BBD0" # Pastel pink inner shirt
         jill_ribbon_color = "#F06292" # Pink ribbons
 
         # ----------------------------------------------------
@@ -573,6 +538,31 @@ class ImageGenerator:
         if output_path.exists():
             logger.info(f"Image already exists, skipping generation: {output_path.name}")
             return True
+
+        # Check for matching high-fidelity 3D scene assets in assets/scenes/
+        try:
+            from src.utils import get_project_root
+            import shutil
+            root = get_project_root()
+            scene_num = context.get("scene_number", 1) if context else 1
+            scene_fn = f"scene_{scene_num:02d}.png"
+            
+            # Check shared_adventure or lost_compass
+            shared_asset = root / "assets" / "scenes" / "shared_adventure" / scene_fn
+            compass_asset = root / "assets" / "scenes" / "lost_compass" / scene_fn
+            
+            if "compass" in prompt.lower() and compass_asset.exists():
+                output_path.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy(compass_asset, output_path)
+                logger.info(f"Loaded 3D cinematic scene asset for {scene_fn} from {compass_asset}")
+                return True
+            elif shared_asset.exists():
+                output_path.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy(shared_asset, output_path)
+                logger.info(f"Loaded 3D cinematic scene asset for {scene_fn} from {shared_asset}")
+                return True
+        except Exception as e:
+            logger.debug(f"Could not load pre-rendered scene asset: {e}")
             
         enhanced_prompt = self._enhance_prompt_with_expressions(prompt, context)
         success = self.provider.generate(enhanced_prompt, output_path, width, height, context)

@@ -4,11 +4,11 @@
     "name": "Jack",
     "type": "adventurous young boy",
     "personality": "energetic, curious, adventurous",
-    "canonical_visual_description": "Jack is a 3D Pixar style chibi boy with brown tousled hair, round cheeks, button nose, and wide expressive hazel eyes. He wears blue overalls, a yellow t-shirt underneath, and red sneakers. Rendered dynamically using Character Sticker Paste Rendering and Visually Lossless H.264 video compression.",
+    "canonical_visual_description": "Jack is a 3D stylized cartoon boy with brown tousled hair, large round expressive eyes, small button nose, light freckles on rosy cheeks, solid bright-yellow crew-neck t-shirt, blue denim rolled-up trousers, and red canvas sneakers.",
     "voice_style": "energetic, boyish, enthusiastic",
     "color_palette": {
-      "primary": "#1A237E",
-      "accent": "#4CAF50"
+      "primary": "#1565C0",
+      "accent": "#FFEB3B"
     }
   },
   {
@@ -16,11 +16,11 @@
     "name": "Jill",
     "type": "cheerful young girl",
     "personality": "cheerful, bright, observant",
-    "canonical_visual_description": "Jill is a chibi 3D Pixar style girl with dark brown pigtails with pink ribbons, freckles across the nose, and bright animated eyes. She wears a pink dungaree dress/pinafore, a striped pastel inner shirt, and white canvas shoes. Rendered dynamically using Character Sticker Paste Rendering and Visually Lossless H.264 video compression.",
+    "canonical_visual_description": "Jill is a 3D stylized cartoon girl with black hair styled in twin braided pigtails tied with pink ribbon clips, side fringe, large animated dark eyes, pastel pink inner t-shirt layered under bright grass-green dungarees, and pinkish-red canvas sneakers.",
     "voice_style": "sweet, bright, curious",
     "color_palette": {
-      "primary": "#FF0000",
-      "accent": "#8B4513"
+      "primary": "#4CAF50",
+      "accent": "#F48FB1"
     }
   }
 ]

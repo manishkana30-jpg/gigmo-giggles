@@ -241,8 +241,8 @@ Ensure video_prompt specifies: "Slow dramatic push-in zoom on Jack and Jill's ex
 
     def _generate_mock_episode(self, topic: Dict[str, Any], episode_id: str) -> Dict[str, Any]:
         """Deterministic high-quality episode generator for offline testing or fallback."""
-        title_raw = topic.get("title", "The Water Cycle")
-        learning_obj = topic.get("learning_objective", "Understand how clouds collect water droplets and make rain.")
+        title_raw = topic.get("title", "The Shared Adventure")
+        learning_obj = topic.get("learning_objective", "Learn the joy of sharing and kindness towards forest animals.")
         target_age = self.settings.get("target_age", "6-9")
 
         if title_raw == "The Lost Compass Adventure":
@@ -279,7 +279,7 @@ Ensure video_prompt specifies: "Slow dramatic push-in zoom on Jack and Jill's ex
                                 "sound_effect": "happy_pop"
                             }
                         ],
-                        "image_prompt": "A vibrant, sun-drenched enchanted meadow, lush green rolling hills under warm golden-hour light. Jack crouches near a glowing wooden stump with wide eyes and an open-mouth grin, pointing eagerly. Jill leans over his shoulder with pigtails bouncing, hands clasped in awe, eyebrows arched high. Cinematic 3D render, Pixar style...",
+                        "image_prompt": "A vibrant, sun-drenched enchanted meadow, lush green rolling hills under warm golden-hour light. Jack (3D stylized boy, curly brown hair, yellow t-shirt, blue pants) crouches near a glowing wooden stump with wide eyes and an open-mouth grin, pointing eagerly. Jill (3D stylized girl, twin braided black pigtails with pink ribbons, green overalls over pink shirt) leans over his shoulder with pigtails bouncing, hands clasped in awe, eyebrows arched high. Cinematic 3D render, Pixar style",
                         "video_prompt": "Slow dramatic push-in zoom on Jack and Jill's expressive faces, subtle multiplane horizontal pan to emphasize foreground/background parallax separation.",
                         "voice_direction": "Jack is extremely curious, Jill is supportive and excited.",
                         "sound_effects": ["outdoor_ambience", "magical_chime"]
@@ -306,7 +306,7 @@ Ensure video_prompt specifies: "Slow dramatic push-in zoom on Jack and Jill's ex
                                 "sound_effect": "wind_howl"
                             }
                         ],
-                        "image_prompt": "Rocky trail leading up a mist-covered hill. Jack stands firmly, one foot on a boulder, jaw set with determined grit, holding a wooden walking stick. Jill looks down at the steep drop with raised inner eyebrows, biting her lip in mild worry, clutching Jack's sleeve. Dynamic wide-angle, atmospheric haze...",
+                        "image_prompt": "A high-quality 3D animated cartoon scene, Pixar Disney style, Unreal Engine 5 render, vibrant colors. Jack (3D stylized boy, curly brown hair, yellow t-shirt, blue pants, red sneakers) and Jill (3D stylized girl, twin braided black pigtails with pink ribbons, green overalls over pink shirt, pink sneakers) interacting with the environment. Cinematic lighting, shallow depth of field, 8k resolution, highly detailed.",
                         "video_prompt": "Subtle multiplane horizontal pan to emphasize steep drop",
                         "voice_direction": "Jack is brave and resolute, Jill is slightly nervous but trusting.",
                         "sound_effects": ["wind_howl", "footsteps"]
@@ -320,10 +320,10 @@ Ensure video_prompt specifies: "Slow dramatic push-in zoom on Jack and Jill's ex
                         "dialogue": [
                             {
                                 "character": "Jack",
-                                "text": "Whoa! This moss is super slippery! Help!",
-                                "translated_text": "अरे! यह काई बहुत फिसलन भरी है! बचाओ!",
-                                "emotion": "panic",
-                                "sound_effect": "slip_slide"
+                                "text": "Whoa! Whoa! The rocks are super slippery! Help!",
+                                "translated_text": "अरे! अरे! चट्टानें बहुत फिसलन भरी हैं! मदद करो!",
+                                "emotion": "scared",
+                                "sound_effect": "slip_fall"
                             },
                             {
                                 "character": "Jill",
@@ -333,7 +333,7 @@ Ensure video_prompt specifies: "Slow dramatic push-in zoom on Jack and Jill's ex
                                 "sound_effect": "gasp"
                             }
                         ],
-                        "image_prompt": "Jack slips on a slick mossy stone, arms pinwheeling in exaggerated slapstick motion, eyes wide in comic shock. Jill gasps with both hands covering her cheeks, mouth shaped in a round 'O', leaning sideways to catch him. Freeze-frame action shot, slight motion blur...",
+                        "image_prompt": "A high-quality 3D animated cartoon scene, Pixar Disney style, Unreal Engine 5 render, vibrant colors. Jack (3D stylized boy, curly brown hair, yellow t-shirt, blue pants, red sneakers) and Jill (3D stylized girl, twin braided black pigtails with pink ribbons, green overalls over pink shirt, pink sneakers) interacting with the environment. Cinematic lighting, shallow depth of field, 8k resolution, highly detailed.",
                         "video_prompt": "Fast frantic shake effect with motion blur on Jack",
                         "voice_direction": "Jack is in comic panic, Jill yells out in surprise.",
                         "sound_effects": ["slip_slide", "comic_gasp"]
@@ -360,7 +360,7 @@ Ensure video_prompt specifies: "Slow dramatic push-in zoom on Jack and Jill's ex
                                 "sound_effect": "happy_laugh"
                             }
                         ],
-                        "image_prompt": "Top of the hill overlooking a sparkling river valley at sunset. Jack and Jill sit side-by-side on a wooden bench, laughing joyfully with crinkled eyes and rosy cheeks, holding up the shiny golden compass together. Warm rim lighting, rich sunset hues, heartfelt storytelling composition...",
+                        "image_prompt": "A high-quality 3D animated cartoon scene, Pixar Disney style, Unreal Engine 5 render, vibrant colors. Jack (3D stylized boy, curly brown hair, yellow t-shirt, blue pants, red sneakers) and Jill (3D stylized girl, twin braided black pigtails with pink ribbons, green overalls over pink shirt, pink sneakers) interacting with the environment. Cinematic lighting, shallow depth of field, 8k resolution, highly detailed.",
                         "video_prompt": "Warm slow pan revealing the beautiful sunset valley",
                         "voice_direction": "Jack is victorious and thrilled, Jill is relieved and happy.",
                         "sound_effects": ["success_fanfare", "happy_laugh"]
@@ -396,153 +396,146 @@ Ensure video_prompt specifies: "Slow dramatic push-in zoom on Jack and Jill's ex
             return {
                 "episode_id": episode_id,
                 "topic": title_raw,
-                "learning_objective": learning_obj,
+                "learning_objective": "Learn the joy of sharing and kindness towards forest animals.",
                 "target_age": target_age,
-                "title": f"{title_raw} | Fun Science for Kids | Gigmo Giggles",
+                "title": f"{title_raw}: Forest Picnic 🧺 | Jack and Jill" if title_raw == "The Shared Adventure" else f"{title_raw} 🌟 | Jack and Jill",
                 "characters": [
-                    {"name": "Jack", "role": "Lead Adventurer / Science Explorer"},
-                    {"name": "Jill", "role": "Curious Guide / Scientific Observer"}
+                    {"name": "Jack", "role": "Adventurous and kind boy"},
+                    {"name": "Jill", "role": "Helpful and observant girl"}
                 ],
                 "scenes": [
                     {
                         "scene_number": 1,
                         "duration_seconds": 15,
-                        "location": "Sunny Meadow Hilltop",
-                        "action": "Jack and Jill are sitting on a grassy hill overlooking a valley, Jack points excitedly at the sky.",
-                        "narration": f"One beautiful morning, Jack and Jill set out to discover: {title_raw}!",
-                        "translated_narration": f"एक खूबसूरत सुबह, जैक और जिल ने खोज करने निकले: {title_raw}!",
+                        "location": "A sunlit mossy forest clearing under a giant oak tree",
+                        "action": "Jack and Jill sit on a checkered picnic blanket enjoying fresh sandwiches.",
+                        "narration": "What a beautiful, sunny afternoon for a forest picnic with Jack and Jill!",
                         "dialogue": [
                             {
                                 "character": "Jack",
-                                "text": f"Hey Jill, have you ever wondered about {title_raw.lower()}? Let's find out!",
-                                "translated_text": f"अरे जिल, क्या तुमने कभी {title_raw.lower()} के बारे में सोचा है? चलो पता लगाते हैं!",
-                                "emotion": "Joyful Laugh / Closed Eyes",
-                                "sound_effect": "boing"
+                                "text": "Mmm, these sandwiches are so delicious! What a wonderful day for a picnic, Jill!",
+                                "translated_text": "वाह, ये सैंडविच बहुत स्वादिष्ट हैं! जिल, पिकनिक के लिए कितना बढ़िया दिन है!",
+                                "emotion": "joyful",
+                                "sound_effect": "happy_cheer"
                             },
                             {
                                 "character": "Jill",
-                                "text": "That sounds like an amazing adventure! I've been curious about that too!",
-                                "translated_text": "यह एक अद्भुत रोमांच लगता है! मुझे भी इसके बारे में जानने की बहुत उत्सुकता है!",
-                                "emotion": "Playful Wink / Joy",
-                                "sound_effect": "chime"
+                                "text": "I packed plenty of yummy treats for our forest adventure! It's so peaceful here.",
+                                "translated_text": "मैंने हमारे जंगल के रोमांच के लिए ढेर सारे स्वादिष्ट स्नैक्स पैक किए हैं! यहाँ कितनी शांति है।",
+                                "emotion": "cheerful",
+                                "sound_effect": "birds_chirping"
                             }
                         ],
-                        "image_prompt": f"Wide Shot 24mm f/8, Jack wearing blue overalls and yellow t-shirt sitting on a grassy hilltop pointing excitedly at the sky, Jill in pink dungaree dress and striped pastel shirt sitting beside him with bright animated eyes and a broad curious smile, lush green meadow valley below, high-key lighting with bright sun and volumetric god rays, high-end 3D animated feature film aesthetic Pixar Disney inspired, subsurface scattering on skin, vibrant color palette, octane render, 8k resolution",
-                        "video_prompt": "Slow dramatic push-in zoom on Jack and Jill's expressive faces, subtle multiplane horizontal pan to emphasize foreground/background parallax separation.",
-                        "voice_direction": "Jack speaks with high-pitched wonder and excitement. Jill responds warmly with playful chuckling.",
-                        "sound_effects": ["outdoor_birds", "happy_chime"]
+                        "image_prompt": "A high-quality 3D animated cartoon scene, Pixar Disney style, Unreal Engine 5 render. Jack (yellow t-shirt, blue pants) sitting on a checkered picnic blanket eating a sandwich with a big smile. Jill (green overalls, pink shirt) happily holding a wicker picnic basket under a giant mossy oak tree. Warm dappled sunlight filtering through lush forest canopy, vibrant 8k cinematic lighting.",
+                        "video_prompt": "Slow dramatic push-in zoom on Jack and Jill enjoying their picnic",
+                        "voice_direction": "Jack is cheerful and satisfied, Jill is bright and excited.",
+                        "sound_effects": ["forest_birds", "gentle_breeze"]
                     },
                     {
                         "scene_number": 2,
                         "duration_seconds": 15,
-                        "location": "The Discovery Clearing",
-                        "action": "Jill holds up a magnifying glass, showing Jack something fascinating. Jack leans in with wide eyes.",
-                        "narration": "Jill discovers the first clue to understanding the secret!",
-                        "translated_narration": "जिल ने रहस्य को समझने का पहला सुराग खोजा!",
+                        "location": "Forest clearing near the picnic blanket",
+                        "action": "A mischievous raccoon snatches the picnic basket and scurries into the woods. Jack and Jill stand up in shock.",
+                        "narration": "Suddenly, a cheeky little raccoon makes off with their picnic basket!",
                         "dialogue": [
                             {
-                                "character": "Jill",
-                                "text": "Look through here, Jack! You can see exactly how it works!",
-                                "translated_text": "यहाँ से देखो, जैक! तुम देख सकते हो कि यह कैसे काम करता है!",
-                                "emotion": "Sparkling / Proud",
-                                "sound_effect": "whoosh"
+                                "character": "Jack",
+                                "text": "Hey! Look! That little raccoon is running away with our picnic basket!",
+                                "translated_text": "अरे! देखो! वह छोटा रैकून हमारी पिकनिक की टोकरी लेकर भाग रहा है!",
+                                "emotion": "surprised",
+                                "sound_effect": "comic_boing"
                             },
                             {
-                                "character": "Jack",
-                                "text": "Whoa! That is incredible! So that is the secret!",
-                                "translated_text": "वाह! यह तो अविश्वसनीय है! तो यह है राज़!",
-                                "emotion": "Gasp / Astonished",
-                                "sound_effect": "sparkle"
+                                "character": "Jill",
+                                "text": "Oh no! We have to follow it and find out where it's taking our snacks!",
+                                "translated_text": "ओह नहीं! हमें उसका पीछा करना होगा और देखना होगा कि वह हमारे स्नैक्स कहाँ ले जा रहा है!",
+                                "emotion": "shocked",
+                                "sound_effect": "gasp"
                             }
                         ],
-                        "image_prompt": f"Medium Shot 50mm f/4, Jill with dark brown pigtails and pink ribbons wearing pink dungaree dress holding a magnifying glass up to her eye with a confident proud smile, Jack in blue overalls leaning in close with wide dilated hazel eyes and parted lips showing curious wonder, forest clearing with wildflowers background, warm volumetric lighting golden hour rim light, high-end 3D animated feature film aesthetic, smooth stylized shading, subsurface scattering, Unreal Engine 5, octane render, 8k resolution",
-                        "video_prompt": "Slow dramatic push-in zoom on Jack and Jill's expressive faces, subtle multiplane horizontal pan to emphasize foreground/background parallax separation.",
-                        "voice_direction": "Jill is confident and pedagogical. Jack is amazed and gasping.",
-                        "sound_effects": ["whoosh", "sparkle"]
+                        "image_prompt": "A high-quality 3D animated cartoon scene, Pixar Disney style, Unreal Engine 5 render. Jack and Jill standing on the checkered blanket looking shocked. A cute cartoon raccoon running into the forest carrying the red-and-white picnic basket in its paws. Mossy ancient trees, glowing magical mushrooms, vibrant colors, cinematic depth of field.",
+                        "video_prompt": "Quick horizontal pan following the scurrying raccoon into the deep forest",
+                        "voice_direction": "Jack is alarmed and surprised, Jill is determined to follow.",
+                        "sound_effects": ["scurry_leaves", "surprised_gasp"]
                     },
                     {
                         "scene_number": 3,
                         "duration_seconds": 15,
-                        "location": "The Science Lab Treehouse",
-                        "action": "Jack explains his understanding while gesturing at a colorful diagram. Jill nods approvingly.",
-                        "narration": "Jack puts it all together — learning is so much fun!",
-                        "translated_narration": "जैक सब कुछ समझ गया — सीखना कितना मज़ेदार है!",
+                        "location": "Mysterious forest trail leading to a hollow tree root",
+                        "action": "Jack kneels down pointing at tiny muddy raccoon paw prints. Jill watches closely.",
+                        "narration": "Jack and Jill follow the tiny paw prints deeper into the enchanted woods.",
                         "dialogue": [
                             {
                                 "character": "Jack",
-                                "text": "I think I understand now! It all connects like a big puzzle!",
-                                "translated_text": "मुझे लगता है अब मैं समझ गया! यह सब एक बड़ी पहेली की तरह जुड़ता है!",
-                                "emotion": "Hyped / Celebrating",
-                                "sound_effect": "bell"
+                                "text": "Look down here, Jill! The footprints lead right into that cozy hollow tree!",
+                                "translated_text": "यहाँ नीचे देखो, जिल! पैरों के निशान सीधे उस खोखले पेड़ के अंदर जा रहे हैं!",
+                                "emotion": "curious",
+                                "sound_effect": "footstep_clues"
                             },
                             {
                                 "character": "Jill",
-                                "text": "You got it, Jack! That is exactly right! Science is amazing!",
-                                "translated_text": "बिल्कुल सही, जैक! विज्ञान कमाल का है!",
-                                "emotion": "Gentle Smile / Content",
-                                "sound_effect": "tada"
+                                "text": "Let's tiptoe quietly so we don't scare our little furry friend.",
+                                "translated_text": "चलो धीरे-धीरे और चुपचाप चलें ताकि हम अपने प्यारे दोस्त को डरा न दें।",
+                                "emotion": "thoughtful",
+                                "sound_effect": "tiptoe_steps"
                             }
                         ],
-                        "image_prompt": f"Close-Up 85mm f/1.8, Jack with brown tousled hair and round cheeks wearing blue overalls and yellow t-shirt, both hands raised in clenched victory fists with wide energetic smile showing teeth, Jill beside him with dark brown pigtails and freckles wearing pink dungaree dress giving a gentle warm closed-mouth smile, cozy treehouse interior with colorful diagrams on wooden walls, warm chiaroscuro lighting with dramatic spotlight on characters, heavy background bokeh, high-end 3D animated feature film aesthetic, subsurface scattering on skin, clean silhouettes, octane render, 8k resolution",
-                        "video_prompt": "Slow dramatic push-in zoom on Jack and Jill's expressive faces, subtle multiplane horizontal pan to emphasize foreground/background parallax separation.",
-                        "voice_direction": "Jack is victorious and hyped. Jill is warm and encouraging.",
-                        "sound_effects": ["gentle_breeze", "happy_tada"]
+                        "image_prompt": "A high-quality 3D animated cartoon scene, Pixar Disney style, Unreal Engine 5 render. Jack kneeling on the forest dirt path, pointing at glowing paw prints. Jill standing beside him with hands on her hips, looking curiously into a large dark hollow at the base of a huge mossy tree trunk. The striped tail of a raccoon is visible disappearing inside. Deep forest ambiance, volumetric beams.",
+                        "video_prompt": "Slow camera dolly following the paw prints toward the hollow tree entrance",
+                        "voice_direction": "Jack is whispering with excitement, Jill speaks softly and kindly.",
+                        "sound_effects": ["twig_snap", "curious_chime"]
                     },
                     {
                         "scene_number": 4,
                         "duration_seconds": 15,
-                        "location": "Sunset Hilltop Overlooking the Valley",
-                        "action": "Jack and Jill wave at the screen, inviting kids to join the next adventure.",
-                        "narration": "What an amazing discovery! See you next time on Gigmo Giggles!",
-                        "translated_narration": "क्या अद्भुत खोज! अगली बार मिलते हैं गिगमो गिगल्स पर!",
+                        "location": "Inside a warm, glowing hollow tree",
+                        "action": "Jack kneels warmly, offering a shiny red apple to the adorable raccoon next to the picnic basket.",
+                        "narration": "Instead of being upset, Jack and Jill decide to share their picnic with their new friend!",
                         "dialogue": [
                             {
                                 "character": "Jack",
-                                "text": "That was so cool! Are you ready for the quiz?",
-                                "translated_text": "यह बहुत मज़ेदार था! क्या तुम क्विज़ के लिए तैयार हो?",
-                                "emotion": "Winking Mischief / Laugh",
-                                "sound_effect": "drumroll"
+                                "text": "Here you go, little buddy! We are happy to share our fresh apple with you!",
+                                "translated_text": "यह लो, छोटे दोस्त! हम तुम्हारे साथ अपना ताजा सेब बांटकर बहुत खुश हैं!",
+                                "emotion": "joyful",
+                                "sound_effect": "gentle_sparkle"
                             },
                             {
                                 "character": "Jill",
-                                "text": "Let's see how much you learned today! Here is the question!",
-                                "translated_text": "चलो देखते हैं आज तुमने कितना सीखा! यह रहा सवाल!",
-                                "emotion": "Friendly Wave / Greeting",
-                                "sound_effect": "quiz_pop"
+                                "text": "See? Sharing makes every adventure so much sweeter and full of friendship!",
+                                "translated_text": "देखा? बांटने से हर रोमांच और भी प्यारा और दोस्ती से भरा बन जाता है!",
+                                "emotion": "proud",
+                                "sound_effect": "happy_fanfare"
                             }
                         ],
-                        "image_prompt": f"Wide Shot 24mm f/8, Jack wearing blue overalls and yellow t-shirt winking cheekily with broad toothy grin, Jill in pink dungaree dress with dark brown pigtails waving right hand with bright welcoming open-mouthed smile, sunset hilltop overlooking a sparkling river valley, warm rim lighting rich sunset hues with volumetric god rays, high-end 3D animated feature film aesthetic Pixar Disney inspired, vibrant color palette, subsurface scattering, clean silhouettes, octane render, 8k resolution",
-                        "video_prompt": "Slow dramatic push-in zoom on Jack and Jill's expressive faces, subtle multiplane horizontal pan to emphasize foreground/background parallax separation.",
-                        "voice_direction": "Jack is cheeky and energetic. Jill is bright and inviting.",
-                        "sound_effects": ["drumroll", "fanfare"]
+                        "image_prompt": "A high-quality 3D animated cartoon scene, Pixar Disney style, Unreal Engine 5 render. Warm golden light illuminating the inside of a hollow tree. Jack smiling warmly, holding out a shiny red apple to an adorable cartoon raccoon holding its paws up happily. The opened picnic basket rests nearby with berries. Magical firefly sparkles, cozy and heartwarming atmosphere, 8k Pixar quality.",
+                        "video_prompt": "Gentle zoom-out highlighting the warm friendship and happy celebration",
+                        "voice_direction": "Jack is gentle and joyful, Jill delivers the heartwarming moral.",
+                        "sound_effects": ["warm_chime", "happy_ending_fanfare"]
                     }
                 ],
                 "quiz": [
                     {
-                        "question": f"What did Jack and Jill learn about today?",
-                        "options": [f"A) {title_raw}", "B) How to bake cookies", "C) Dancing penguins"],
-                        "correct_answer": f"A) {title_raw}",
-                        "explanation": f"Jack and Jill explored {title_raw.lower()} together and discovered amazing things!"
+                        "question": "What did Jack share with the little raccoon?",
+                        "options": [
+                            "A) A shiny red apple",
+                            "B) A giant pumpkin",
+                            "C) A bucket of water"
+                        ],
+                        "correct_answer": "A) A shiny red apple",
+                        "explanation": "Jack kindly shared a delicious red apple with the raccoon in the tree hollow!"
                     }
                 ],
                 "youtube": {
-                    "title": f"{title_raw} | Fun Science for Kids | Gigmo Giggles",
-                    "description": f"Join Jack and Jill as they discover {title_raw.lower()}! A fun, colorful, animated learning adventure for curious kids.\n\n🔔 Subscribe for a new animated learning adventure every day!\n#GigmoGiggles #KidsLearning #ScienceForKids",
-                    "tags": ["kids learning", title_raw.lower(), "science for kids", "jack and jill", "cartoon science", "gigmo giggles"],
-                    "hashtags": ["#KidsLearning", "#ScienceForKids", "#GigmoGiggles", "#Animation"],
+                    "title": "The Shared Adventure: Forest Picnic 🧺 | Jack and Jill Kids Stories",
+                    "description": "Join Jack and Jill on a heartwarming forest adventure as they have a picnic and make a new raccoon friend!",
+                    "tags": ["kids stories", "jack and jill", "sharing is caring", "cartoon for kids", "forest adventure"],
+                    "hashtags": ["#GigmoGiggles", "#KidsAnimation", "#Storytime"],
                     "category": "Education",
                     "target_audience": "Children (Made for Kids)"
                 },
                 "thumbnail": {
-                    "prompt": f"Wide Shot 24mm, Jack wearing blue overalls and yellow t-shirt and Jill in pink dungaree dress with dark brown pigtails, both pointing excitedly at a glowing magical element, bright sunny sky background, high contrast vibrant colors, high-end 3D animated feature film aesthetic Pixar Disney inspired, octane render, 8k resolution",
-                    "overlay_text": title_raw.upper()[:25]
+                    "prompt": "Jack and Jill sharing a red apple with an adorable raccoon inside a cozy glowing tree hollow, 3D Pixar style",
+                    "overlay_text": "THE SHARED ADVENTURE"
                 },
-                "shorts": [
-                    {
-                        "title": f"{title_raw} ✨ #Shorts",
-                        "hook": f"Did you know about {title_raw.lower()}? Jack and Jill found out!",
-                        "scene_reference": 2,
-                        "duration_seconds": 30
-                    }
-                ]
+                "shorts": []
             }

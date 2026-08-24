@@ -396,7 +396,7 @@ Ensure video_prompt specifies: "Slow dramatic push-in zoom on Jack and Jill's ex
             return {
                 "episode_id": episode_id,
                 "topic": title_raw,
-                "learning_objective": "Learn the joy of sharing and kindness towards forest animals.",
+                "learning_objective": "Learn the joy of sharing, kindness towards forest animals, and teamwork.",
                 "target_age": target_age,
                 "title": f"{title_raw}: Forest Picnic 🧺 | Jack and Jill" if title_raw == "The Shared Adventure" else f"{title_raw} 🌟 | Jack and Jill",
                 "characters": [
@@ -406,7 +406,7 @@ Ensure video_prompt specifies: "Slow dramatic push-in zoom on Jack and Jill's ex
                 "scenes": [
                     {
                         "scene_number": 1,
-                        "duration_seconds": 15,
+                        "duration_seconds": 30,
                         "location": "A sunlit mossy forest clearing under a giant oak tree",
                         "action": "Jack and Jill sit on a checkered picnic blanket enjoying fresh sandwiches.",
                         "narration": "What a beautiful, sunny afternoon for a forest picnic with Jack and Jill!",
@@ -433,7 +433,7 @@ Ensure video_prompt specifies: "Slow dramatic push-in zoom on Jack and Jill's ex
                     },
                     {
                         "scene_number": 2,
-                        "duration_seconds": 15,
+                        "duration_seconds": 30,
                         "location": "Forest clearing near the picnic blanket",
                         "action": "A mischievous raccoon snatches the picnic basket and scurries into the woods. Jack and Jill stand up in shock.",
                         "narration": "Suddenly, a cheeky little raccoon makes off with their picnic basket!",
@@ -460,7 +460,7 @@ Ensure video_prompt specifies: "Slow dramatic push-in zoom on Jack and Jill's ex
                     },
                     {
                         "scene_number": 3,
-                        "duration_seconds": 15,
+                        "duration_seconds": 30,
                         "location": "Mysterious forest trail leading to a hollow tree root",
                         "action": "Jack kneels down pointing at tiny muddy raccoon paw prints. Jill watches closely.",
                         "narration": "Jack and Jill follow the tiny paw prints deeper into the enchanted woods.",
@@ -487,7 +487,7 @@ Ensure video_prompt specifies: "Slow dramatic push-in zoom on Jack and Jill's ex
                     },
                     {
                         "scene_number": 4,
-                        "duration_seconds": 15,
+                        "duration_seconds": 30,
                         "location": "Inside a warm, glowing hollow tree",
                         "action": "Jack kneels warmly, offering a shiny red apple to the adorable raccoon next to the picnic basket.",
                         "narration": "Instead of being upset, Jack and Jill decide to share their picnic with their new friend!",
@@ -511,25 +511,187 @@ Ensure video_prompt specifies: "Slow dramatic push-in zoom on Jack and Jill's ex
                         "video_prompt": "Gentle zoom-out highlighting the warm friendship and happy celebration",
                         "voice_direction": "Jack is gentle and joyful, Jill delivers the heartwarming moral.",
                         "sound_effects": ["warm_chime", "happy_ending_fanfare"]
+                    },
+                    {
+                        "scene_number": 5,
+                        "duration_seconds": 30,
+                        "location": "Inside the cozy hollow tree nursery",
+                        "action": "Three tiny baby raccoons peek out from behind their mother, chirping with excitement.",
+                        "narration": "Look! The mother raccoon was just trying to feed her hungry little babies!",
+                        "dialogue": [
+                            {
+                                "character": "Jack",
+                                "text": "Aww, look at the baby raccoons! They are so tiny and cute!",
+                                "translated_text": "अरे वाह, छोटे रैकून के बच्चों को देखो! वे कितने छोटे और प्यारे हैं!",
+                                "emotion": "amazed",
+                                "sound_effect": "baby_chirp"
+                            },
+                            {
+                                "character": "Jill",
+                                "text": "She was taking food for her family! Good thing we brought plenty to share.",
+                                "translated_text": "वह अपने परिवार के लिए खाना ले जा रही थी! अच्छा हुआ कि हम बाँटने के लिए बहुत सारा खाना लाए हैं।",
+                                "emotion": "caring",
+                                "sound_effect": "heartwarming_chime"
+                            }
+                        ],
+                        "image_prompt": "A high-quality 3D animated cartoon scene, Pixar Disney style, Unreal Engine 5 render. Jack and Jill smiling warmly at three tiny fluffy baby raccoons sitting inside a moss-lined tree nest. Glowing golden forest light, ultra-detailed 8k Pixar aesthetic.",
+                        "video_prompt": "Slow pan across the happy baby raccoons eating berries",
+                        "voice_direction": "Jack is filled with wonder, Jill speaks with gentle affection.",
+                        "sound_effects": ["gentle_lullaby", "happy_squeak"]
+                    },
+                    {
+                        "scene_number": 6,
+                        "duration_seconds": 30,
+                        "location": "Tree hollow entrance overlooking the enchanted forest",
+                        "action": "Jack unpacks sandwiches, grapes, and nuts on a wooden bark table.",
+                        "narration": "Jack and Jill set up a special mini forest feast for all their woodland friends.",
+                        "dialogue": [
+                            {
+                                "character": "Jack",
+                                "text": "Let's make a grand feast table! Grapes for the babies, and crunchy nuts for everyone!",
+                                "translated_text": "चलो एक शानदार दावत की मेज बनाते हैं! बच्चों के लिए अंगूर और सभी के लिए कुरकुरे मेवे!",
+                                "emotion": "enthusiastic",
+                                "sound_effect": "table_set"
+                            },
+                            {
+                                "character": "Jill",
+                                "text": "Teamwork turns a lost picnic into the best forest party ever!",
+                                "translated_text": "टीमवर्क एक खोई हुई पिकनिक को अब तक की सबसे बेहतरीन जंगल पार्टी में बदल देता है!",
+                                "emotion": "cheerful",
+                                "sound_effect": "sparkle_chime"
+                            }
+                        ],
+                        "image_prompt": "A high-quality 3D animated cartoon scene, Pixar Disney style, Unreal Engine 5 render. Jack arranging fresh fruits on a smooth wooden log while Jill pours sweet juice into tiny acorn cups. Forest birds perched nearby, vibrant Pixar 3D aesthetic.",
+                        "video_prompt": "Dynamic push-in showing the colorful forest feast",
+                        "voice_direction": "Jack is full of energy, Jill laughs with joy.",
+                        "sound_effects": ["forest_party", "cheerful_whistle"]
+                    },
+                    {
+                        "scene_number": 7,
+                        "duration_seconds": 30,
+                        "location": "The sunny forest meadow outside the hollow tree",
+                        "action": "The raccoons, squirrels, and birds gather together around Jack and Jill.",
+                        "narration": "The forest clearing fills with happy woodland creatures enjoying the feast together.",
+                        "dialogue": [
+                            {
+                                "character": "Jack",
+                                "text": "Look, Jill! Even the colorful forest birds and squirrels came to join us!",
+                                "translated_text": "देखो, जिल! रंग-बिरंगे जंगल के पक्षी और गिलहरियाँ भी हमारे साथ शामिल होने आए हैं!",
+                                "emotion": "delighted",
+                                "sound_effect": "flutter_wings"
+                            },
+                            {
+                                "character": "Jill",
+                                "text": "When you are kind to nature, nature becomes your friend!",
+                                "translated_text": "जब आप प्रकृति के प्रति दयालु होते हैं, तो प्रकृति आपकी दोस्त बन जाती है!",
+                                "emotion": "wise",
+                                "sound_effect": "nature_harmony"
+                            }
+                        ],
+                        "image_prompt": "A high-quality 3D animated cartoon scene, Pixar Disney style, Unreal Engine 5 render. Jack and Jill surrounded by friendly forest animals in a lush sunlit meadow with wildflowers. Warm golden lighting, 8k resolution, cinematic atmosphere.",
+                        "video_prompt": "Wide 360-degree sweeping pan capturing the entire joyful animal celebration",
+                        "voice_direction": "Jack speaks with excitement, Jill delivers an inspiring message.",
+                        "sound_effects": ["animal_chatter", "upbeat_music"]
+                    },
+                    {
+                        "scene_number": 8,
+                        "duration_seconds": 30,
+                        "location": "The sunny forest glade under warm golden hour sunlight",
+                        "action": "Jack and Jill stand proudly holding hands with their animal friends.",
+                        "narration": "Jack and Jill learned that sharing what we have brings the greatest happiness of all.",
+                        "dialogue": [
+                            {
+                                "character": "Jack",
+                                "text": "I will always remember this amazing adventure with our forest friends!",
+                                "translated_text": "मैं अपने जंगल के दोस्तों के साथ इस अद्भुत रोमांच को हमेशा याद रखूँगा!",
+                                "emotion": "grateful",
+                                "sound_effect": "triumph_fanfare"
+                            },
+                            {
+                                "character": "Jill",
+                                "text": "And sharing taught us that kindness is the most magical treasure in the world!",
+                                "translated_text": "और बाँटने से हमें सिखाया कि दयालुता दुनिया का सबसे जादुई खजाना है!",
+                                "emotion": "loving",
+                                "sound_effect": "warm_glow"
+                            }
+                        ],
+                        "image_prompt": "A high-quality 3D animated cartoon scene, Pixar Disney style, Unreal Engine 5 render. Jack and Jill smiling with warm glowing hearts under the sunset sky, waving happily. Beautiful volumetric lighting, cinematic 8k finish.",
+                        "video_prompt": "Slow dramatic dolly back capturing the sunset glow over the forest",
+                        "voice_direction": "Jack is heartfelt, Jill speaks with warmth and love.",
+                        "sound_effects": ["warm_outro_fanfare", "sunset_birds"]
+                    },
+                    {
+                        "scene_number": 9,
+                        "duration_seconds": 30,
+                        "location": "The forest edge trail heading back home",
+                        "action": "Jack and Jill wave goodbye to the raccoon family waving back from the tree.",
+                        "narration": "As the sun sets, Jack and Jill head home with full bellies and happy hearts.",
+                        "dialogue": [
+                            {
+                                "character": "Jack",
+                                "text": "Goodbye, little friends! We will visit you again soon with more apples!",
+                                "translated_text": "अलविदा, छोटे दोस्तों! हम जल्द ही और सेब लेकर आपसे मिलने फिर आएंगे!",
+                                "emotion": "happy",
+                                "sound_effect": "wave_goodbye"
+                            },
+                            {
+                                "character": "Jill",
+                                "text": "See you soon! What an unforgettable day of discovery!",
+                                "translated_text": "जल्द मिलते हैं! खोज और रोमांच का कितना अविस्मरणीय दिन था!",
+                                "emotion": "cheerful",
+                                "sound_effect": "happy_steps"
+                            }
+                        ],
+                        "image_prompt": "A high-quality 3D animated cartoon scene, Pixar Disney style, Unreal Engine 5 render. Jack and Jill walking along a cozy forest path toward the warm sunset glow, looking back and waving at the friendly raccoons. Highly detailed 3D Pixar render.",
+                        "video_prompt": "Gentle tracking shot following Jack and Jill as they head home",
+                        "voice_direction": "Both speak with cheerful energy and warmth.",
+                        "sound_effects": ["evening_crickets", "gentle_steps"]
+                    },
+                    {
+                        "scene_number": 10,
+                        "duration_seconds": 30,
+                        "location": "Interactive Kids Studio with colorful question banner",
+                        "action": "Jack and Jill point to the screen with big cheerful smiles, inviting the audience to answer the daily quiz.",
+                        "narration": "Now it's time for our Gigmo Giggles Daily Adventure Quiz! Are you ready?",
+                        "dialogue": [
+                            {
+                                "character": "Jack",
+                                "text": "Hey friends at home! Can you tell us: What did we share with the little raccoon?",
+                                "translated_text": "अरे घर पर बैठे दोस्तों! क्या आप हमें बता सकते हैं: हमने छोटे रैकून के साथ क्या साझा किया?",
+                                "emotion": "playful",
+                                "sound_effect": "quiz_pop"
+                            },
+                            {
+                                "character": "Jill",
+                                "text": "Tell us your answer in the comments below, and subscribe for tomorrow's 3D adventure!",
+                                "translated_text": "नीचे कमेंट्स में अपना उत्तर बताएं, और कल के 3D एडवेंचर के लिए सब्सक्राइब करें!",
+                                "emotion": "excited",
+                                "sound_effect": "bell_chime"
+                            }
+                        ],
+                        "image_prompt": "A high-quality 3D animated cartoon scene, Pixar Disney style, Unreal Engine 5 render. Jack and Jill pointing directly at the camera with big beaming smiles in a colorful studio setting with floating glowing star badges. Vibrant 8k Pixar quality.",
+                        "video_prompt": "Fun interactive zoom-in on Jack and Jill with festive confetti sparkles",
+                        "voice_direction": "Both speak enthusiastically to the viewer at home.",
+                        "sound_effects": ["quiz_fanfare", "applause"]
                     }
                 ],
                 "quiz": [
                     {
-                        "question": "What did Jack share with the little raccoon?",
+                        "question": "What did Jack and Jill share with the little raccoon?",
                         "options": [
-                            "A) A shiny red apple",
-                            "B) A giant pumpkin",
-                            "C) A bucket of water"
+                            "A) Fresh red apples and delicious fruits",
+                            "B) A giant heavy rock",
+                            "C) An old bicycle"
                         ],
-                        "correct_answer": "A) A shiny red apple",
-                        "explanation": "Jack kindly shared a delicious red apple with the raccoon in the tree hollow!"
+                        "correct_answer": "A) Fresh red apples and delicious fruits",
+                        "explanation": "Jack and Jill kindly shared their delicious red apples and fresh treats with the raccoon family!"
                     }
                 ],
                 "youtube": {
-                    "title": "The Shared Adventure: Forest Picnic 🧺 | Jack and Jill Kids Stories",
-                    "description": "Join Jack and Jill on a heartwarming forest adventure as they have a picnic and make a new raccoon friend!",
-                    "tags": ["kids stories", "jack and jill", "sharing is caring", "cartoon for kids", "forest adventure"],
-                    "hashtags": ["#GigmoGiggles", "#KidsAnimation", "#Storytime"],
+                    "title": "The Shared Adventure: Forest Picnic 🧺 | Jack and Jill 5-Minute Kids Story",
+                    "description": "Join Jack and Jill on an unforgettable 5-minute 3D animated forest adventure! Learn the power of sharing, kindness to animals, and teamwork in this beautiful Pixar-style kids show episode.\n\n⏱️ Chapters:\n0:00 Scene 1: Forest Picnic\n0:30 Scene 2: The Cheeky Raccoon\n1:00 Scene 3: Tracking Paw Prints\n1:30 Scene 4: The Tree Hollow\n2:00 Scene 5: Baby Raccoons\n2:30 Scene 6: Setting the Feast\n3:00 Scene 7: Animal Party\n3:30 Scene 8: The Lesson of Sharing\n4:00 Scene 9: Heading Home\n4:30 Scene 10: Interactive Quiz",
+                    "tags": ["kids stories", "jack and jill", "sharing is caring", "cartoon for kids", "forest adventure", "5 minute kids story", "3D animation"],
+                    "hashtags": ["#GigmoGiggles", "#KidsAnimation", "#Storytime", "#JackAndJill"],
                     "category": "Education",
                     "target_audience": "Children (Made for Kids)"
                 },

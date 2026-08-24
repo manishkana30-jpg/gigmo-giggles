@@ -90,24 +90,24 @@ jobs:
         run: |
           set -euo pipefail
 
-          TOPIC_FLAG=""
+          ARGS=()
           if [ -n "${{ inputs.topic }}" ]; then
-            TOPIC_FLAG="--topic \"${{ inputs.topic }}\""
-          fi
-          
-          MOCK_FLAG=""
-          if [ "${{ inputs.mock }}" = "true" ] || [ -z "$GEMINI_API_KEY" ]; then
-            echo "ℹ️ Running with offline/mock assets mode (pre-rendered 3D storyboard)"
-            MOCK_FLAG="--mock"
+            ARGS+=(--topic "${{ inputs.topic }}")
           fi
 
-          PUBLISH_FLAG="--publish"
-          if [ -z "$YOUTUBE_REFRESH_TOKEN" ]; then
-            echo "⚠️ No YOUTUBE_REFRESH_TOKEN found in secrets, video will be generated locally as an artifact without upload."
-            PUBLISH_FLAG="--no-publish"
+          if [ "${{ inputs.mock }}" = "true" ] || [ -z "$GEMINI_API_KEY" ]; then
+            echo "ℹ️ Running with offline/mock assets mode (pre-rendered 3D storyboard)"
+            ARGS+=(--mock)
+          fi
+
+          if [ -n "$YOUTUBE_REFRESH_TOKEN" ]; then
+            ARGS+=(--publish)
+          else
+            echo "⚠️ No YOUTUBE_REFRESH_TOKEN found in secrets, skipping YouTube upload."
+            ARGS+=(--no-publish)
           fi
           
-          python -u -m src.main $TOPIC_FLAG $MOCK_FLAG $PUBLISH_FLAG
+          python -u -m src.main "${ARGS[@]}"
 
       - name: Verify MP4 Was Generated
         run: |

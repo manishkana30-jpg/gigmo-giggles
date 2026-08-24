@@ -300,8 +300,22 @@ class PILComicProceduralProvider(BaseImageProvider):
 
         if jack_img_path.exists() and jill_img_path.exists():
             try:
+                def remove_background(image, tolerance=30):
+                    image = image.convert("RGBA")
+                    data = image.getdata()
+                    bg = data[0]
+                    new_data = []
+                    for item in data:
+                        if abs(item[0]-bg[0])<tolerance and abs(item[1]-bg[1])<tolerance and abs(item[2]-bg[2])<tolerance:
+                            new_data.append((255, 255, 255, 0))
+                        else:
+                            new_data.append(item)
+                    image.putdata(new_data)
+                    return image
+
                 # Paste Jack sticker
                 with Image.open(jack_img_path) as j_img:
+                    j_img = remove_background(j_img)
                     j_w, j_h = j_img.size
                     scale = 450.0 / j_h
                     new_w = int(j_w * scale)
@@ -310,6 +324,7 @@ class PILComicProceduralProvider(BaseImageProvider):
 
                 # Paste Jill sticker
                 with Image.open(jill_img_path) as jl_img:
+                    jl_img = remove_background(jl_img)
                     jl_w, jl_h = jl_img.size
                     scale = 450.0 / jl_h
                     new_w_jill = int(jl_w * scale)

@@ -217,48 +217,111 @@ class PILComicProceduralProvider(BaseImageProvider):
         draw.rectangle([0, int(height * 0.72), width, height], fill="#43A047")
 
     def _draw_characters(self, draw: ImageDraw.ImageDraw, width: int, height: int, scene_num: int):
-        """Draw Bobo (Bear), Luna (Fox), and Milo (Robot)."""
+        """Draw canonical kids show characters: Jack (Left) and Jill (Right)."""
         base_y = int(height * 0.58)
 
-        # Bobo the Bear (Left)
-        bobo_x = int(width * 0.22)
-        draw.ellipse([bobo_x - 30, base_y - 120, bobo_x + 10, base_y - 80], fill="#8D5B28", outline="#5D3A1A", width=4)
-        draw.ellipse([bobo_x + 90, base_y - 120, bobo_x + 130, base_y - 80], fill="#8D5B28", outline="#5D3A1A", width=4)
-        draw.ellipse([bobo_x - 40, base_y, bobo_x + 140, base_y + 240], fill="#A0682C", outline="#5D3A1A", width=6)
-        draw.ellipse([bobo_x - 20, base_y - 100, bobo_x + 120, base_y + 40], fill="#B27B38", outline="#5D3A1A", width=6)
-        draw.ellipse([bobo_x + 10, base_y - 40, bobo_x + 90, base_y + 20], fill="#EAD2AC")
-        draw.ellipse([bobo_x + 40, base_y - 35, bobo_x + 60, base_y - 15], fill="#2C1B0D")
-        draw.ellipse([bobo_x + 15, base_y - 70, bobo_x + 35, base_y - 45], fill="#FFFFFF", outline="#000000", width=2)
-        draw.ellipse([bobo_x + 65, base_y - 70, bobo_x + 85, base_y - 45], fill="#FFFFFF", outline="#000000", width=2)
-        draw.ellipse([bobo_x + 22, base_y - 65, bobo_x + 32, base_y - 50], fill="#2C1B0D")
-        draw.ellipse([bobo_x + 72, base_y - 65, bobo_x + 82, base_y - 50], fill="#2C1B0D")
-        draw.polygon([(bobo_x + 10, base_y + 30), (bobo_x + 90, base_y + 30), (bobo_x + 50, base_y + 80)], fill="#FFEB3B", outline="#F57F17")
+        flesh_color = "#FFD1A4"
+        jack_hair_color = "#1A1A1A"
+        jack_glasses_color = "#1A237E" # Navy Blue
+        jack_shirt_color = "#FFFFFF"
+        jack_shorts_color = "#4CAF50" # Green
+        
+        jill_hair_color = "#8D4925" # Reddish-Brown
+        jill_top_color = "#C2185B" # Dark Rose
+        jill_headband_color = "#D50000" # Red
+        pearl_color = "#E0E0E0"
 
-        # Luna the Fox (Center)
-        luna_x = int(width * 0.48)
-        draw.polygon([(luna_x - 10, base_y - 110), (luna_x + 25, base_y - 40), (luna_x - 30, base_y - 40)], fill="#FF7043", outline="#BF360C")
-        draw.polygon([(luna_x + 110, base_y - 110), (luna_x + 75, base_y - 40), (luna_x + 130, base_y - 40)], fill="#FF7043", outline="#BF360C")
-        draw.ellipse([luna_x - 10, base_y + 10, luna_x + 110, base_y + 220], fill="#FF7043", outline="#BF360C", width=6)
-        draw.rectangle([luna_x + 15, base_y + 30, luna_x + 85, base_y + 140], fill="#009688", outline="#004D40", width=4)
-        draw.ellipse([luna_x, base_y - 70, luna_x + 100, base_y + 30], fill="#FF8A65", outline="#BF360C", width=5)
-        draw.polygon([(luna_x + 20, base_y + 10), (luna_x + 80, base_y + 10), (luna_x + 50, base_y + 40)], fill="#FFFFFF")
-        draw.ellipse([luna_x + 43, base_y + 28, luna_x + 57, base_y + 40], fill="#212121")
-        draw.ellipse([luna_x + 20, base_y - 45, luna_x + 40, base_y - 20], fill="#FFA726", outline="#000000", width=2)
-        draw.ellipse([luna_x + 60, base_y - 45, luna_x + 80, base_y - 20], fill="#FFA726", outline="#000000", width=2)
-        draw.ellipse([luna_x + 27, base_y - 40, luna_x + 36, base_y - 25], fill="#212121")
-        draw.ellipse([luna_x + 67, base_y - 40, luna_x + 76, base_y - 25], fill="#212121")
+        # ----------------------------------------------------
+        # Draw Jack (Left side of the screen)
+        # ----------------------------------------------------
+        jack_x = int(width * 0.30)
+        
+        # Jack's Spiky Hair (drawn behind head)
+        hair_y = base_y - 65
+        spikes = [
+            [(jack_x - 30, hair_y), (jack_x - 15, hair_y - 45), (jack_x, hair_y)],
+            [(jack_x - 10, hair_y), (jack_x + 10, hair_y - 55), (jack_x + 30, hair_y)],
+            [(jack_x + 15, hair_y), (jack_x + 35, hair_y - 60), (jack_x + 55, hair_y)],
+            [(jack_x + 40, hair_y), (jack_x + 60, hair_y - 55), (jack_x + 80, hair_y)],
+            [(jack_x + 65, hair_y), (jack_x + 80, hair_y - 45), (jack_x + 95, hair_y)]
+        ]
+        for spike in spikes:
+            draw.polygon(spike, fill=jack_hair_color)
 
-        # Milo the Robot (Right)
-        milo_x = int(width * 0.72)
-        draw.line([milo_x + 45, base_y - 90, milo_x + 45, base_y - 45], fill="#78909C", width=6)
-        draw.ellipse([milo_x + 35, base_y - 110, milo_x + 55, base_y - 90], fill="#FFEB3B", outline="#F57F17", width=3)
-        draw.rounded_rectangle([milo_x, base_y - 45, milo_x + 90, base_y + 35], radius=15, fill="#42A5F5", outline="#0D47A1", width=5)
-        draw.rounded_rectangle([milo_x + 12, base_y - 25, milo_x + 78, base_y + 10], radius=8, fill="#212121")
-        draw.ellipse([milo_x + 20, base_y - 20, milo_x + 38, base_y - 2], fill="#76FF03")
-        draw.ellipse([milo_x + 52, base_y - 20, milo_x + 70, base_y - 2], fill="#76FF03")
-        draw.rounded_rectangle([milo_x - 5, base_y + 45, milo_x + 95, base_y + 160], radius=12, fill="#64B5F6", outline="#0D47A1", width=5)
-        draw.ellipse([milo_x + 5, base_y + 160, milo_x + 40, base_y + 195], fill="#37474F", outline="#212121", width=4)
-        draw.ellipse([milo_x + 50, base_y + 160, milo_x + 85, base_y + 195], fill="#37474F", outline="#212121", width=4)
+        # Jack's Head
+        draw.ellipse([jack_x - 20, base_y - 60, jack_x + 85, base_y + 40], fill=flesh_color, outline="#3E2723", width=4)
+
+        # Jack's Eyes & Navy Blue Glasses
+        draw.ellipse([jack_x + 5, base_y - 25, jack_x + 30, base_y], fill="#FFFFFF", outline="#000000", width=2)
+        draw.ellipse([jack_x + 40, base_y - 25, jack_x + 65, base_y], fill="#FFFFFF", outline="#000000", width=2)
+        # Pupils
+        draw.ellipse([jack_x + 12, base_y - 18, jack_x + 22, base_y - 8], fill="#000000")
+        draw.ellipse([jack_x + 47, base_y - 18, jack_x + 57, base_y - 8])
+        # Glasses frames (Navy Blue)
+        draw.rectangle([jack_x + 1, base_y - 28, jack_x + 34, base_y + 3], outline=jack_glasses_color, width=4)
+        draw.rectangle([jack_x + 36, base_y - 28, jack_x + 69, base_y + 3], outline=jack_glasses_color, width=4)
+        # Glasses bridge & temples
+        draw.line([jack_x + 34, base_y - 12, jack_x + 36, base_y - 12], fill=jack_glasses_color, width=4)
+        draw.line([jack_x - 10, base_y - 12, jack_x + 1, base_y - 12], fill=jack_glasses_color, width=4)
+        draw.line([jack_x + 69, base_y - 12, jack_x + 80, base_y - 12], fill=jack_glasses_color, width=4)
+
+        # Jack's Mouth (smiling)
+        draw.arc([jack_x + 20, base_y, jack_x + 50, base_y + 20], start=0, end=180, fill="#3E2723", width=4)
+
+        # Jack's Torso: White Graphic T-Shirt
+        draw.rectangle([jack_x - 15, base_y + 40, jack_x + 80, base_y + 160], fill=jack_shirt_color, outline="#3E2723", width=4)
+        # Small blue circle graphic on the t-shirt
+        draw.ellipse([jack_x + 15, base_y + 80, jack_x + 50, base_y + 115], fill="#0288D1", outline="#01579B", width=2)
+
+        # Jack's Pants: Green Shorts
+        draw.rectangle([jack_x - 15, base_y + 160, jack_x + 80, base_y + 220], fill=jack_shorts_color, outline="#3E2723", width=4)
+
+        # ----------------------------------------------------
+        # Draw Jill (Right side of the screen)
+        # ----------------------------------------------------
+        jill_x = int(width * 0.60)
+        
+        # Jill's Wavy Hair (drawn behind head first)
+        draw.ellipse([jill_x - 45, base_y - 65, jill_x + 40, base_y + 140], fill=jill_hair_color)
+        draw.ellipse([jill_x + 40, base_y - 65, jill_x + 125, base_y + 140], fill=jill_hair_color)
+        draw.rectangle([jill_x - 40, base_y, jill_x + 120, base_y + 120], fill=jill_hair_color)
+
+        # Jill's Head
+        draw.ellipse([jill_x - 20, base_y - 60, jill_x + 100, base_y + 40], fill=flesh_color, outline="#3E2723", width=4)
+
+        # Red headband
+        draw.arc([jill_x - 15, base_y - 62, jill_x + 95, base_y - 30], start=180, end=360, fill=jill_headband_color, width=10)
+        # Red Bow on headband
+        draw.polygon([(jill_x - 10, base_y - 55), (jill_x - 25, base_y - 70), (jill_x - 25, base_y - 40)], fill=jill_headband_color)
+        draw.polygon([(jill_x - 10, base_y - 55), (jill_x + 5, base_y - 70), (jill_x + 5, base_y - 40)], fill=jill_headband_color)
+        draw.ellipse([jill_x - 14, base_y - 59, jill_x - 6, base_y - 51], fill="#FFFFFF")
+
+        # Jill's Eyes (Big expressive eyes)
+        draw.ellipse([jill_x + 10, base_y - 25, jill_x + 38, base_y + 2], fill="#FFFFFF", outline="#000000", width=2)
+        draw.ellipse([jill_x + 45, base_y - 25, jill_x + 73, base_y + 2], fill="#FFFFFF", outline="#000000", width=2)
+        # Pupils
+        draw.ellipse([jill_x + 19, base_y - 17, jill_x + 29, base_y - 7], fill="#3E2723")
+        draw.ellipse([jill_x + 54, base_y - 17, jill_x + 64, base_y - 7], fill="#3E2723")
+
+        # Jill's Mouth
+        draw.arc([jill_x + 25, base_y + 5, jill_x + 58, base_y + 25], start=0, end=180, fill="#3E2723", width=4)
+
+        # Jill's Torso: Dark Rose Short-Sleeve Top
+        draw.rectangle([jill_x - 15, base_y + 40, jill_x + 95, base_y + 160], fill=jill_top_color, outline="#3E2723", width=4)
+
+        # White Pearl Necklace
+        necklace_points = [
+            (jill_x + 5, base_y + 42),
+            (jill_x + 15, base_y + 49),
+            (jill_x + 25, base_y + 53),
+            (jill_x + 35, base_y + 55),
+            (jill_x + 45, base_y + 55),
+            (jill_x + 55, base_y + 53),
+            (jill_x + 65, base_y + 49),
+            (jill_x + 75, base_y + 42)
+        ]
+        for px, py in necklace_points:
+            draw.ellipse([px - 4, py - 4, px + 4, py + 4], fill=pearl_color, outline="#9E9E9E", width=1)
 
     def _draw_dialogue_bubble(
         self,

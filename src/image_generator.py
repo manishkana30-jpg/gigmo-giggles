@@ -144,9 +144,9 @@ class HuggingFaceImageProvider(BaseImageProvider):
 
 class PILComicProceduralProvider(BaseImageProvider):
     """
-    High-quality 2D cartoon comic scene generator using Pillow.
+    High-quality 3D Pixar-style cartoon comic scene generator using Pillow.
     Guarantees zero-failure, instant, offline generation of colorful cartoon graphics
-    featuring canonical characters (Bobo, Luna, Milo) with speech bubbles and scenic backdrops.
+    featuring canonical characters (Jack, Jill) with speech bubbles and scenic backdrops.
     """
 
     def generate(
@@ -320,24 +320,24 @@ class PILComicProceduralProvider(BaseImageProvider):
             except Exception as e:
                 logger.warning(f"Failed to paste cropped PNGs: {e}. Falling back to procedural drawing.")
 
-        # Procedural fallback drawing variables
+        # Procedural fallback drawing variables (matching 3D Pixar specs)
         flesh_color = "#FFD1A4"
-        jack_hair_color = "#1A1A1A"
-        jack_glasses_color = "#1A237E" # Navy Blue
-        jack_shirt_color = "#FFFFFF"
-        jack_shorts_color = "#4CAF50" # Green
+        jack_hair_color = "#6B4226" # Brown tousled hair
+        jack_overalls_color = "#1565C0" # Blue overalls
+        jack_shirt_color = "#FFD600" # Yellow t-shirt
+        jack_sneakers_color = "#D32F2F" # Red sneakers
         
-        jill_hair_color = "#8D4925" # Reddish-Brown
-        jill_top_color = "#C2185B" # Dark Rose
-        jill_headband_color = "#D50000" # Red
-        pearl_color = "#E0E0E0"
+        jill_hair_color = "#3E2723" # Dark brown pigtails
+        jill_dungaree_color = "#F48FB1" # Pink dungaree dress
+        jill_inner_shirt_color = "#E8D5E0" # Striped pastel inner shirt
+        jill_ribbon_color = "#F06292" # Pink ribbons
 
         # ----------------------------------------------------
         # Draw Jack (Left side of the screen)
         # ----------------------------------------------------
         jack_x = int(width * 0.30)
         
-        # Jack's Spiky Hair (drawn behind head)
+        # Jack's Tousled Brown Hair (drawn behind head)
         hair_y = base_y - 65
         spikes = [
             [(jack_x - 30, hair_y), (jack_x - 15, hair_y - 45), (jack_x, hair_y)],
@@ -376,12 +376,11 @@ class PILComicProceduralProvider(BaseImageProvider):
             draw.ellipse([jack_x + 12, base_y - 18, jack_x + 22, base_y - 8], fill="#000000")
             draw.ellipse([jack_x + 47, base_y - 18, jack_x + 57, base_y - 8], fill="#000000")
 
-        # Glasses frames (Navy Blue) - always draw over eyes
-        draw.rectangle([jack_x + 1, base_y - 28, jack_x + 34, base_y + 3], outline=jack_glasses_color, width=4)
-        draw.rectangle([jack_x + 36, base_y - 28, jack_x + 69, base_y + 3], outline=jack_glasses_color, width=4)
-        draw.line([jack_x + 34, base_y - 12, jack_x + 36, base_y - 12], fill=jack_glasses_color, width=4)
-        draw.line([jack_x - 10, base_y - 12, jack_x + 1, base_y - 12], fill=jack_glasses_color, width=4)
-        draw.line([jack_x + 69, base_y - 12, jack_x + 80, base_y - 12], fill=jack_glasses_color, width=4)
+        # Round cheeks blush (Pixar style)
+        draw.ellipse([jack_x - 5, base_y - 5, jack_x + 12, base_y + 8], fill="#FFAB91")
+        draw.ellipse([jack_x + 55, base_y - 5, jack_x + 72, base_y + 8], fill="#FFAB91")
+        # Button nose
+        draw.ellipse([jack_x + 28, base_y - 8, jack_x + 40, base_y + 5], fill="#FFB088")
 
         # Eyebrows based on emotion
         if jack_emotion == "sad":
@@ -409,12 +408,14 @@ class PILComicProceduralProvider(BaseImageProvider):
         elif jack_emotion == "thoughtful":
             draw.line([jack_x + 22, base_y + 10, jack_x + 48, base_y + 10], fill="#3E2723", width=4)
 
-        # Jack's Torso: White Graphic T-Shirt
-        draw.rectangle([jack_x - 15, base_y + 40, jack_x + 80, base_y + 160], fill=jack_shirt_color, outline="#3E2723", width=4)
-        draw.ellipse([jack_x + 15, base_y + 80, jack_x + 50, base_y + 115], fill="#0288D1", outline="#01579B", width=2)
+        # Jack's Yellow T-Shirt (visible at neckline)
+        draw.rectangle([jack_x + 10, base_y + 40, jack_x + 55, base_y + 65], fill=jack_shirt_color, outline="#F9A825", width=2)
 
-        # Jack's Pants: Green Shorts
-        draw.rectangle([jack_x - 15, base_y + 160, jack_x + 80, base_y + 220], fill=jack_shorts_color, outline="#3E2723", width=4)
+        # Jack's Blue Overalls
+        draw.rectangle([jack_x - 15, base_y + 55, jack_x + 80, base_y + 220], fill=jack_overalls_color, outline="#0D47A1", width=4)
+        # Overall straps
+        draw.line([jack_x + 5, base_y + 55, jack_x + 15, base_y + 40], fill=jack_overalls_color, width=6)
+        draw.line([jack_x + 60, base_y + 55, jack_x + 50, base_y + 40], fill=jack_overalls_color, width=6)
 
         # ----------------------------------------------------
         # Draw Jill (Right side of the screen)
@@ -429,11 +430,14 @@ class PILComicProceduralProvider(BaseImageProvider):
         # Jill's Head
         draw.ellipse([jill_x - 20, base_y - 60, jill_x + 100, base_y + 40], fill=flesh_color, outline="#3E2723", width=4)
 
-        # Red headband
-        draw.arc([jill_x - 15, base_y - 62, jill_x + 95, base_y - 30], start=180, end=360, fill=jill_headband_color, width=10)
-        draw.polygon([(jill_x - 10, base_y - 55), (jill_x - 25, base_y - 70), (jill_x - 25, base_y - 40)], fill=jill_headband_color)
-        draw.polygon([(jill_x - 10, base_y - 55), (jill_x + 5, base_y - 70), (jill_x + 5, base_y - 40)], fill=jill_headband_color)
-        draw.ellipse([jill_x - 14, base_y - 59, jill_x - 6, base_y - 51], fill="#FFFFFF")
+        # Pink ribbons on pigtails
+        draw.polygon([(jill_x - 35, base_y - 30), (jill_x - 50, base_y - 50), (jill_x - 50, base_y - 10)], fill=jill_ribbon_color)
+        draw.polygon([(jill_x - 35, base_y - 30), (jill_x - 20, base_y - 50), (jill_x - 20, base_y - 10)], fill=jill_ribbon_color)
+        draw.polygon([(jill_x + 115, base_y - 30), (jill_x + 100, base_y - 50), (jill_x + 100, base_y - 10)], fill=jill_ribbon_color)
+        draw.polygon([(jill_x + 115, base_y - 30), (jill_x + 130, base_y - 50), (jill_x + 130, base_y - 10)], fill=jill_ribbon_color)
+        # Freckles across nose
+        for fx, fy in [(jill_x + 30, base_y - 3), (jill_x + 38, base_y - 5), (jill_x + 46, base_y - 3), (jill_x + 54, base_y - 5), (jill_x + 62, base_y - 3)]:
+            draw.ellipse([fx - 2, fy - 2, fx + 2, fy + 2], fill="#A1887F")
 
         # Draw Jill's eyes based on emotion
         if jill_emotion == "wink":
@@ -484,22 +488,17 @@ class PILComicProceduralProvider(BaseImageProvider):
         elif jill_emotion == "thoughtful":
             draw.line([jill_x + 27, base_y + 15, jill_x + 55, base_y + 15], fill="#3E2723", width=4)
 
-        # Jill's Torso: Dark Rose Short-Sleeve Top
-        draw.rectangle([jill_x - 15, base_y + 40, jill_x + 95, base_y + 160], fill=jill_top_color, outline="#3E2723", width=4)
+        # Jill's Striped Pastel Inner Shirt (visible at neckline)
+        draw.rectangle([jill_x + 10, base_y + 40, jill_x + 70, base_y + 65], fill=jill_inner_shirt_color, outline="#D7CCC8", width=2)
+        # Stripes on inner shirt
+        for sy in range(base_y + 45, base_y + 63, 5):
+            draw.line([jill_x + 12, sy, jill_x + 68, sy], fill="#F8BBD0", width=1)
 
-        # White Pearl Necklace
-        necklace_points = [
-            (jill_x + 5, base_y + 42),
-            (jill_x + 15, base_y + 49),
-            (jill_x + 25, base_y + 53),
-            (jill_x + 35, base_y + 55),
-            (jill_x + 45, base_y + 55),
-            (jill_x + 55, base_y + 53),
-            (jill_x + 65, base_y + 49),
-            (jill_x + 75, base_y + 42)
-        ]
-        for px, py in necklace_points:
-            draw.ellipse([px - 4, py - 4, px + 4, py + 4], fill=pearl_color, outline="#9E9E9E", width=1)
+        # Jill's Pink Dungaree Dress
+        draw.rectangle([jill_x - 15, base_y + 55, jill_x + 95, base_y + 200], fill=jill_dungaree_color, outline="#EC407A", width=4)
+        # Dungaree straps
+        draw.line([jill_x + 10, base_y + 55, jill_x + 20, base_y + 40], fill=jill_dungaree_color, width=6)
+        draw.line([jill_x + 70, base_y + 55, jill_x + 60, base_y + 40], fill=jill_dungaree_color, width=6)
 
     def _draw_dialogue_bubble(
         self,

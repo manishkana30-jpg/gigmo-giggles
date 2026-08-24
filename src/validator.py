@@ -11,7 +11,7 @@ from pydantic import BaseModel, Field, field_validator
 # ============================================================================
 
 class CharacterEntry(BaseModel):
-    name: str = Field(..., description="Character name e.g. Bobo, Luna, Milo")
+    name: str = Field(..., description="Character name e.g. Jack, Jill")
     role: Optional[str] = Field(default="Main Cast", description="Role in the episode")
 
 

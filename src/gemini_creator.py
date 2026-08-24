@@ -398,132 +398,151 @@ Ensure video_prompt specifies: "Slow dramatic push-in zoom on Jack and Jill's ex
                 "topic": title_raw,
                 "learning_objective": learning_obj,
                 "target_age": target_age,
-                "title": f"{title_raw} - Gigmo Giggles Episode",
+                "title": f"{title_raw} | Fun Science for Kids | Gigmo Giggles",
                 "characters": [
-                    {"name": "Bobo", "role": "Friendly bear"},
-                    {"name": "Luna", "role": "Clever fox"}
+                    {"name": "Jack", "role": "Lead Adventurer / Science Explorer"},
+                    {"name": "Jill", "role": "Curious Guide / Scientific Observer"}
                 ],
                 "scenes": [
                     {
                         "scene_number": 1,
                         "duration_seconds": 15,
-                        "location": "The Sunny Hillside",
-                        "action": "Bobo and Luna look at the sky.",
-                        "narration": "Welcome to another sunny day of wonder!",
+                        "location": "Sunny Meadow Hilltop",
+                        "action": "Jack and Jill are sitting on a grassy hill overlooking a valley, Jack points excitedly at the sky.",
+                        "narration": f"One beautiful morning, Jack and Jill set out to discover: {title_raw}!",
+                        "translated_narration": f"एक खूबसूरत सुबह, जैक और जिल ने खोज करने निकले: {title_raw}!",
                         "dialogue": [
                             {
-                                "character": "Bobo",
-                                "text": f"Hey Luna! Look at that! Why is {title_raw.lower()}?",
-                                "emotion": "curious",
+                                "character": "Jack",
+                                "text": f"Hey Jill, have you ever wondered about {title_raw.lower()}? Let's find out!",
+                                "translated_text": f"अरे जिल, क्या तुमने कभी {title_raw.lower()} के बारे में सोचा है? चलो पता लगाते हैं!",
+                                "emotion": "Joyful Laugh / Closed Eyes",
                                 "sound_effect": "boing"
                             },
                             {
-                                "character": "Luna",
-                                "text": "Great question, Bobo! Let's find out together!",
-                                "emotion": "excited",
+                                "character": "Jill",
+                                "text": "That sounds like an amazing adventure! I've been curious about that too!",
+                                "translated_text": "यह एक अद्भुत रोमांच लगता है! मुझे भी इसके बारे में जानने की बहुत उत्सुकता है!",
+                                "emotion": "Playful Wink / Joy",
                                 "sound_effect": "chime"
                             }
                         ],
-                        "image_prompt": "Bobo the bear and Luna the fox looking at the sky.",
-                        "video_prompt": "Slow zoom in",
-                        "voice_direction": "Excited",
+                        "image_prompt": f"Wide Shot 24mm f/8, Jack wearing blue overalls and yellow t-shirt sitting on a grassy hilltop pointing excitedly at the sky, Jill in pink dungaree dress and striped pastel shirt sitting beside him with bright animated eyes and a broad curious smile, lush green meadow valley below, high-key lighting with bright sun and volumetric god rays, high-end 3D animated feature film aesthetic Pixar Disney inspired, subsurface scattering on skin, vibrant color palette, octane render, 8k resolution",
+                        "video_prompt": "Slow dramatic push-in zoom on Jack and Jill's expressive faces, subtle multiplane horizontal pan to emphasize foreground/background parallax separation.",
+                        "voice_direction": "Jack speaks with high-pitched wonder and excitement. Jill responds warmly with playful chuckling.",
                         "sound_effects": ["outdoor_birds", "happy_chime"]
                     },
                     {
                         "scene_number": 2,
                         "duration_seconds": 15,
-                        "location": "The Meadow Deck",
-                        "action": "Luna shows a diagram.",
-                        "narration": "They study the first secret.",
+                        "location": "The Discovery Clearing",
+                        "action": "Jill holds up a magnifying glass, showing Jack something fascinating. Jack leans in with wide eyes.",
+                        "narration": "Jill discovers the first clue to understanding the secret!",
+                        "translated_narration": "जिल ने रहस्य को समझने का पहला सुराग खोजा!",
                         "dialogue": [
                             {
-                                "character": "Luna",
-                                "text": "It all starts right here. See?",
-                                "emotion": "smart",
+                                "character": "Jill",
+                                "text": "Look through here, Jack! You can see exactly how it works!",
+                                "translated_text": "यहाँ से देखो, जैक! तुम देख सकते हो कि यह कैसे काम करता है!",
+                                "emotion": "Sparkling / Proud",
                                 "sound_effect": "whoosh"
                             },
                             {
-                                "character": "Bobo",
-                                "text": "Whoa! That is so cool!",
-                                "emotion": "amazed",
+                                "character": "Jack",
+                                "text": "Whoa! That is incredible! So that is the secret!",
+                                "translated_text": "वाह! यह तो अविश्वसनीय है! तो यह है राज़!",
+                                "emotion": "Gasp / Astonished",
                                 "sound_effect": "sparkle"
                             }
                         ],
-                        "image_prompt": "Luna pointing at a diagram.",
-                        "video_prompt": "Pan left",
-                        "voice_direction": "Pedagogical",
+                        "image_prompt": f"Medium Shot 50mm f/4, Jill with dark brown pigtails and pink ribbons wearing pink dungaree dress holding a magnifying glass up to her eye with a confident proud smile, Jack in blue overalls leaning in close with wide dilated hazel eyes and parted lips showing curious wonder, forest clearing with wildflowers background, warm volumetric lighting golden hour rim light, high-end 3D animated feature film aesthetic, smooth stylized shading, subsurface scattering, Unreal Engine 5, octane render, 8k resolution",
+                        "video_prompt": "Slow dramatic push-in zoom on Jack and Jill's expressive faces, subtle multiplane horizontal pan to emphasize foreground/background parallax separation.",
+                        "voice_direction": "Jill is confident and pedagogical. Jack is amazed and gasping.",
                         "sound_effects": ["whoosh", "sparkle"]
                     },
                     {
                         "scene_number": 3,
                         "duration_seconds": 15,
-                        "location": "The Science Room",
-                        "action": "Bobo explains more.",
-                        "narration": "Learning together is so much fun!",
+                        "location": "The Science Lab Treehouse",
+                        "action": "Jack explains his understanding while gesturing at a colorful diagram. Jill nods approvingly.",
+                        "narration": "Jack puts it all together — learning is so much fun!",
+                        "translated_narration": "जैक सब कुछ समझ गया — सीखना कितना मज़ेदार है!",
                         "dialogue": [
                             {
-                                "character": "Bobo",
-                                "text": "I think I understand how this works now!",
-                                "emotion": "happy",
+                                "character": "Jack",
+                                "text": "I think I understand now! It all connects like a big puzzle!",
+                                "translated_text": "मुझे लगता है अब मैं समझ गया! यह सब एक बड़ी पहेली की तरह जुड़ता है!",
+                                "emotion": "Hyped / Celebrating",
                                 "sound_effect": "bell"
                             },
                             {
-                                "character": "Luna",
-                                "text": "You got it, Bobo! That's exactly right!",
-                                "emotion": "proud",
+                                "character": "Jill",
+                                "text": "You got it, Jack! That is exactly right! Science is amazing!",
+                                "translated_text": "बिल्कुल सही, जैक! विज्ञान कमाल का है!",
+                                "emotion": "Gentle Smile / Content",
                                 "sound_effect": "tada"
                             }
                         ],
-                        "image_prompt": "Bobo smiling with a lightbulb idea.",
-                        "video_prompt": "Zoom out",
-                        "voice_direction": "Encouraging",
+                        "image_prompt": f"Close-Up 85mm f/1.8, Jack with brown tousled hair and round cheeks wearing blue overalls and yellow t-shirt, both hands raised in clenched victory fists with wide energetic smile showing teeth, Jill beside him with dark brown pigtails and freckles wearing pink dungaree dress giving a gentle warm closed-mouth smile, cozy treehouse interior with colorful diagrams on wooden walls, warm chiaroscuro lighting with dramatic spotlight on characters, heavy background bokeh, high-end 3D animated feature film aesthetic, subsurface scattering on skin, clean silhouettes, octane render, 8k resolution",
+                        "video_prompt": "Slow dramatic push-in zoom on Jack and Jill's expressive faces, subtle multiplane horizontal pan to emphasize foreground/background parallax separation.",
+                        "voice_direction": "Jack is victorious and hyped. Jill is warm and encouraging.",
                         "sound_effects": ["gentle_breeze", "happy_tada"]
                     },
                     {
                         "scene_number": 4,
                         "duration_seconds": 15,
-                        "location": "The Quiz Studio",
-                        "action": "They ask a question.",
-                        "narration": "Now it's time for the quiz!",
+                        "location": "Sunset Hilltop Overlooking the Valley",
+                        "action": "Jack and Jill wave at the screen, inviting kids to join the next adventure.",
+                        "narration": "What an amazing discovery! See you next time on Gigmo Giggles!",
+                        "translated_narration": "क्या अद्भुत खोज! अगली बार मिलते हैं गिगमो गिगल्स पर!",
                         "dialogue": [
                             {
-                                "character": "Bobo",
-                                "text": "Are you ready for the quiz?",
-                                "emotion": "thrilled",
+                                "character": "Jack",
+                                "text": "That was so cool! Are you ready for the quiz?",
+                                "translated_text": "यह बहुत मज़ेदार था! क्या तुम क्विज़ के लिए तैयार हो?",
+                                "emotion": "Winking Mischief / Laugh",
                                 "sound_effect": "drumroll"
                             },
                             {
-                                "character": "Luna",
-                                "text": "Here is the question of the day!",
-                                "emotion": "smiling",
+                                "character": "Jill",
+                                "text": "Let's see how much you learned today! Here is the question!",
+                                "translated_text": "चलो देखते हैं आज तुमने कितना सीखा! यह रहा सवाल!",
+                                "emotion": "Friendly Wave / Greeting",
                                 "sound_effect": "quiz_pop"
                             }
                         ],
-                        "image_prompt": "Bobo and Luna waving at the screen.",
-                        "video_prompt": "Static shot",
-                        "voice_direction": "High energy",
+                        "image_prompt": f"Wide Shot 24mm f/8, Jack wearing blue overalls and yellow t-shirt winking cheekily with broad toothy grin, Jill in pink dungaree dress with dark brown pigtails waving right hand with bright welcoming open-mouthed smile, sunset hilltop overlooking a sparkling river valley, warm rim lighting rich sunset hues with volumetric god rays, high-end 3D animated feature film aesthetic Pixar Disney inspired, vibrant color palette, subsurface scattering, clean silhouettes, octane render, 8k resolution",
+                        "video_prompt": "Slow dramatic push-in zoom on Jack and Jill's expressive faces, subtle multiplane horizontal pan to emphasize foreground/background parallax separation.",
+                        "voice_direction": "Jack is cheeky and energetic. Jill is bright and inviting.",
                         "sound_effects": ["drumroll", "fanfare"]
                     }
                 ],
                 "quiz": [
                     {
-                        "question": "Who goes on the adventure?",
-                        "options": ["A) Bobo and Luna", "B) No one"],
-                        "correct_answer": "A) Bobo and Luna",
-                        "explanation": "Bobo and Luna explore the topic together."
+                        "question": f"What did Jack and Jill learn about today?",
+                        "options": [f"A) {title_raw}", "B) How to bake cookies", "C) Dancing penguins"],
+                        "correct_answer": f"A) {title_raw}",
+                        "explanation": f"Jack and Jill explored {title_raw.lower()} together and discovered amazing things!"
                     }
                 ],
                 "youtube": {
-                    "title": f"{title_raw} | Fun Science for Kids",
-                    "description": f"Learn about {title_raw.lower()} with Bobo and Luna!",
-                    "tags": ["kids", "learning", "science"],
-                    "hashtags": ["#KidsLearning"],
+                    "title": f"{title_raw} | Fun Science for Kids | Gigmo Giggles",
+                    "description": f"Join Jack and Jill as they discover {title_raw.lower()}! A fun, colorful, animated learning adventure for curious kids.\n\n🔔 Subscribe for a new animated learning adventure every day!\n#GigmoGiggles #KidsLearning #ScienceForKids",
+                    "tags": ["kids learning", title_raw.lower(), "science for kids", "jack and jill", "cartoon science", "gigmo giggles"],
+                    "hashtags": ["#KidsLearning", "#ScienceForKids", "#GigmoGiggles", "#Animation"],
                     "category": "Education",
                     "target_audience": "Children (Made for Kids)"
                 },
                 "thumbnail": {
-                    "prompt": "Bobo and Luna pointing at the sky",
-                    "overlay_text": title_raw.upper()
+                    "prompt": f"Wide Shot 24mm, Jack wearing blue overalls and yellow t-shirt and Jill in pink dungaree dress with dark brown pigtails, both pointing excitedly at a glowing magical element, bright sunny sky background, high contrast vibrant colors, high-end 3D animated feature film aesthetic Pixar Disney inspired, octane render, 8k resolution",
+                    "overlay_text": title_raw.upper()[:25]
                 },
-                "shorts": []
+                "shorts": [
+                    {
+                        "title": f"{title_raw} ✨ #Shorts",
+                        "hook": f"Did you know about {title_raw.lower()}? Jack and Jill found out!",
+                        "scene_reference": 2,
+                        "duration_seconds": 30
+                    }
+                ]
             }

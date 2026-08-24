@@ -46,7 +46,7 @@ class YouTubeMetadataGenerator:
 {chapters_text}
 
 ✨ ABOUT GIGMO GIGGLES:
-Gigmo Giggles is a fun, colorful, educational animated cartoon show for curious kids! Join Bobo the Bear, Luna the Fox, and Milo the Robot as they explore science, nature, good manners, and the wonders of our world!
+Gigmo Giggles is a fun, colorful, educational animated cartoon show for curious kids! Join Jack and Jill as they explore science, nature, good manners, and the wonders of our world!
 
 🔔 Subscribe for a new animated learning adventure every day!
 

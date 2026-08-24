@@ -163,29 +163,60 @@ class ThumbnailGenerator:
             y2 = center_y + math.sin(rad2) * 1000
             draw.polygon([(center_x, center_y), (x1, y1), (x2, y2)], fill="#FFEA00")
 
-        # 2. Draw Bobo (Bear) on Left Side
-        bobo_x = int(width * 0.18)
+        # 2. Draw Jack (Left Side) — Brown hair, blue overalls, yellow shirt
+        jack_x = int(width * 0.18)
         base_y = int(height * 0.52)
-        draw.ellipse([bobo_x - 30, base_y - 120, bobo_x + 20, base_y - 70], fill="#8D5B28", outline="#4E342E", width=5)
-        draw.ellipse([bobo_x + 110, base_y - 120, bobo_x + 160, base_y - 70], fill="#8D5B28", outline="#4E342E", width=5)
-        draw.ellipse([bobo_x - 20, base_y - 90, bobo_x + 150, base_y + 80], fill="#B27B38", outline="#4E342E", width=7)
-        draw.ellipse([bobo_x + 15, base_y - 20, bobo_x + 115, base_y + 60], fill="#FFE082")
-        draw.ellipse([bobo_x + 50, base_y - 15, bobo_x + 80, base_y + 10], fill="#212121")
-        draw.ellipse([bobo_x + 20, base_y - 65, bobo_x + 55, base_y - 30], fill="#FFFFFF", outline="#000000", width=3)
-        draw.ellipse([bobo_x + 75, base_y - 65, bobo_x + 110, base_y - 30], fill="#FFFFFF", outline="#000000", width=3)
-        draw.ellipse([bobo_x + 30, base_y - 58, bobo_x + 48, base_y - 38], fill="#212121")
-        draw.ellipse([bobo_x + 85, base_y - 58, bobo_x + 103, base_y - 38], fill="#212121")
-        draw.ellipse([bobo_x + 38, base_y - 55, bobo_x + 44, base_y - 47], fill="#FFFFFF")
-        draw.ellipse([bobo_x + 93, base_y - 55, bobo_x + 99, base_y - 47], fill="#FFFFFF")
+        # Tousled brown hair
+        hair_y = base_y - 65
+        for spike in [
+            [(jack_x - 10, hair_y), (jack_x + 5, hair_y - 35), (jack_x + 20, hair_y)],
+            [(jack_x + 10, hair_y), (jack_x + 30, hair_y - 40), (jack_x + 50, hair_y)],
+            [(jack_x + 35, hair_y), (jack_x + 55, hair_y - 35), (jack_x + 75, hair_y)],
+            [(jack_x + 60, hair_y), (jack_x + 75, hair_y - 30), (jack_x + 90, hair_y)],
+        ]:
+            draw.polygon(spike, fill="#6B4226")
+        # Head
+        draw.ellipse([jack_x - 5, base_y - 55, jack_x + 75, base_y + 30], fill="#FFD1A4", outline="#3E2723", width=4)
+        # Eyes
+        draw.ellipse([jack_x + 8, base_y - 25, jack_x + 28, base_y - 5], fill="#FFFFFF", outline="#000000", width=2)
+        draw.ellipse([jack_x + 42, base_y - 25, jack_x + 62, base_y - 5], fill="#FFFFFF", outline="#000000", width=2)
+        draw.ellipse([jack_x + 14, base_y - 20, jack_x + 22, base_y - 10], fill="#6D4C41")  # Hazel
+        draw.ellipse([jack_x + 48, base_y - 20, jack_x + 56, base_y - 10], fill="#6D4C41")
+        # Blush & nose
+        draw.ellipse([jack_x + 2, base_y - 3, jack_x + 15, base_y + 8], fill="#FFAB91")
+        draw.ellipse([jack_x + 55, base_y - 3, jack_x + 68, base_y + 8], fill="#FFAB91")
+        draw.ellipse([jack_x + 28, base_y - 5, jack_x + 40, base_y + 5], fill="#FFB088")
+        # Smile
+        draw.arc([jack_x + 20, base_y + 5, jack_x + 50, base_y + 22], start=0, end=180, fill="#3E2723", width=3)
+        # Yellow T-shirt
+        draw.rectangle([jack_x + 10, base_y + 30, jack_x + 60, base_y + 50], fill="#FFD600", outline="#F9A825", width=2)
+        # Blue overalls
+        draw.rectangle([jack_x - 5, base_y + 45, jack_x + 75, base_y + 100], fill="#1565C0", outline="#0D47A1", width=3)
 
-        # 3. Draw Milo (Robot) on Right Side
-        milo_x = int(width * 0.72)
-        draw.line([milo_x + 60, base_y - 110, milo_x + 60, base_y - 50], fill="#78909C", width=8)
-        draw.ellipse([milo_x + 45, base_y - 135, milo_x + 75, base_y - 105], fill="#FF1744", outline="#B71C1C", width=4)
-        draw.rounded_rectangle([milo_x, base_y - 50, milo_x + 120, base_y + 60], radius=20, fill="#29B6F6", outline="#01579B", width=7)
-        draw.rounded_rectangle([milo_x + 15, base_y - 25, milo_x + 105, base_y + 25], radius=10, fill="#212121")
-        draw.ellipse([milo_x + 25, base_y - 15, milo_x + 50, base_y + 15], fill="#00E676")
-        draw.ellipse([milo_x + 70, base_y - 15, milo_x + 95, base_y + 15], fill="#00E676")
+        # 3. Draw Jill (Right Side) — Dark brown pigtails, pink dungaree
+        jill_x = int(width * 0.72)
+        # Pigtails
+        draw.ellipse([jill_x - 30, base_y - 55, jill_x + 20, base_y + 80], fill="#3E2723")
+        draw.ellipse([jill_x + 60, base_y - 55, jill_x + 110, base_y + 80], fill="#3E2723")
+        # Pink ribbons
+        draw.polygon([(jill_x - 5, base_y - 30), (jill_x - 18, base_y - 48), (jill_x - 18, base_y - 12)], fill="#F06292")
+        draw.polygon([(jill_x + 85, base_y - 30), (jill_x + 98, base_y - 48), (jill_x + 98, base_y - 12)], fill="#F06292")
+        # Head
+        draw.ellipse([jill_x - 5, base_y - 55, jill_x + 85, base_y + 30], fill="#FFD1A4", outline="#3E2723", width=4)
+        # Eyes
+        draw.ellipse([jill_x + 10, base_y - 25, jill_x + 33, base_y - 5], fill="#FFFFFF", outline="#000000", width=2)
+        draw.ellipse([jill_x + 47, base_y - 25, jill_x + 70, base_y - 5], fill="#FFFFFF", outline="#000000", width=2)
+        draw.ellipse([jill_x + 17, base_y - 20, jill_x + 26, base_y - 10], fill="#4E342E")
+        draw.ellipse([jill_x + 54, base_y - 20, jill_x + 63, base_y - 10], fill="#4E342E")
+        # Freckles
+        for fx, fy in [(jill_x + 28, base_y - 3), (jill_x + 36, base_y - 5), (jill_x + 44, base_y - 3), (jill_x + 52, base_y - 5)]:
+            draw.ellipse([fx - 2, fy - 2, fx + 2, fy + 2], fill="#A1887F")
+        # Smile
+        draw.arc([jill_x + 25, base_y + 5, jill_x + 55, base_y + 22], start=0, end=180, fill="#3E2723", width=3)
+        # Striped pastel shirt
+        draw.rectangle([jill_x + 10, base_y + 30, jill_x + 70, base_y + 50], fill="#E8D5E0", outline="#D7CCC8", width=2)
+        # Pink dungaree dress
+        draw.rectangle([jill_x - 5, base_y + 45, jill_x + 85, base_y + 100], fill="#F48FB1", outline="#EC407A", width=3)
 
         img.save(str(output_path), "PNG")
 

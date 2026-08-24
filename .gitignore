@@ -1,60 +1,112 @@
-# Environment & Secrets
+# ── Credentials & Secrets (NEVER commit these) ──────────────────
 .env
-*.env
-.secrets*
+.env.*
+!.env.example
+token.json
+credentials.json
+client_secret*.json
+oauth*.json
+*_token.json
+firebase-adminsdk-*.json
+*.pem
+*.key
+*.p12
+*.pfx
+*secret*
+*password*
+*apikey*
 
-# Python
+# ── Python Bytecode & Cache ──────────────────────────────────────
 __pycache__/
 *.py[cod]
-*$py.class
-*.so
+*.pyo
+*.pyd
 .Python
-env/
-venv/
-.venv/
-ENV/
+
+# ── Build & Packaging Artifacts ─────────────────────────────────
 build/
-develop-eggs/
 dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
 *.egg-info/
-.installed.cfg
 *.egg
+*.whl
+.eggs/
+pip-wheel-metadata/
+MANIFEST
 
-# Testing & Coverage
+# ── Test, Coverage & QA Residue ─────────────────────────────────
 .pytest_cache/
-.coverage
-htmlcov/
 .tox/
+.hypothesis/
+.coverage
+coverage.xml
+htmlcov/
+nosetests.xml
+test-results/
+*.cover
 
-# Media & Generated Output (Do not commit heavy video/audio files)
-episodes/*/*/images/*.png
-episodes/*/*/audio/*.mp3
-episodes/*/*/audio/*.wav
-episodes/*/*/video/*.mp4
-episodes/*/*/thumbnail/*.png
-!episodes/**/.gitkeep
-
-# IDEs & System
-.vscode/
-.idea/
-*.swp
-*.swo
-.DS_Store
-Thumbs.db
-
-# Generated Data and Secrets
-client_secret.json
+# ── Generated Output & Large Binaries ───────────────────────────
+*.mp4
+*.mp3
+*.wav
+*.avi
+*.mov
+*.mkv
+*.zip
+*.tar.gz
+*.tar.bz2
+*.rar
+*.7z
+output/
+generated/
+renders/
+episodes/
 daily-episode-*/
 latest_run/
 .tmp.driveupload/
 rhubarb.zip
-episodes/
+
+# ── Temporary & Residual Files ───────────────────────────────────
+*.tmp
+*.temp
+*.bak
+*.backup
+*.swp
+*.swo
+*~
+*.orig
+*.rej
+*.log
+logs/
+tmp/
+temp/
+scratch/
+
+# ── OS Noise ─────────────────────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ── Editor & IDE Noise ───────────────────────────────────────────
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.project
+.classpath
+
+# ── Node / JS (if applicable) ────────────────────────────────────
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.yarn-integrity
+
+# ── GitHub Actions Cache ─────────────────────────────────────────
+.cache/
+*.cache

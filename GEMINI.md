@@ -8,8 +8,8 @@ This file defines the canonical rules, constraints, and guidelines for the Gigmo
 
 The show features **Jack** and **Jill** as the main characters. Ensure that their visual descriptions and emotion prompts are preserved exactly:
 
-- **Jack**: Spiky black hair, navy blue glasses, wearing a white graphic t-shirt and green shorts.
-- **Jill**: Red bow headband, long wavy reddish-brown hair, dark rose short-sleeve top with a white pearl necklace.
+- **Jack**: Brown tousled hair, round cheeks, button nose, wide expressive hazel eyes. Default Attire: Blue overalls, yellow t-shirt underneath, red sneakers.
+- **Jill**: Dark brown pigtails with pink ribbons, freckles across the nose, bright animated eyes. Default Attire: Pink dungaree dress/pinafore, striped pastel inner shirt, white canvas shoes.
 - Visual prompts must match the specs defined in `config/characters.json` and `config/character_prompts.json`.
 
 ---

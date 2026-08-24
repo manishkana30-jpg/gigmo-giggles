@@ -28,10 +28,10 @@ def test_gemini_creator_injects_character_canonical_descriptions():
     system_prompt = director._build_system_prompt()
 
     assert "Jack" in system_prompt
-    assert "spiky black hair" in system_prompt
-    assert "navy blue glasses" in system_prompt
+    assert "brown tousled hair" in system_prompt
+    assert "blue overalls" in system_prompt
     assert "Jill" in system_prompt
-    assert "red bow headband" in system_prompt
+    assert "dark brown pigtails" in system_prompt
 
 
 def test_image_generator_prompt_enhancement():

@@ -30,7 +30,7 @@ def test_script_generator_markdown_output(mock_episode, tmp_path: Path):
     content = script_path.read_text(encoding="utf-8")
     assert "Gigmo Giggles Screenplay" in content
     assert "Scene Breakdown" in content
-    assert "Bobo" in content
+    assert "Jack" in content
     assert "Interactive Kid Quiz" in content
 
 

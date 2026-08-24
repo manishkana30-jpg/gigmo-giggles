@@ -39,7 +39,7 @@ def test_subtitle_generator_files(mock_episode, tmp_path: Path):
 
     srt_text = results["srt"].read_text(encoding="utf-8")
     assert "-->" in srt_text
-    assert "Bobo" in srt_text or "Narrator" in srt_text or "Luna" in srt_text
+    assert "Jack" in srt_text or "Narrator" in srt_text or "Jill" in srt_text
 
     vtt_text = results["vtt"].read_text(encoding="utf-8")
     assert vtt_text.startswith("WEBVTT")

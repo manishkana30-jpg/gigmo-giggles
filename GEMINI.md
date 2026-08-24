@@ -48,6 +48,14 @@ For offline verification and testing (the `--mock` flag):
 
 ---
 
+## 🔍 Quality Audit Gate before Publishing
+
+To guarantee zero-defect broadcasts:
+- **Rule**: Quality Gate Verification (`QualityGateValidator.check_quality_gate`) must always execute **before** YouTube upload publishing.
+- **Halt on Failure**: If any quality or safety check fails, the pipeline must immediately raise an exception (`ValueError`) and abort/prevent the publishing stage.
+
+---
+
 ## 🚀 GitHub Actions Workflow Security
 
 All multi-line scripts in `.github/workflows/*.yml` must be hardened using:

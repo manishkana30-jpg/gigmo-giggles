@@ -141,7 +141,15 @@ def run_pipeline(
         YouTubeMetadataGenerator.save_metadata(episode_data, base_episodes_dir / "youtube_metadata.json")
         mark_step_completed("metadata")
 
-        # Step 11: YouTube Publisher check
+        # Step 11: Quality Gate Verification
+        logger.info("--- 11. Quality Gate Verification ---")
+        passed, quality_issues = QualityGateValidator.check_quality_gate(base_episodes_dir, episode_data)
+        if not passed:
+            raise ValueError(f"Quality gate check failed. Publication halted. Issues: {quality_issues}")
+        mark_step_completed("quality_gate")
+
+        # Step 12: YouTube Publisher check
+        logger.info("--- 12. YouTube Publishing ---")
         import json
         settings_path = root / "config" / "settings.json"
         with open(settings_path, 'r', encoding='utf-8') as f:
@@ -179,13 +187,6 @@ def run_pipeline(
         elif publish_result.get("status") == "success":
             logger.info(f"YouTube upload succeeded: {publish_result.get('url')}")
         mark_step_completed("youtube_publish")
-
-        # Step 12: Quality Gate Verification
-        logger.info("--- 11. Quality Gate Verification ---")
-        passed, quality_issues = QualityGateValidator.check_quality_gate(base_episodes_dir, episode_data)
-        if not passed:
-            logger.warning(f"Quality gate warnings: {quality_issues}")
-            status_tracker["quality_warnings"] = quality_issues
 
         # Step 13: Mark Topic as Used in Catalog
         topic_mgr.mark_topic_as_used(selected_topic, episode_data.get("episode_id", date_str))

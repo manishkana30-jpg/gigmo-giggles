@@ -103,11 +103,18 @@ class YouTubePublisher:
 
             if thumbnail_path.exists():
                 logger.info(f"Uploading custom thumbnail: {thumbnail_path.name}")
-                youtube.thumbnails().set(
-                    videoId=video_id,
-                    media_body=MediaFileUpload(str(thumbnail_path), mimetype=thumbnail_mime)
-                ).execute()
-                logger.info("Thumbnail uploaded successfully.")
+                try:
+                    youtube.thumbnails().set(
+                        videoId=video_id,
+                        media_body=MediaFileUpload(str(thumbnail_path), mimetype=thumbnail_mime)
+                    ).execute()
+                    logger.info("Thumbnail uploaded successfully.")
+                except Exception as thumb_err:
+                    logger.warning(
+                        f"Custom thumbnail upload failed: {thumb_err}. "
+                        "This is common if the YouTube channel is not phone-verified for custom thumbnails. "
+                        "Continuing with video publishing."
+                    )
 
             return {
                 "status": "success",

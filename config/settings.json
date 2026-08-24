@@ -2,5 +2,7 @@
     "auto_upload_youtube": false,
     "youtube_privacy_status": "private",
     "language": "English",
-    "spoken_language": "Hindi"
+    "spoken_language": "Hindi",
+    "scenes_per_episode": 10,
+    "target_episode_duration_seconds": 300
 }

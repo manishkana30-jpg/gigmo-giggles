@@ -1,23 +1,27 @@
 # Scriptwriting Guidelines for Gigmo Giggles
 
 1. **Duration & Pacing**:
-   - Total runtime: 120 - 240 seconds (2 - 4 minutes).
-   - Average scene duration: 12 - 20 seconds.
-   - Pacing: lively, rhythmic, alternating between funny character reactions and clear visual explanations.
+   - Total runtime: ~300 seconds (5 minutes).
+   - Number of scenes: Exactly 10 narrative scenes (~25 - 35 seconds per scene).
+   - Pacing: lively, rhythmic, alternating between funny character reactions, discovery, teamwork, and clear visual explanations.
 
 2. **Vocabulary & Sentences**:
-   - Keep sentences short (under 12 words per sentence).
-   - Use high-energy verbs and sensory words (fizzy, bouncy, shiny, zooming).
-   - When introducing a new scientific or educational term, immediately define it using a kid-friendly visual metaphor.
+   - Keep sentences short, catchy, and expressive.
+   - Use high-energy verbs and sensory words (fizzy, bouncy, shiny, zooming, roaring).
+   - When introducing a new scientific or educational concept, immediately define it using a kid-friendly visual metaphor.
 
 3. **Dialogue Dynamics**:
-   - **Bobo**: Enthusiastic, easily amused, makes innocent silly guesses that get corrected gently.
-   - **Luna**: The smart, encouraging elder-sister type who explains the 'how' and 'why' clearly.
-   - **Milo**: The tech-whiz robot who beeps, calculates, projects fun holographic graphs, and asks the ultimate question.
+   - **Jack**: Enthusiastic, energetic, slightly clumsy, makes innocent funny guesses, speaks with curiosity.
+   - **Jill**: Smart, observant, resourceful, encourages teamwork, and explains the 'how' and 'why' clearly.
 
-4. **Structure Flow**:
-   - Scene 1: Fun hook & puzzling observation.
+4. **10-Scene Structure Flow**:
+   - Scene 1: Fun hook & everyday observation.
    - Scene 2: Posing the question & setting off on the mini-mission.
-   - Scenes 3–7: Step-by-step discovery with visual analogies.
-   - Scene 8–9: "Aha!" moment & review summary.
+   - Scene 3: Journey into the new setting.
+   - Scene 4: First clue & visual demonstration.
+   - Scene 5: Unexpected obstacle or playful hurdle.
+   - Scene 6: Team brainstorming & combining ideas.
+   - Scene 7: Creative action & executing the plan.
+   - Scene 8: "Aha!" moment & scientific breakthrough.
+   - Scene 9: Celebration & recap summary of what was learned.
    - Scene 10: Interactive quiz question for the viewers at home.

@@ -4,6 +4,7 @@ import os
 from pathlib import Path
 from typing import Dict, Any
 from google.oauth2.credentials import Credentials
+from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
 from src.utils import setup_logger
@@ -12,18 +13,14 @@ logger = setup_logger("YouTubePublisher")
 
 
 class YouTubePublisher:
-    """
-    Interface for uploading videos to the YouTube Data API v3.
-    """
+    """Interface for uploading videos to the YouTube Data API v3."""
 
     def __init__(self, enabled: bool = False, privacy_status: str = "private"):
         self.enabled = enabled
         self.privacy_status = privacy_status
 
     def publish(self, video_path: Path, metadata: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        Publish video to YouTube.
-        """
+        """Publish video to YouTube."""
         if not self.enabled:
             logger.info("YouTube auto-publishing is currently disabled. Video generated locally for manual review.")
             return {
@@ -43,6 +40,13 @@ class YouTubePublisher:
                 "reason": "missing credentials"
             }
 
+        if not video_path.exists() or video_path.stat().st_size == 0:
+            logger.error(f"Video file not found or empty: {video_path}")
+            return {
+                "status": "failed",
+                "reason": f"Video file not found or empty: {video_path}"
+            }
+
         try:
             creds = Credentials(
                 None,
@@ -51,6 +55,8 @@ class YouTubePublisher:
                 client_id=client_id,
                 client_secret=client_secret
             )
+            creds.refresh(Request())
+            logger.info("YouTube OAuth2 token refreshed successfully.")
 
             youtube = build("youtube", "v3", credentials=creds)
 
@@ -58,7 +64,7 @@ class YouTubePublisher:
             title = metadata.get("title", "Kids Educational Video")
             description = metadata.get("description", "A fun and educational video for kids!")
             tags = metadata.get("tags", ["kids", "educational", "learning"])
-            
+
             logger.info(f"Uploading to YouTube: {title}")
 
             body = {
@@ -81,18 +87,25 @@ class YouTubePublisher:
                 body=body,
                 media_body=media
             )
-            
+
             response = request.execute()
             video_id = response.get("id")
             logger.info(f"Video uploaded successfully! Video ID: {video_id}")
+            logger.info(f"URL: https://youtu.be/{video_id}")
 
-            # Upload thumbnail if provided
-            thumbnail_path = video_path.parent / "thumbnail.jpg"
+            # Upload thumbnail (check both .png and .jpg)
+            thumbnail_dir = video_path.parent.parent / "thumbnail"
+            thumbnail_path = thumbnail_dir / "thumbnail.png"
+            thumbnail_mime = "image/png"
+            if not thumbnail_path.exists():
+                thumbnail_path = thumbnail_dir / "thumbnail.jpg"
+                thumbnail_mime = "image/jpeg"
+
             if thumbnail_path.exists():
-                logger.info("Uploading custom thumbnail...")
+                logger.info(f"Uploading custom thumbnail: {thumbnail_path.name}")
                 youtube.thumbnails().set(
                     videoId=video_id,
-                    media_body=MediaFileUpload(str(thumbnail_path), mimetype="image/jpeg")
+                    media_body=MediaFileUpload(str(thumbnail_path), mimetype=thumbnail_mime)
                 ).execute()
                 logger.info("Thumbnail uploaded successfully.")
 

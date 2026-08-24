@@ -16,10 +16,14 @@ on:
         default: false
         type: boolean
 
+permissions:
+  contents: read
+
 jobs:
   build-and-generate:
     name: Generate Daily Episode
     runs-on: ubuntu-latest
+    continue-on-error: false
 
     steps:
       - name: Check out repository
@@ -33,6 +37,7 @@ jobs:
 
       - name: Install Rhubarb (Zero-Fail Method)
         run: |
+          set -euo pipefail
           # 1. Download and extract
           wget -q https://github.com/DanielSWolf/rhubarb-lip-sync/releases/download/v1.13.0/rhubarb-lip-sync-1.13.0-Linux.zip
           unzip -q -o rhubarb-lip-sync-1.13.0-Linux.zip
@@ -55,6 +60,7 @@ jobs:
 
       - name: Install FFmpeg, Blender & Clean Old Ghosts
         run: |
+          set -euo pipefail
           sudo apt-get update
           sudo apt-get install -y ffmpeg blender xvfb libegl1 libgl1 libxxf86vm1 libxfixes3 libxi6 libxrender1
           # Kill zombie temp files left by previous failed runs
@@ -64,25 +70,26 @@ jobs:
 
       - name: Install Python Dependencies
         run: |
+          set -euo pipefail
           python -m pip install --upgrade pip
-          pip install Pillow>=10.0.0 moviepy>=1.0.3
-          if [ -f requirements.txt ]; then
-            pip install -r requirements.txt
-          fi
+          pip install -r requirements.txt
 
       - name: Run Test Suite
         run: |
+          set -euo pipefail
           pytest -v
 
       - name: Run Episode Generator
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          GEMINI_MODEL: ${{ secrets.GEMINI_MODEL || 'gemini-2.5-flash' }}
+          GEMINI_MODEL: ${{ vars.GEMINI_MODEL || 'gemini-2.5-flash' }}
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
           YOUTUBE_CLIENT_ID: ${{ secrets.YOUTUBE_CLIENT_ID }}
           YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
           YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
         run: |
+          set -euo pipefail
+
           TOPIC_FLAG=""
           if [ -n "${{ inputs.topic }}" ]; then
             TOPIC_FLAG="--topic \"${{ inputs.topic }}\""
@@ -90,11 +97,26 @@ jobs:
           
           MOCK_FLAG=""
           if [ "${{ inputs.mock }}" = "true" ] || [ -z "$GEMINI_API_KEY" ]; then
-            echo "Running with mock/fallback mode (no live Gemini key provided or mock flag enabled)"
+            echo "⚠️ Running with mock/fallback mode (no live Gemini key provided or mock flag enabled)"
             MOCK_FLAG="--mock"
           fi
           
-          python -m src.main $TOPIC_FLAG $MOCK_FLAG
+          python -u -m src.main $TOPIC_FLAG $MOCK_FLAG
+
+      - name: Verify MP4 Was Generated
+        run: |
+          set -euo pipefail
+          MP4=$(find episodes/ -name "episode.mp4" -type f 2>/dev/null | head -n 1)
+          if [ -z "$MP4" ]; then
+            echo "❌ No episode.mp4 found in episodes/"
+            exit 1
+          fi
+          SIZE=$(stat --format=%s "$MP4")
+          echo "✅ Found $MP4 ($SIZE bytes)"
+          if [ "$SIZE" -lt 1000 ]; then
+            echo "❌ MP4 is suspiciously small ($SIZE bytes)"
+            exit 1
+          fi
 
       - name: Upload Episode Artifacts
         if: always()
@@ -102,4 +124,4 @@ jobs:
         with:
           name: daily-episode-${{ github.run_number }}
           path: episodes/
-          retention-days: 14
+          retention-days: 30

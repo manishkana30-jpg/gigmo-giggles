@@ -151,13 +151,23 @@ def run_pipeline(
             privacy_status=settings.get("youtube_privacy_status", "private")
         )
         
-        # Prepare metadata for YouTube
+        # Verify MP4 exists before attempting upload
+        video_file = base_episodes_dir / "video" / "episode.mp4"
+        if not video_file.exists() or video_file.stat().st_size == 0:
+            raise FileNotFoundError(f"Generated video not found or empty: {video_file}")
+
+        # Load YouTube metadata
         youtube_metadata = episode_data.get("youtube", {})
         if not youtube_metadata and (base_episodes_dir / "youtube_metadata.json").exists():
             with open(base_episodes_dir / "youtube_metadata.json", 'r', encoding='utf-8') as f:
                 youtube_metadata = json.load(f)
-                
-        publisher.publish(base_episodes_dir / "video" / "episode.mp4", youtube_metadata)
+
+        publish_result = publisher.publish(video_file, youtube_metadata)
+        if publish_result.get("status") == "failed":
+            raise RuntimeError(f"YouTube upload failed: {publish_result.get('error') or publish_result.get('reason')}")
+        elif publish_result.get("status") == "success":
+            logger.info(f"YouTube upload succeeded: {publish_result.get('url')}")
+        mark_step_completed("youtube_publish")
 
         # Step 12: Quality Gate Verification
         logger.info("--- 11. Quality Gate Verification ---")

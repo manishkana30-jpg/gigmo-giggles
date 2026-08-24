@@ -170,7 +170,7 @@ class PILComicProceduralProvider(BaseImageProvider):
             self._draw_scenery(draw, width, height, scene_num)
 
             # 2. Draw cartoon cast (Jack and Jill with dynamic expressions)
-            self._draw_characters(draw, width, height, scene_num, context, prompt)
+            self._draw_characters(img, draw, width, height, scene_num, context, prompt)
 
             # 3. Speech bubble or educational banner
             self._draw_dialogue_bubble(draw, width, height, dialogues, location, scene_num)
@@ -217,20 +217,9 @@ class PILComicProceduralProvider(BaseImageProvider):
         draw.ellipse([width // 3, hill_y - 40, width + 400, height + 400], fill="#66BB6A")
         draw.rectangle([0, int(height * 0.72), width, height], fill="#43A047")
 
-    def _draw_characters(self, draw: ImageDraw.ImageDraw, width: int, height: int, scene_num: int, context: Optional[Dict[str, Any]] = None, prompt: Optional[str] = None):
+    def _draw_characters(self, img: Image.Image, draw: ImageDraw.ImageDraw, width: int, height: int, scene_num: int, context: Optional[Dict[str, Any]] = None, prompt: Optional[str] = None):
         """Draw canonical kids show characters: Jack (Left) and Jill (Right) with expressions matching context."""
         base_y = int(height * 0.58)
-
-        flesh_color = "#FFD1A4"
-        jack_hair_color = "#1A1A1A"
-        jack_glasses_color = "#1A237E" # Navy Blue
-        jack_shirt_color = "#FFFFFF"
-        jack_shorts_color = "#4CAF50" # Green
-        
-        jill_hair_color = "#8D4925" # Reddish-Brown
-        jill_top_color = "#C2185B" # Dark Rose
-        jill_headband_color = "#D50000" # Red
-        pearl_color = "#E0E0E0"
 
         # Resolve emotions/expressions based on context
         jack_emotion = "happy"
@@ -275,6 +264,73 @@ class PILComicProceduralProvider(BaseImageProvider):
             elif "think" in action_text or "curious" in action_text: jill_emotion = "thoughtful"
             elif "angry" in action_text or "annoyed" in action_text: jill_emotion = "angry"
             elif "laugh" in action_text or "giggle" in action_text: jill_emotion = "laugh"
+
+        # Check if cropped character PNG files exist
+        jack_files = {
+            "sad": "sad_pouting.png",
+            "angry": "furious_shouting.png",
+            "laugh": "joyful_laugh_closed_eyes.png",
+            "surprised": "gasp_astonished.png",
+            "thoughtful": "smug_scheming.png",
+            "wink": "winking_mischief_laugh.png",
+            "love": "shy_love_flattered.png",
+            "hyped": "hyped_celebrating.png",
+            "happy": "joyful_laugh_closed_eyes.png"
+        }
+        
+        jill_files = {
+            "sad": "crying_distressed.png",
+            "angry": "annoyed_pouting.png",
+            "laugh": "playful_wink_joy.png",
+            "surprised": "shocked_surprised.png",
+            "thoughtful": "pensive_curious.png",
+            "wink": "playful_wink_joy.png",
+            "love": "infatuated_in_love.png",
+            "happy": "gentle_smile_content.png"
+        }
+
+        from src.utils import get_project_root
+        root = get_project_root()
+        
+        jack_fname = jack_files.get(jack_emotion, "joyful_laugh_closed_eyes.png")
+        jack_img_path = root / "assets" / "characters" / "jack" / jack_fname
+        
+        jill_fname = jill_files.get(jill_emotion, "gentle_smile_content.png")
+        jill_img_path = root / "assets" / "characters" / "jill" / jill_fname
+
+        if jack_img_path.exists() and jill_img_path.exists():
+            try:
+                # Paste Jack sticker
+                with Image.open(jack_img_path) as j_img:
+                    j_w, j_h = j_img.size
+                    scale = 450.0 / j_h
+                    new_w = int(j_w * scale)
+                    jack_resized = j_img.resize((new_w, 450), Image.Resampling.LANCZOS)
+                img.paste(jack_resized, (int(width * 0.18), height - 490), jack_resized)
+
+                # Paste Jill sticker
+                with Image.open(jill_img_path) as jl_img:
+                    jl_w, jl_h = jl_img.size
+                    scale = 450.0 / jl_h
+                    new_w_jill = int(jl_w * scale)
+                    jill_resized = jl_img.resize((new_w_jill, 450), Image.Resampling.LANCZOS)
+                img.paste(jill_resized, (int(width * 0.58), height - 490), jill_resized)
+                
+                return # Successful sticker overlay, skip procedural drawing
+            except Exception as e:
+                logger.warning(f"Failed to paste cropped PNGs: {e}. Falling back to procedural drawing.")
+
+        # Procedural fallback drawing variables
+        flesh_color = "#FFD1A4"
+        jack_hair_color = "#1A1A1A"
+        jack_glasses_color = "#1A237E" # Navy Blue
+        jack_shirt_color = "#FFFFFF"
+        jack_shorts_color = "#4CAF50" # Green
+        
+        jill_hair_color = "#8D4925" # Reddish-Brown
+        jill_top_color = "#C2185B" # Dark Rose
+        jill_headband_color = "#D50000" # Red
+        pearl_color = "#E0E0E0"
 
         # ----------------------------------------------------
         # Draw Jack (Left side of the screen)

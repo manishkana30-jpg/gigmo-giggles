@@ -14,6 +14,28 @@ The show features **Jack** and **Jill** as the main characters. Ensure that thei
 
 ---
 
+## 🎨 Sprite Sheet Cropping & Sticker Paste Rendering
+
+Instead of procedurally drawing or using generated avatar styles, the pipeline overlays the exact character graphics provided:
+1. **Source Sprite Sheets**: Grid sheets exist in `assets/characters/Jack.png` (3x3 Jack expressions) and `assets/characters/Jill.png` (3x3 Jill expressions).
+2. **Auto-Cropping**: Sliced versions are produced into `assets/characters/jack/` and `assets/characters/jill/` using a 3x3 uniform grid divider.
+3. **Rendering Layer**: If the files exist, the image generator overlays the matching cropped PNG expression directly onto the rolling green hill background (scaled to height of `450` pixels with Lanczos filter and pasted using the alpha channel transparency mask) instead of using fallback procedural drawings.
+
+---
+
+## 🎥 High-Quality Video Compression Specs
+
+To deliver maximum quality broadcasts:
+1. **Resolution & Framerate**: Video is compiled at `1920x1080` (16:9) at `30` FPS.
+2. **FFmpeg Compression Settings**:
+   - **Quality**: CRF `-crf 16` (visually lossless).
+   - **Compression Speed**: Preset `-preset slow` for optimal block-matching and detail preservation.
+   - **Tuning**: Tune `-tune stillimage` to maximize sharpness on sliding cartoon overlays.
+   - **H.264 Profile**: Profile `-profile:v high` and level `-level 4.1` for broadcast compatibility.
+   - **Audio Quality**: Stereo AAC with bitrate `-b:a 256k`.
+
+---
+
 ## 🗣️ Spoken Language & Subtitle Burn-In
 
 To deliver Hindi language content to English-subtitled audiences, follow these translation and styling rules:

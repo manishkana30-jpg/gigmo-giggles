@@ -187,9 +187,12 @@ class VideoGenerator:
             "-i", str(audio_path),
             "-vf", vf_filter,
             "-c:v", "libx264",
-            "-preset", "medium",
-            "-crf", "18",
-            "-c:a", "aac", "-b:a", "192k",
+            "-preset", "slow",
+            "-crf", "16",
+            "-tune", "stillimage",
+            "-profile:v", "high",
+            "-level", "4.1",
+            "-c:a", "aac", "-b:a", "256k",
             "-t", str(duration_sec),
             "-shortest",
             str(output_path)
@@ -308,11 +311,14 @@ class VideoGenerator:
                         "-map", "[v_sub]", "-map", "[a]",
                         "-c:v", "libx264",
                         "-preset", "slow",
-                        "-crf", "18",
+                        "-crf", "16",
+                        "-tune", "stillimage",
+                        "-profile:v", "high",
+                        "-level", "4.1",
                         "-pix_fmt", "yuv420p",
                         "-movflags", "+faststart",
                         "-max_muxing_queue_size", "1024",
-                        "-c:a", "aac", "-b:a", "192k",
+                        "-c:a", "aac", "-b:a", "256k",
                         str(final_video_path)
                     ]
                 else:
@@ -323,11 +329,14 @@ class VideoGenerator:
                         "-map", "[v_sub]", "-map", "0:a",
                         "-c:v", "libx264",
                         "-preset", "slow",
-                        "-crf", "18",
+                        "-crf", "16",
+                        "-tune", "stillimage",
+                        "-profile:v", "high",
+                        "-level", "4.1",
                         "-pix_fmt", "yuv420p",
                         "-movflags", "+faststart",
                         "-max_muxing_queue_size", "1024",
-                        "-c:a", "aac", "-b:a", "192k",
+                        "-c:a", "aac", "-b:a", "256k",
                         str(final_video_path)
                     ]
 
